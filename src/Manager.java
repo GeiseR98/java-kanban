@@ -1,8 +1,22 @@
 import java.util.HashMap;
 
 public class Manager {
-    HashMap<Integer, task> task = new HashMap<Integer, task>();
+       HashMap<Integer, Task> justTask = new HashMap<>();
+       int numberTask = 0;
 
+    Manager(){
+    }
+    void saveJustTusk(String name, String description, String status){
+        if (!justTask.containsKey(numberTask)){
+            justTask.put(numberTask, new Task(name, description, status));
+        }
+            Task task = justTask.get(numberTask);
+            task.setStatus(status);
+
+
+        numberTask++;
+       // Task thistask = justTask.get(numberTusk);
+    }
     /*
     1) Возможность хранить задачи всех типов. Для этого вам нужно выбрать подходящую коллекцию.
     2) Методы для каждого из типа задач(Задача/Эпик/Подзадача):
