@@ -6,16 +6,13 @@ public class Manager {
 
     Manager(){
     }
-    void saveJustTusk(String name, String description, String status){
+    void saveJustTask(String name, String description, String status){
         if (!justTask.containsKey(numberTask)){
             justTask.put(numberTask, new Task(name, description, status));
         }
             Task task = justTask.get(numberTask);
             task.setStatus(status);
-
-
-        numberTask++;
-       // Task thistask = justTask.get(numberTusk);
+            numberTask++;
     }
     /*
     1) Возможность хранить задачи всех типов. Для этого вам нужно выбрать подходящую коллекцию.
