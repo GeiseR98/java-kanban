@@ -1,13 +1,10 @@
-public class Task {
+public class JustTask {
 
     private String name;                               // имя задачи (вводит пользователь)
     private String description;                        // описание (вводит пользователь)
-
-
-
     private String status;                             // статус задачи (хрен знает кто и как вводит, ну у эпиков расчитывается исходя из подзадач
 
-    public Task(String name, String description, String status) {
+    public JustTask(String name, String description, String status) {
         this.name = name;
         this.description = description;
         this.status = status;
@@ -28,9 +25,12 @@ public class Task {
     public String getStatus() {
         return status;
     }
-    // номер задачи присваивается в менеджере при добавлении в мапу...
 
+    public String getDescription() {
+        return description;
+    }
 
-
-
+    public String getName() {
+        return name;
+    }
 }

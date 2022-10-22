@@ -1,6 +1,16 @@
-public class Epic extends Task{
-    public Epic(String name, String description, String status) {
+import java.util.ArrayList;
+
+public class Epic extends JustTask {
+
+    private ArrayList<Integer> listIdSubtask;
+
+    public Epic(String name, String description, String status, ArrayList<Integer> listIdSubtask) {
         super(name, description, status);
+        this.listIdSubtask = listIdSubtask;
+    }
+
+    public void setListIdSubtask(ArrayList<Integer> listIdSubtask) {
+        this.listIdSubtask = listIdSubtask;
     }
     // добавить поле списка подзадач
 }

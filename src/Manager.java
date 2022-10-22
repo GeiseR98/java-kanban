@@ -1,19 +1,28 @@
 import java.util.HashMap;
 
 public class Manager {
-       HashMap<Integer, Task> justTask = new HashMap<>();
-       int numberTask = 0;
+       HashMap<Integer, JustTask> justTask = new HashMap<>();
+       HashMap<Integer, Epic> epicTask = new HashMap<>();
+       HashMap<Integer, Subtask> subTask = new HashMap<>();
+       int idTask = 0;
 
     Manager(){
     }
     void saveJustTask(String name, String description, String status){
-        if (!justTask.containsKey(numberTask)){
-            justTask.put(numberTask, new Task(name, description, status));
+        ++idTask;
+        if (!justTask.containsKey(idTask)){
+            justTask.put(idTask, new JustTask(name, description, status));
         }
-            Task task = justTask.get(numberTask);
-            task.setStatus(status);
-            numberTask++;
+        //JustTask task = justTask.get(idTask);
     }
+    void saveSubTask(String name, String description, String status, Integer idMaster){
+        ++idTask;
+        if (!subTask.containsKey(idTask)){
+            subTask.put(idTask, new Subtask(name, description, status, idMaster));
+        }
+        //Subtask task = subTask.get(idTask);
+    } //нужно дописать добавление номера суба в эпик
+
     /*
     1) Возможность хранить задачи всех типов. Для этого вам нужно выбрать подходящую коллекцию.
     2) Методы для каждого из типа задач(Задача/Эпик/Подзадача):

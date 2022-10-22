@@ -4,7 +4,8 @@ public class Main {
         System.out.println("Поехали!");
         Manager manager = new Manager();
         manager.saveJustTask("первый", "описание", "статус");
-        manager.saveJustTask("второй", "описание", "статус");
+        manager.saveJustTask("второй", "описание2", "статус2");
+        manager.saveSubTask("третий", "описание3", "NEW", 2);
 
     }
 }
