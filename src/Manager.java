@@ -7,8 +7,6 @@ public class Manager {
        HashMap<Integer, Subtask> subTask = new HashMap<>();
        int idTask = 0;
 
-    Manager(){
-    }
     void saveJustTask(String name, String description, String status){
         ++idTask;
         if (!justTask.containsKey(idTask)){
@@ -35,6 +33,16 @@ public class Manager {
             }
         }
     }
+    void printAllJustTask(){
+        System.out.println("Список задач: ");
+        for (Integer key : justTask.keySet()){
+            System.out.println("- " + justTask.get(key).getName()
+                    + ". номер задачи: " + key
+                    + ". статус задачи: " + justTask.get(key).getStatus()
+                    + ". описание: " + justTask.get(key).getDescription());
+        }
+    }
+
 
 
     /*
