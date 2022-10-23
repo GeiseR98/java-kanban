@@ -42,7 +42,21 @@ public class Manager {
                     + ". описание: " + justTask.get(key).getDescription());
         }
     }
-
+    void printAllEpicTask(){
+        System.out.println("список эпиков: ");
+        for (Integer key : epicTask.keySet()){
+            System.out.println("- " + epicTask.get(key).getName()
+                    + ". номер задачи: " + key
+                    + ". статус задачи: " + epicTask.get(key).getStatus()
+                    + ". описание: " + epicTask.get(key).getDescription());
+            if (epicTask.get(key).getListIdSubtask().size() != 0){
+            System.out.println("вложенные подзадачи: ");
+                for (int i = 0; i <= epicTask.get(key).getListIdSubtask().size(); i++){
+                    System.out.println(epicTask.get(key).getListIdSubtask().get(i));
+                }
+            }
+        }
+    }
 
 
     /*
