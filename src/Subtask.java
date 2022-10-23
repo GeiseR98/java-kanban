@@ -9,5 +9,17 @@ public class Subtask extends JustTask {
     public void setIdMaster(Integer idMaster) {
         this.idMaster = idMaster;
     }
-    // добавить поле принадлежности к эпику
+
+    public Integer getIdMaster() {
+        return idMaster;
+    }
+
+    @Override
+    public String toString() {
+        return " - {" +
+                "название: '" + super.getName() + '\'' +
+                ", описание: '" + super.getDescription() + '\'' +
+                ", статус: '" + super.getStatus() + '\'' +
+                '}';
+    }
 }

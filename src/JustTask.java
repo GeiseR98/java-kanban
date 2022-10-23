@@ -36,7 +36,7 @@ public class JustTask {
     }
     @Override
     public String toString() {
-        return "{" +
+        return " - {" +
                 "Название: '" + name + '\'' +
                 ", описание: '" + description + '\'' +
                 ", статус: '" + status + '\'' +

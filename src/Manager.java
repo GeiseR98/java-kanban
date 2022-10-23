@@ -49,15 +49,22 @@ public class Manager {
             if (epicTask.get(key).getListIdSubtask().size() != 0) {
                 System.out.println("Эпик №" + key + epicTask.get(key));
                 System.out.println("    подзадачи эпика: ");
-                for (int i = 0; i < epicTask.get(key).getListIdSubtask().size(); i++) {
-                    System.out.println("        подзадача №" + epicTask.get(key).getListIdSubtask().get(i)
+                    for (int i = 0; i < epicTask.get(key).getListIdSubtask().size(); i++) {
+                        System.out.println("        подзадача №" + epicTask.get(key).getListIdSubtask().get(i)
                            + " - " + subTask.get(epicTask.get(key).getListIdSubtask().get(i)).getName());
-                }
+                    }
             } else {
                 System.out.println("Эпик №" + key + epicTask.get(key));
                 System.out.println("    Подзадач ещё не добавлено ");
             }
-
+        }
+    }
+    void printAllSubTask(){
+        System.out.println("Список подзадач: ");
+        for (Integer key : subTask.keySet()) {
+            System.out.println("Подзадача №:" + key + subTask.get(key) + ", находится в эпике №" + subTask.get(key).getIdMaster());
+        }
+    }
 
     /*
     ~~1) Возможность хранить задачи всех типов. Для этого вам нужно выбрать подходящую коллекцию.
@@ -78,6 +85,5 @@ public class Manager {
             4.2.2 если все подзадачи имеют статус DONE, то и эпик считается завершённым — со статусом DONE.
             4.2.3 во всех остальных случаях статус должен быть IN_PROGRESS.
      */
-        }
-    }
+
 }

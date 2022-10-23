@@ -12,6 +12,7 @@ public class Main {
         manager.saveSubTask("третий", "описание3", "NEW", 2);
         manager.printAllJustTask();
         manager.printAllEpicTask();
+        manager.printAllSubTask();
 
 
 
