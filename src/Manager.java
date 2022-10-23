@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Manager {
@@ -15,13 +16,27 @@ public class Manager {
         }
         //JustTask task = justTask.get(idTask);
     }
-    void saveSubTask(String name, String description, String status, Integer idMaster){
+    void saveEpicTask(String name, String description){
         ++idTask;
-        if (!subTask.containsKey(idTask)){
-            subTask.put(idTask, new Subtask(name, description, status, idMaster));
+        if (!epicTask.containsKey(idTask)){
+            String status = "NEW";
+            ArrayList<Integer> listIdSubtask = new ArrayList<>();
+            epicTask.put(idTask, new Epic(name, description, status, listIdSubtask));
         }
+    }
+    void saveSubTask(String name, String description, String status, Integer idMaster) {
+        ++idTask;
+        if (!epicTask.containsKey(idMaster)) {
+            System.out.println("Такого эпика не существует, создайте сначала эпик");
+        } else {
+            if (!subTask.containsKey(idTask)) {
+                subTask.put(idTask, new Subtask(name, description, status, idMaster));
+                epicTask.get(idMaster).getListIdSubtask().add(idTask);
+            }
+        }
+    }
         //Subtask task = subTask.get(idTask);
-    } //нужно дописать добавление номера суба в эпик
+     //нужно дописать добавление номера суба в эпик
 
     /*
     1) Возможность хранить задачи всех типов. Для этого вам нужно выбрать подходящую коллекцию.
