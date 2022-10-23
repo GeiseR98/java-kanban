@@ -4,6 +4,7 @@ public class JustTask {
     private String description;                        // описание (вводит пользователь)
     private String status;                             // статус задачи (хрен знает кто и как вводит, ну у эпиков расчитывается исходя из подзадач
 
+
     public JustTask(String name, String description, String status) {
         this.name = name;
         this.description = description;
@@ -33,4 +34,13 @@ public class JustTask {
     public String getName() {
         return name;
     }
+    @Override
+    public String toString() {
+        return "JustTask{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
+
 }

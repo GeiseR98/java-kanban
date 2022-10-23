@@ -51,8 +51,9 @@ public class Manager {
                     + ". описание: " + epicTask.get(key).getDescription());
             if (epicTask.get(key).getListIdSubtask().size() != 0){
             System.out.println("вложенные подзадачи: ");
-                for (int i = 0; i <= epicTask.get(key).getListIdSubtask().size(); i++){
-                    System.out.println(epicTask.get(key).getListIdSubtask().get(i));
+                for (int i = 0; i < epicTask.get(key).getListIdSubtask().size(); i++){
+                    System.out.println(subTask.get(epicTask.get(key).getListIdSubtask().get(i)).getName()
+                            + ". номер задачи: " + epicTask.get(key).getListIdSubtask().get(i));
                 }
             }
         }
