@@ -20,8 +20,8 @@ public class Epic extends JustTask {
 
     @Override
     public String toString() {
-        return "Эпик: {" +
-                "Название задачи: '" + super.getName() + '\'' +
+        return "{" +
+                "название: '" + super.getName() + '\'' +
                 ", описание: '" + super.getDescription() + '\'' +
                 ", статус: '" + super.getStatus() + '\'' +
                 '}';

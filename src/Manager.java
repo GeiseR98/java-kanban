@@ -44,28 +44,18 @@ public class Manager {
     }
 
     void printAllEpicTask() {
-        System.out.println("список эпиков: ");
+        System.out.println("Список эпиков: ");
         for (Integer key : epicTask.keySet()) {
             if (epicTask.get(key).getListIdSubtask().size() != 0) {
-                System.out.println(epicTask.get(key) + ", вложенные задачи: ");
+                System.out.println("Эпик №" + key + epicTask.get(key));
+                System.out.println("    подзадачи эпика: ");
                 for (int i = 0; i < epicTask.get(key).getListIdSubtask().size(); i++) {
-                    System.out.println(subTask.get(epicTask.get(key).getListIdSubtask().get(i)).getName()
-                            + ". номер задачи: " + epicTask.get(key).getListIdSubtask().get(i));
+                    System.out.println("        подзадача №" + epicTask.get(key).getListIdSubtask().get(i)
+                           + " - " + subTask.get(epicTask.get(key).getListIdSubtask().get(i)).getName());
                 }
-            /*System.out.println("- " + epicTask.get(key).getName()
-                    + ". номер задачи: " + key
-                    + ". статус задачи: " + epicTask.get(key).getStatus()
-                    + ". описание: " + epicTask.get(key).getDescription());
-            if (epicTask.get(key).getListIdSubtask().size() != 0){
-            System.out.println("вложенные подзадачи: ");
-                for (int i = 0; i < epicTask.get(key).getListIdSubtask().size(); i++){
-                    System.out.println(subTask.get(epicTask.get(key).getListIdSubtask().get(i)).getName()
-                            + ". номер задачи: " + epicTask.get(key).getListIdSubtask().get(i));
-                }
-            }*/
-
             } else {
-                System.out.println(epicTask.get(key));
+                System.out.println("Эпик №" + key + epicTask.get(key));
+                System.out.println("    Подзадач ещё не добавлено ");
             }
 
 

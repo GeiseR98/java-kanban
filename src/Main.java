@@ -6,6 +6,7 @@ public class Main {
         manager.saveJustTask("первый", "описание");
         manager.saveJustTask("второй", "описание2");
         manager.saveEpicTask("название", "описание эпика");
+        manager.saveEpicTask("сыграть в доту", "кайфануть");
         manager.saveSubTask("третий", "описание3", "NEW", 3);
         manager.saveSubTask("четвертый", "описание5", "NEW", 3);
         manager.saveSubTask("третий", "описание3", "NEW", 2);
