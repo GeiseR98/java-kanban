@@ -17,5 +17,13 @@ public class Epic extends JustTask {
     public void setListIdSubtask(ArrayList<Integer> listIdSubtask) {
         this.listIdSubtask = listIdSubtask;
     }
-    // добавить поле списка подзадач
+
+    @Override
+    public String toString() {
+        return "Эпик: {" +
+                "Название задачи: '" + super.getName() + '\'' +
+                ", описание: '" + super.getDescription() + '\'' +
+                ", статус: '" + super.getStatus() + '\'' +
+                '}';
+    }
 }

@@ -2,26 +2,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Manager {
-       HashMap<Integer, JustTask> justTask = new HashMap<>();
-       HashMap<Integer, Epic> epicTask = new HashMap<>();
-       HashMap<Integer, Subtask> subTask = new HashMap<>();
-       int idTask = 0;
+    HashMap<Integer, JustTask> justTask = new HashMap<>();
+    HashMap<Integer, Epic> epicTask = new HashMap<>();
+    HashMap<Integer, Subtask> subTask = new HashMap<>();
+    int idTask = 0;
 
-    void saveJustTask(String name, String description, String status){
+    void saveJustTask(String name, String description) {
         ++idTask;
-        if (!justTask.containsKey(idTask)){
+        String status = "New";
+        if (!justTask.containsKey(idTask)) {
             justTask.put(idTask, new JustTask(name, description, status));
         }
-        //JustTask task = justTask.get(idTask);
     }
-    void saveEpicTask(String name, String description){
+
+    void saveEpicTask(String name, String description) {
         ++idTask;
-        if (!epicTask.containsKey(idTask)){
+        if (!epicTask.containsKey(idTask)) {
             String status = "NEW";
             ArrayList<Integer> listIdSubtask = new ArrayList<>();
             epicTask.put(idTask, new Epic(name, description, status, listIdSubtask));
         }
     }
+
     void saveSubTask(String name, String description, String status, Integer idMaster) {
         ++idTask;
         if (!epicTask.containsKey(idMaster)) {
@@ -33,19 +35,24 @@ public class Manager {
             }
         }
     }
-    void printAllJustTask(){
+
+    void printAllJustTask() {
         System.out.println("Список задач: ");
-        for (Integer key : justTask.keySet()){
-            System.out.println("- " + justTask.get(key).getName()
-                    + ". номер задачи: " + key
-                    + ". статус задачи: " + justTask.get(key).getStatus()
-                    + ". описание: " + justTask.get(key).getDescription());
+        for (Integer key : justTask.keySet()) {
+            System.out.println("Задача №" + key + justTask.get(key));
         }
     }
-    void printAllEpicTask(){
+
+    void printAllEpicTask() {
         System.out.println("список эпиков: ");
-        for (Integer key : epicTask.keySet()){
-            System.out.println("- " + epicTask.get(key).getName()
+        for (Integer key : epicTask.keySet()) {
+            if (epicTask.get(key).getListIdSubtask().size() != 0) {
+                System.out.println(epicTask.get(key) + ", вложенные задачи: ");
+                for (int i = 0; i < epicTask.get(key).getListIdSubtask().size(); i++) {
+                    System.out.println(subTask.get(epicTask.get(key).getListIdSubtask().get(i)).getName()
+                            + ". номер задачи: " + epicTask.get(key).getListIdSubtask().get(i));
+                }
+            /*System.out.println("- " + epicTask.get(key).getName()
                     + ". номер задачи: " + key
                     + ". статус задачи: " + epicTask.get(key).getStatus()
                     + ". описание: " + epicTask.get(key).getDescription());
@@ -55,9 +62,11 @@ public class Manager {
                     System.out.println(subTask.get(epicTask.get(key).getListIdSubtask().get(i)).getName()
                             + ". номер задачи: " + epicTask.get(key).getListIdSubtask().get(i));
                 }
+            }*/
+
+            } else {
+                System.out.println(epicTask.get(key));
             }
-        }
-    }
 
 
     /*
@@ -79,4 +88,6 @@ public class Manager {
             4.2.2 если все подзадачи имеют статус DONE, то и эпик считается завершённым — со статусом DONE.
             4.2.3 во всех остальных случаях статус должен быть IN_PROGRESS.
      */
+        }
+    }
 }

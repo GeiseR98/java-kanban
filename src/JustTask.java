@@ -36,10 +36,10 @@ public class JustTask {
     }
     @Override
     public String toString() {
-        return "JustTask{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status='" + status + '\'' +
+        return "{" +
+                "Название: '" + name + '\'' +
+                ", описание: '" + description + '\'' +
+                ", статус: '" + status + '\'' +
                 '}';
     }
 
