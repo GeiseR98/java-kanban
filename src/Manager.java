@@ -65,7 +65,12 @@ public class Manager {
             System.out.println("Подзадача №:" + key + subTask.get(key) + ", находится в эпике №" + subTask.get(key).getIdMaster());
         }
     }
-
+    void showTask(Integer id) {
+        if (justTask.get(id) != null) System.out.println("Задача №" + id + justTask.get(id));
+        else if (epicTask.get(id) != null) System.out.println("Задача №" + id + epicTask.get(id));
+        else if (subTask.get(id) != null) System.out.println("Задача №" + id + subTask.get(id));
+        else System.out.println("задачи с таким номером не обнаружено");
+    }
     /*
     ~~1) Возможность хранить задачи всех типов. Для этого вам нужно выбрать подходящую коллекцию.
     2) Методы для каждого из типа задач(Задача/Эпик/Подзадача):
