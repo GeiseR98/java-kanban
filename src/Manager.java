@@ -35,7 +35,7 @@ public class Manager {
                 epicTask.get(idMaster).getListIdSubtask().add(idTask);
             }
         }
-        //нужно дописать проверку статуса эпика
+        checkEpicStatus(idMaster);
     }
 
     void printAllJustTask() {
@@ -83,11 +83,10 @@ public class Manager {
         if (justTask.get(id) != null){
             justTask.remove(id);
             System.out.println("Задача №" + id + " успешно удалена...");
-        }
-        if (epicTask.get(id) != null){
+        } else if (epicTask.get(id) != null){
             if (epicTask.get(id).getListIdSubtask().size() != 0) {
                 for (int i = 0; i < epicTask.get(id).getListIdSubtask().size(); i++) {
-                    subTask.remove(i);
+                    subTask.remove(epicTask.get(id).getListIdSubtask().get(i));
                 }
                 epicTask.remove(id);
                 System.out.println("Эпик №" + id + " успешно удален вместе с подзадачами.");
@@ -95,12 +94,36 @@ public class Manager {
                 epicTask.remove(id);
                 System.out.println("Эпик №" + id + " успешно удален");
             }
-        }
-        if (subTask.get(id) != null) {
+        } else if (subTask.get(id) != null) {
+            int idMaster = subTask.get(id).getIdMaster();
             subTask.remove(id);
-            //нужно дописать проверку статуса эпика
+            checkEpicStatus(idMaster);
+        } else {
+            System.out.println("Такой задачи не обнаружено");
         }
     }
+    void checkEpicStatus(Integer idMaster){
+        if (epicTask.get(idMaster).getListIdSubtask().size() != 0){
+            int wordNew = 0;
+            int wordDone = 0;
+            for (int i = 0; i < epicTask.get(idMaster).getListIdSubtask().size(); i++){
+                if (subTask.get(epicTask.get(idMaster).getListIdSubtask().get(i)).getStatus().equals("NEW")){
+                    wordNew++;
+                } else if (subTask.get(epicTask.get(idMaster).getListIdSubtask().get(i)).getStatus().equals("DONE")){
+                    wordDone++;
+                }
+            }
+            if (wordNew == epicTask.get(idMaster).getListIdSubtask().size()){
+                epicTask.get(idMaster).setStatus("NEW");
+            } else if (wordDone == epicTask.get(idMaster).getListIdSubtask().size()){
+                epicTask.get(idMaster).setStatus("DONE");
+            } else {
+                epicTask.get(idMaster).setStatus("IN_PROGRESS");
+            }
+        }
+    }
+
+
     /*
     ~~1) Возможность хранить задачи всех типов. Для этого вам нужно выбрать подходящую коллекцию.
     2) Методы для каждого из типа задач(Задача/Эпик/Подзадача):

@@ -10,6 +10,7 @@ public class Main {
         manager.saveSubTask("третий", "описание3",  3);
         manager.saveSubTask("четвертый", "описание5",  3);
         manager.saveSubTask("третий", "описание3",  2);
+        manager.removeTask(3);
         manager.showTask(5);
 
 
