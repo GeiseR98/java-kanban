@@ -17,15 +17,16 @@ public class Manager {
 
     void saveEpicTask(String name, String description) {
         ++idTask;
+        String status = "NEW";
         if (!epicTask.containsKey(idTask)) {
-            String status = "NEW";
             ArrayList<Integer> listIdSubtask = new ArrayList<>();
             epicTask.put(idTask, new Epic(name, description, status, listIdSubtask));
         }
     }
 
-    void saveSubTask(String name, String description, String status, Integer idMaster) {
+    void saveSubTask(String name, String description, Integer idMaster) {
         ++idTask;
+        String status = "NEW";
         if (!epicTask.containsKey(idMaster)) {
             System.out.println("Такого эпика не существует, создайте сначала эпик");
         } else {
@@ -34,6 +35,7 @@ public class Manager {
                 epicTask.get(idMaster).getListIdSubtask().add(idTask);
             }
         }
+        //нужно дописать проверку статуса эпика
     }
 
     void printAllJustTask() {
@@ -76,6 +78,28 @@ public class Manager {
             }
         } else if (subTask.get(id) != null) System.out.println("Подзадача №:" + id + subTask.get(id) + ", находится в эпике №" + subTask.get(id).getIdMaster());
           else System.out.println("задачи с таким номером не обнаружено");
+    }
+    void removeTask(Integer id){
+        if (justTask.get(id) != null){
+            justTask.remove(id);
+            System.out.println("Задача №" + id + " успешно удалена...");
+        }
+        if (epicTask.get(id) != null){
+            if (epicTask.get(id).getListIdSubtask().size() != 0) {
+                for (int i = 0; i < epicTask.get(id).getListIdSubtask().size(); i++) {
+                    subTask.remove(i);
+                }
+                epicTask.remove(id);
+                System.out.println("Эпик №" + id + " успешно удален вместе с подзадачами.");
+            } else {
+                epicTask.remove(id);
+                System.out.println("Эпик №" + id + " успешно удален");
+            }
+        }
+        if (subTask.get(id) != null) {
+            subTask.remove(id);
+            //нужно дописать проверку статуса эпика
+        }
     }
     /*
     ~~1) Возможность хранить задачи всех типов. Для этого вам нужно выбрать подходящую коллекцию.
