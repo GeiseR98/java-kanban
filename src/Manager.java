@@ -102,7 +102,37 @@ public class Manager {
             System.out.println("Такой задачи не обнаружено");
         }
     }
-    void checkEpicStatus(Integer idMaster){
+    void changeStatus(Integer id, String status){
+        if (checkInputStatus(status)) {
+            if (justTask.get(id) != null) {
+                justTask.get(id).setStatus(status);
+            }
+            else if (subTask.get(id) != null) {
+                int idMaster = subTask.get(id).getIdMaster();
+                subTask.get(id).setStatus(status);
+                checkEpicStatus(idMaster);
+            } else if (epicTask.get(id) != null) {
+                System.out.println("Вы не можете менять статус эпика, он рассчитывается исходя из статусов подзадач");
+            } else {
+                System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
+            }
+        } else {
+            System.out.println("Вы неверно ввели статус, попробуйте снова");
+        }
+    }
+    void changeDescription(Integer id, String description){
+        if (justTask.get(id) != null) justTask.get(id).setDescription(description);
+        else if (subTask.get(id) != null) subTask.get(id).setDescription(description);
+        else if (epicTask.get(id) != null) epicTask.get(id).setDescription(description);
+        else System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
+    }
+    void changeName(Integer id, String name){
+        if (justTask.get(id) != null) justTask.get(id).setName(name);
+        else if (subTask.get(id) != null) subTask.get(id).setName(name);
+        else if (epicTask.get(id) != null) epicTask.get(id).setName(name);
+        else System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
+    }
+    private void checkEpicStatus(Integer idMaster){
         if (epicTask.get(idMaster).getListIdSubtask().size() != 0){
             int wordNew = 0;
             int wordDone = 0;
@@ -122,6 +152,11 @@ public class Manager {
             }
         }
     }
+     private boolean checkInputStatus(String status){
+        boolean inputStatus = false;
+        if (status.equals("NEW") || status.equals("IN_PROGRESS") || status.equals("DONE")) inputStatus = true;
+        return inputStatus;
+     }
 
 
     /*
