@@ -2,29 +2,44 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Manager {
+    /*
+    Очень рад, что пасхалочка о Postal2 была замечена)))
+    По поводу замечания: "Нужно добавить методы, которые вернут списки (List) задач/эпиков/подзадач
+     - такое задание в ТЗ"
+     Я не совсем понял для чего пользователю именно список, интерфейс List мы еще не проходили(
+     Я бы возвращал тогда не список, а всю таблицу(HashMap), так как в списке нет номеров задачи (id)
+     и, соответственно, от списка я пока пользы не вижу...
+     а вообще пункт "2.1 Получение списка всех задач." я понял как то, что реализовал в методах
+     printAllJustTask, printAllEpicTask и printAllSubTask соответственно...
+     Но замечание поправил и сделал методы getListAllJustTask, getListAllEpicTask и getListAllSubTask.
+     */
     HashMap<Integer, JustTask> justTask = new HashMap<>();
     HashMap<Integer, Epic> epicTask = new HashMap<>();
     HashMap<Integer, Subtask> subTask = new HashMap<>();
     int idTask = 0;
 
-    void saveJustTask(String name, String description) {
+    Integer saveJustTask(String name, String description) {
         ++idTask;
-        String status = "New";
+        String status = "NEW";          // enum действительно здорово. на будущее учту.
         if (!justTask.containsKey(idTask)) {
             justTask.put(idTask, new JustTask(name, description, status));
+            System.out.println("Задача сохранена под номером '" + idTask + "'");
         }
+        return idTask;
     }
 
-    void saveEpicTask(String name, String description) {
+    Integer saveEpicTask(String name, String description) {
         ++idTask;
         String status = "NEW";
         if (!epicTask.containsKey(idTask)) {
             ArrayList<Integer> listIdSubtask = new ArrayList<>();
             epicTask.put(idTask, new Epic(name, description, status, listIdSubtask));
+            System.out.println("Задача сохранена под номером '" + idTask + "'");
         }
+        return idTask;
     }
 
-    void saveSubTask(String name, String description, Integer idMaster) {
+    Integer saveSubTask(String name, String description, Integer idMaster) {
         ++idTask;
         String status = "NEW";
         if (!epicTask.containsKey(idMaster)) {
@@ -33,9 +48,11 @@ public class Manager {
             if (!subTask.containsKey(idTask)) {
                 subTask.put(idTask, new Subtask(name, description, status, idMaster));
                 epicTask.get(idMaster).getListIdSubtask().add(idTask);
+                System.out.println("Задача сохранена под номером '" + idTask + "'");
             }
         }
         checkEpicStatus(idMaster);
+        return idTask;
     }
 
     void printAllJustTask() {
@@ -43,6 +60,13 @@ public class Manager {
         for (Integer key : justTask.keySet()) {
             System.out.println("Задача №" + key + justTask.get(key));
         }
+    }
+    ArrayList<JustTask> getListAllJustTask() {
+        ArrayList<JustTask> list = new ArrayList<>();
+        for (Integer key : justTask.keySet()) {
+            list.add(justTask.get(key));
+        }
+        return list;
     }
 
     void printAllEpicTask() {
@@ -61,12 +85,27 @@ public class Manager {
             }
         }
     }
+    ArrayList<Epic> getListAllEpicTask() {
+        ArrayList<Epic> list = new ArrayList<>();
+        for (Integer key : epicTask.keySet()) {
+            list.add(epicTask.get(key));
+        }
+        return list;
+    }
+
     void printAllSubTask(){
         System.out.println("Список подзадач: ");
         for (Integer key : subTask.keySet()) {
             System.out.println("Подзадача №:" + key + subTask.get(key) + ", находится в эпике №"
                     + subTask.get(key).getIdMaster());
         }
+    }
+    ArrayList<Subtask> getListSubTask() {
+        ArrayList<Subtask> list = new ArrayList<>();
+        for (Integer key : subTask.keySet()) {
+            list.add(subTask.get(key));
+        }
+        return list;
     }
     void showTask(Integer id) {
           if (justTask.get(id) != null) System.out.println("Задача №" + id + justTask.get(id));

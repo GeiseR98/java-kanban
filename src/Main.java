@@ -10,6 +10,9 @@ public class Main {
         manager.saveSubTask("взять чек", "Чек находится в кабинете главы кампании Running With Scissors",  3);
         manager.saveSubTask("обналичить чек", "Чек можно обналичить в Банке Парадайз",  3);
         manager.saveSubTask("купить молоко", "Молоко продаётся в магазине 'счастливый Ганеш'",  3);
+        manager.printAllJustTask();
+        manager.printAllEpicTask();
+        manager.printAllSubTask();
         manager.changeDescription(1, "рядом с местом голосования вход в здание с игровыми автоматами, " +
                 "дальше черный ход и над выходом будет обрез");
         manager.removeTask(2);
