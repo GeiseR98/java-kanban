@@ -64,7 +64,8 @@ public class Manager {
     void printAllSubTask(){
         System.out.println("Список подзадач: ");
         for (Integer key : subTask.keySet()) {
-            System.out.println("Подзадача №:" + key + subTask.get(key) + ", находится в эпике №" + subTask.get(key).getIdMaster());
+            System.out.println("Подзадача №:" + key + subTask.get(key) + ", находится в эпике №"
+                    + subTask.get(key).getIdMaster());
         }
     }
     void showTask(Integer id) {
@@ -76,7 +77,8 @@ public class Manager {
                 System.out.println("        подзадача №" + epicTask.get(id).getListIdSubtask().get(i)
                         + " - " + subTask.get(epicTask.get(id).getListIdSubtask().get(i)).getName());
             }
-        } else if (subTask.get(id) != null) System.out.println("Подзадача №:" + id + subTask.get(id) + ", находится в эпике №" + subTask.get(id).getIdMaster());
+        } else if (subTask.get(id) != null) System.out.println("Подзадача №:" + id + subTask.get(id)
+                  + ", находится в эпике №" + subTask.get(id).getIdMaster());
           else System.out.println("задачи с таким номером не обнаружено");
     }
     void removeTask(Integer id){
@@ -101,6 +103,11 @@ public class Manager {
         } else {
             System.out.println("Такой задачи не обнаружено");
         }
+    }
+    void removeAllTask(){
+        for (Integer key : justTask.keySet()) justTask.remove(key);
+        for (Integer key : subTask.keySet()) subTask.remove(key);
+        for (Integer key : epicTask.keySet()) epicTask.remove(key);
     }
     void changeStatus(Integer id, String status){
         if (checkInputStatus(status)) {
@@ -160,9 +167,7 @@ public class Manager {
 
 
     /*
-    ~~1) Возможность хранить задачи всех типов. Для этого вам нужно выбрать подходящую коллекцию.
     2) Методы для каждого из типа задач(Задача/Эпик/Подзадача):
-        2.1 Получение списка всех задач.
         2.2 Удаление всех задач.
         2.3 Получение по идентификатору.
         2.4 Создание. Сам объект должен передаваться в качестве параметра.
