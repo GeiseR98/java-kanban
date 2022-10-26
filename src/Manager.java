@@ -3,16 +3,15 @@ import java.util.HashMap;
 
 public class Manager {
     /*
-    Очень рад, что пасхалочка о Postal2 была замечена)))
-    По поводу замечания: "Нужно добавить методы, которые вернут списки (List) задач/эпиков/подзадач
-     - такое задание в ТЗ"
-     Я не совсем понял для чего пользователю именно список, интерфейс List мы еще не проходили(
-     Я бы возвращал тогда не список, а всю таблицу(HashMap), так как в списке нет номеров задачи (id)
-     и, соответственно, от списка я пока пользы не вижу...
-     а вообще пункт "2.1 Получение списка всех задач." я понял как то, что реализовал в методах
-     printAllJustTask, printAllEpicTask и printAllSubTask соответственно...
-     Но замечание поправил и сделал методы getListAllJustTask, getListAllEpicTask и getListAllSubTask.
+    Готово, ох и долго же я пытался понять, что от меня хотят)))
+    Получается что ID у меня теперь дублируется, в ключе таблицы и в самом обьекте.
+    Нашел несколько плюсов в этом, например то что теперь для печати всех задач достаточно метода toString,
+    и при этом осталась возможность обратиться к любой из задач по ключу.
+    Но все равно не очень понятно почему важно возвращение именно списка, а не таблицы,
+    т.к. (возможно пока ещё) не знаю очевидных плюсов работы со списком, а вот плюсы работы с таблицей уже знаю.
+     Методы getListAllJustTask, getListAllEpicTask, getListAllSubTask возвращают нужный список.
      */
+
     HashMap<Integer, JustTask> justTask = new HashMap<>();
     HashMap<Integer, Epic> epicTask = new HashMap<>();
     HashMap<Integer, Subtask> subTask = new HashMap<>();
@@ -20,9 +19,9 @@ public class Manager {
 
     Integer saveJustTask(String name, String description) {
         ++idTask;
-        String status = "NEW";          // enum действительно здорово. на будущее учту.
+        String status = "NEW";
         if (!justTask.containsKey(idTask)) {
-            justTask.put(idTask, new JustTask(name, description, status));
+            justTask.put(idTask, new JustTask(idTask, name, description, status));
             System.out.println("Задача сохранена под номером '" + idTask + "'");
         }
         return idTask;
@@ -33,7 +32,7 @@ public class Manager {
         String status = "NEW";
         if (!epicTask.containsKey(idTask)) {
             ArrayList<Integer> listIdSubtask = new ArrayList<>();
-            epicTask.put(idTask, new Epic(name, description, status, listIdSubtask));
+            epicTask.put(idTask, new Epic(idTask, name, description, status, listIdSubtask));
             System.out.println("Задача сохранена под номером '" + idTask + "'");
         }
         return idTask;
@@ -46,7 +45,7 @@ public class Manager {
             System.out.println("Такого эпика не существует, создайте сначала эпик");
         } else {
             if (!subTask.containsKey(idTask)) {
-                subTask.put(idTask, new Subtask(name, description, status, idMaster));
+                subTask.put(idTask, new Subtask(idTask, name, description, status, idMaster));
                 epicTask.get(idMaster).getListIdSubtask().add(idTask);
                 System.out.println("Задача сохранена под номером '" + idTask + "'");
             }

@@ -9,8 +9,8 @@ public class Epic extends JustTask {
     }
 
 
-    public Epic(String name, String description, String status, ArrayList<Integer> listIdSubtask) {
-        super(name, description, status);
+    public Epic(int id, String name, String description, String status, ArrayList<Integer> listIdSubtask) {
+        super(id, name, description, status);
         this.listIdSubtask = listIdSubtask;
     }
 
@@ -21,7 +21,8 @@ public class Epic extends JustTask {
     @Override
     public String toString() {
         return " - {" +
-                "название: '" + super.getName() + '\'' +
+                "id'" + super.getId() + '\'' +
+                " название: '" + super.getName() + '\'' +
                 ", описание: '" + super.getDescription() + '\'' +
                 ", статус: '" + super.getStatus() + '\'' +
                 '}';

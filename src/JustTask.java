@@ -1,11 +1,13 @@
 public class JustTask {
 
-    private String name;                               // имя задачи (вводит пользователь)
-    private String description;                        // описание (вводит пользователь)
-    private String status;                             // статус задачи (хрен знает кто и как вводит, ну у эпиков расчитывается исходя из подзадач
+    private int id;
+    private String name;
+    private String description;
+    private String status;
 
 
-    public JustTask(String name, String description, String status) {
+    public JustTask(int id, String name, String description, String status) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.status = status;
@@ -23,6 +25,10 @@ public class JustTask {
         this.status = status;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -37,7 +43,8 @@ public class JustTask {
     @Override
     public String toString() {
         return " - {" +
-                "Название: '" + name + '\'' +
+                "id'" + id + '\'' +
+                " название: '" + name + '\'' +
                 ", описание: '" + description + '\'' +
                 ", статус: '" + status + '\'' +
                 '}';

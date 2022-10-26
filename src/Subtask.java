@@ -1,8 +1,8 @@
 public class Subtask extends JustTask {
 
     private Integer idMaster;
-    public Subtask(String name, String description, String status, Integer idMaster) {
-        super(name, description, status);
+    public Subtask(int id, String name, String description, String status, Integer idMaster) {
+        super(id, name, description, status);
         this.idMaster = idMaster;
     }
 
@@ -17,7 +17,8 @@ public class Subtask extends JustTask {
     @Override
     public String toString() {
         return " - {" +
-                "название: '" + super.getName() + '\'' +
+                "id'" + super.getId() + '\'' +
+                " название: '" + super.getName() + '\'' +
                 ", описание: '" + super.getDescription() + '\'' +
                 ", статус: '" + super.getStatus() + '\'' +
                 '}';
