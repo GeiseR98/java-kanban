@@ -1,7 +1,7 @@
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
-public class InMemoryTaskManager implements Manager {
+public class InMemoryTaskTuskManager implements TuskManager {
 
     int idTask = 0;
 
@@ -103,6 +103,7 @@ public class InMemoryTaskManager implements Manager {
     }
     @Override
     public void showTask(Integer id) {
+        addHistory(id);
         if (justTask.get(id) != null) System.out.println("Задача №" + id + justTask.get(id));
         else if (epicTask.get(id) != null) {
             System.out.println("Эпик №" + id + epicTask.get(id));
@@ -171,6 +172,22 @@ public class InMemoryTaskManager implements Manager {
         else if (subTask.get(id) != null) subTask.get(id).setDescription(description);
         else if (epicTask.get(id) != null) epicTask.get(id).setDescription(description);
         else System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
+    }
+
+    @Override
+    public List<JustTask> getHistory() {
+        return history ;
+    }
+    public void addHistory(Integer id) {
+        if (history.size() == 10) history.remove(0);
+        if (justTask.get(id) != null) history.add(justTask.get(id));
+        if (epicTask.get(id) != null) history.add(epicTask.get(id));
+        if (subTask.get(id) != null) history.add(subTask.get(id));
+        }
+    public void showHistory() {
+        for (JustTask view : history) {
+            System.out.println(view);
+        }
     }
     void changeName(Integer id, String name){
         if (justTask.get(id) != null) justTask.get(id).setName(name);

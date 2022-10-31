@@ -2,7 +2,7 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Поехали!");
-        InMemoryTaskManager manager = new InMemoryTaskManager();
+        InMemoryTaskTuskManager manager = new InMemoryTaskTuskManager();
         manager.saveJustTask("Найти оружие", "лопата валяется рядом с трейлером");
         manager.saveJustTask("Покормить Чампа", "нужно добыть где то собачье лакомство");
         manager.saveEpicTask("понедельник", "пройтись по списку жены");
@@ -19,5 +19,18 @@ public class Main {
         manager.removeTask(4);
         manager.changeStatus(5, "DONE");
         manager.showTask(3);
+        manager.showTask(1);
+        manager.showTask(5);
+        manager.showTask(6);
+        manager.showTask(3);
+        manager.showTask(1);
+        manager.showTask(6);
+        manager.showTask(5);
+        manager.showTask(3);
+        manager.showTask(1);
+        manager.showTask(1);
+        manager.showTask(1);
+        manager.showTask(5);
+        manager.showHistory();
     }
 }
