@@ -2,7 +2,7 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Поехали!");
-        Manager manager = new Manager();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
         manager.saveJustTask("Найти оружие", "лопата валяется рядом с трейлером");
         manager.saveJustTask("Покормить Чампа", "нужно добыть где то собачье лакомство");
         manager.saveEpicTask("понедельник", "пройтись по списку жены");
