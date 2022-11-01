@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Epic extends JustTask {
+public class EpicTask extends Task {
 
     private ArrayList<Integer> listIdSubtask;
 
@@ -9,7 +9,7 @@ public class Epic extends JustTask {
     }
 
 
-    public Epic(int id, String name, String description, Status status, ArrayList<Integer> listIdSubtask) {
+    public EpicTask(int id, String name, String description, Status status, ArrayList<Integer> listIdSubtask) {
         super(id, name, description, status);
         this.listIdSubtask = listIdSubtask;
     }

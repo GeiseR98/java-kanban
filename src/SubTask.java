@@ -1,7 +1,7 @@
-public class Subtask extends JustTask {
+public class SubTask extends Task {
 
     private Integer idMaster;
-    public Subtask(int id, String name, String description, Status status, Integer idMaster) {
+    public SubTask(int id, String name, String description, Status status, Integer idMaster) {
         super(id, name, description, status);
         this.idMaster = idMaster;
     }

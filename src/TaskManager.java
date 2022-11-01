@@ -2,12 +2,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public interface TuskManager {
+public interface TaskManager {
     HashMap<Integer, JustTask> justTask = new HashMap<>();
-    HashMap<Integer, Epic> epicTask = new HashMap<>();
-    HashMap<Integer, Subtask> subTask = new HashMap<>();
+    HashMap<Integer, EpicTask> epicTask = new HashMap<>();
+    HashMap<Integer, SubTask> subTask = new HashMap<>();
 
-    List<JustTask> history = new ArrayList<>();
+    List<Task> history = new ArrayList<>();
 
     int idTask = 0;
 
@@ -19,10 +19,10 @@ public interface TuskManager {
     ArrayList<JustTask> getListAllJustTask();
 
     void printAllEpicTask();
-    ArrayList<Epic> getListAllEpicTask();
+    ArrayList<EpicTask> getListAllEpicTask();
 
     void printAllSubTask();
-    ArrayList<Subtask> getListSubTask();
+    ArrayList<SubTask> getListSubTask();
 
     void showTask(Integer id);
     void removeTask(Integer id);
@@ -31,7 +31,7 @@ public interface TuskManager {
     void changeStatus(Integer id, Status status);
 
     void changeDescription(Integer id, String description);
-    List<JustTask> getHistory();
+    List<Task> getHistory();
 
 
 }

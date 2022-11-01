@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMemoryTaskTuskManager implements TuskManager {
+public class InMemoryTaskManager implements TaskManager {
 
     int idTask = 0;
 
@@ -22,7 +22,7 @@ public class InMemoryTaskTuskManager implements TuskManager {
         Status status = Status.NEW;
         if (!epicTask.containsKey(idTask)) {
             ArrayList<Integer> listIdSubtask = new ArrayList<>();
-            epicTask.put(idTask, new Epic(idTask, name, description, status, listIdSubtask));
+            epicTask.put(idTask, new EpicTask(idTask, name, description, status, listIdSubtask));
             System.out.println("Задача сохранена под номером '" + idTask + "'");
         }
         return idTask;
@@ -36,7 +36,7 @@ public class InMemoryTaskTuskManager implements TuskManager {
             System.out.println("Такого эпика не существует, создайте сначала эпик");
         } else {
             if (!subTask.containsKey(idTask)) {
-                subTask.put(idTask, new Subtask(idTask, name, description, status, idMaster));
+                subTask.put(idTask, new SubTask(idTask, name, description, status, idMaster));
                 epicTask.get(idMaster).getListIdSubtask().add(idTask);
                 System.out.println("Задача сохранена под номером '" + idTask + "'");
             }
@@ -78,8 +78,8 @@ public class InMemoryTaskTuskManager implements TuskManager {
         }
     }
     @Override
-    public ArrayList<Epic> getListAllEpicTask() {
-        ArrayList<Epic> list = new ArrayList<>();
+    public ArrayList<EpicTask> getListAllEpicTask() {
+        ArrayList<EpicTask> list = new ArrayList<>();
         for (Integer key : epicTask.keySet()) {
             list.add(epicTask.get(key));
         }
@@ -94,8 +94,8 @@ public class InMemoryTaskTuskManager implements TuskManager {
         }
     }
     @Override
-    public ArrayList<Subtask> getListSubTask() {
-        ArrayList<Subtask> list = new ArrayList<>();
+    public ArrayList<SubTask> getListSubTask() {
+        ArrayList<SubTask> list = new ArrayList<>();
         for (Integer key : subTask.keySet()) {
             list.add(subTask.get(key));
         }
@@ -178,7 +178,7 @@ public class InMemoryTaskTuskManager implements TuskManager {
     }
 
     @Override
-    public List<JustTask> getHistory() {
+    public List<Task> getHistory() {
         return history ;
     }
     public void addHistory(Integer id) {
@@ -188,7 +188,7 @@ public class InMemoryTaskTuskManager implements TuskManager {
         if (subTask.get(id) != null) history.add(subTask.get(id));
         }
     public void showHistory() {
-        for (JustTask view : history) {
+        for (Task view : history) {
             System.out.println(view);
         }
     }
@@ -203,9 +203,9 @@ public class InMemoryTaskTuskManager implements TuskManager {
             int wordNew = 0;
             int wordDone = 0;
             for (int i = 0; i < epicTask.get(idMaster).getListIdSubtask().size(); i++){
-                if (subTask.get(epicTask.get(idMaster).getListIdSubtask().get(i)).getStatus().equals("NEW")){
+                if (subTask.get(epicTask.get(idMaster).getListIdSubtask().get(i)).getStatus().equals(Status.NEW)){
                     wordNew++;
-                } else if (subTask.get(epicTask.get(idMaster).getListIdSubtask().get(i)).getStatus().equals("DONE")){
+                } else if (subTask.get(epicTask.get(idMaster).getListIdSubtask().get(i)).getStatus().equals(Status.DONE)){
                     wordDone++;
                 }
             }
