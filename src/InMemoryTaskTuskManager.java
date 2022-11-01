@@ -8,7 +8,7 @@ public class InMemoryTaskTuskManager implements TuskManager {
     @Override
     public Integer saveJustTask(String name, String description) {
         ++idTask;
-        String status = "NEW";
+        Status status = Status.NEW;
         if (!justTask.containsKey(idTask)) {
             justTask.put(idTask, new JustTask(idTask, name, description, status));
             System.out.println("Задача сохранена под номером '" + idTask + "'");
@@ -19,7 +19,7 @@ public class InMemoryTaskTuskManager implements TuskManager {
     @Override
     public Integer saveEpicTask(String name, String description) {
         ++idTask;
-        String status = "NEW";
+        Status status = Status.NEW;
         if (!epicTask.containsKey(idTask)) {
             ArrayList<Integer> listIdSubtask = new ArrayList<>();
             epicTask.put(idTask, new Epic(idTask, name, description, status, listIdSubtask));
@@ -31,7 +31,7 @@ public class InMemoryTaskTuskManager implements TuskManager {
     @Override
     public Integer saveSubTask(String name, String description, Integer idMaster) {
         ++idTask;
-        String status = "NEW";
+        Status status = Status.NEW;
         if (!epicTask.containsKey(idMaster)) {
             System.out.println("Такого эпика не существует, создайте сначала эпик");
         } else {
@@ -147,8 +147,11 @@ public class InMemoryTaskTuskManager implements TuskManager {
         for (Integer key : epicTask.keySet()) epicTask.remove(key);
         System.out.println("Все задачи удалены");
     }
+
+
+
     @Override
-    public void changeStatus(Integer id, String status){
+    public void changeStatus(Integer id, Status status){
         if (checkInputStatus(status)) {
             if (justTask.get(id) != null) {
                 justTask.get(id).setStatus(status);
@@ -207,17 +210,19 @@ public class InMemoryTaskTuskManager implements TuskManager {
                 }
             }
             if (wordNew == epicTask.get(idMaster).getListIdSubtask().size()){
-                epicTask.get(idMaster).setStatus("NEW");
+                epicTask.get(idMaster).setStatus(Status.NEW);
             } else if (wordDone == epicTask.get(idMaster).getListIdSubtask().size()){
-                epicTask.get(idMaster).setStatus("DONE");
+                epicTask.get(idMaster).setStatus(Status.DONE);
             } else {
-                epicTask.get(idMaster).setStatus("IN_PROGRESS");
+                epicTask.get(idMaster).setStatus(Status.IN_PROGRESS);
             }
         }
     }
-    private boolean checkInputStatus(String status){
+    private boolean checkInputStatus(Status status){
         boolean inputStatus = false;
-        if (status.equals("NEW") || status.equals("IN_PROGRESS") || status.equals("DONE")) inputStatus = true;
+        if (status.equals(Status.NEW)
+                || status.equals(Status.IN_PROGRESS)
+                || status.equals(Status.DONE)) inputStatus = true;
         return inputStatus;
     }
 }

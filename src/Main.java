@@ -17,7 +17,7 @@ public class Main {
                 "дальше черный ход и над выходом будет обрез");
         manager.removeTask(2);
         manager.removeTask(4);
-        manager.changeStatus(5, "DONE");
+        manager.changeStatus(5, Status.DONE);
         manager.showTask(3);
         manager.showTask(1);
         manager.showTask(5);

@@ -27,7 +27,11 @@ public interface TuskManager {
     void showTask(Integer id);
     void removeTask(Integer id);
     void removeAllTask();
-    void changeStatus(Integer id, String status);
+
+    void changeStatus(Integer id, Status status);
+
     void changeDescription(Integer id, String description);
     List<JustTask> getHistory();
+
+
 }

@@ -9,7 +9,7 @@ public class Epic extends JustTask {
     }
 
 
-    public Epic(int id, String name, String description, String status, ArrayList<Integer> listIdSubtask) {
+    public Epic(int id, String name, String description, Status status, ArrayList<Integer> listIdSubtask) {
         super(id, name, description, status);
         this.listIdSubtask = listIdSubtask;
     }
