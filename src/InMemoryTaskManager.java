@@ -127,7 +127,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void showTask(Integer id) {
-        if (justTask.get(id) != null) System.out.println("Задача №" + id + justTask.get(id));
+        if (justTask.get(id) != null) {
+            System.out.println("Задача №" + id + justTask.get(id));
+        }
         else if (epicTask.get(id) != null) {
             System.out.println("Эпик №" + id + epicTask.get(id));
             System.out.println("    подзадачи эпика: ");
@@ -152,6 +154,11 @@ public class InMemoryTaskManager implements TaskManager {
                 epicTask.remove(id);
                 System.out.println("Эпик №" + id + " успешно удален вместе с подзадачами.");
             } else {
+                /*
+                Комментарий: "можно не делать эту ветку, если нет подзадач код сделает то же самое."
+                Сделал эту ветку из-за разницы ответов. Я понимаю что на работоспособность программы,
+                 эта строчка не влияет. Спасибо за внимательность)
+                 */
                 epicTask.remove(id);
                 System.out.println("Эпик №" + id + " успешно удален");
             }
@@ -194,17 +201,32 @@ public class InMemoryTaskManager implements TaskManager {
     }
     @Override
     public void changeDescription(Integer id, String description){
-        if (justTask.get(id) != null) justTask.get(id).setDescription(description);
-        else if (subTask.get(id) != null) subTask.get(id).setDescription(description);
-        else if (epicTask.get(id) != null) epicTask.get(id).setDescription(description);
-        else System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
+        if (justTask.get(id) != null) {
+            justTask.get(id).setDescription(description);
+        }
+        else if (subTask.get(id) != null) {
+            subTask.get(id).setDescription(description);
+        }
+        else if (epicTask.get(id) != null) {
+            epicTask.get(id).setDescription(description);
+        }
+        else {
+            System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
+        }
     }
 
     void changeName(Integer id, String name){
-        if (justTask.get(id) != null) justTask.get(id).setName(name);
-        else if (subTask.get(id) != null) subTask.get(id).setName(name);
-        else if (epicTask.get(id) != null) epicTask.get(id).setName(name);
-        else System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
+        if (justTask.get(id) != null) {
+            justTask.get(id).setName(name);
+        }
+        else if (subTask.get(id) != null) {
+            subTask.get(id).setName(name);
+        }
+        else if (epicTask.get(id) != null) {
+            epicTask.get(id).setName(name);
+        } else {
+            System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
+        }
     }
     private void checkEpicStatus(Integer idMaster){
         if (epicTask.get(idMaster).getListIdSubtask().size() != 0){

@@ -3,13 +3,16 @@ import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
+    int storySize = 10;
     public static List<Task> history = new ArrayList<>();
-    
-   // public static InMemoryHistoryManager memoryHistory = new InMemoryHistoryManager();
 
     public void addHistory(Task task) {
-        if (history.size() == 10) history.remove(0);
-        if (task != null) history.add(task);
+        if (history.size() == storySize) {
+            history.remove(0);
+        }
+        if (task != null) {
+            history.add(task);
+        }
     }
 
     @Override
