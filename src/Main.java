@@ -31,6 +31,5 @@ public class Main {
         taskManager.showTask(1);
         taskManager.showTask(1);
         taskManager.showTask(5);
-        taskManager.showHistory();
     }
 }

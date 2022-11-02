@@ -1,16 +1,17 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    HashMap<Integer, JustTask> justTask = new HashMap<>();
+    public HashMap<Integer, JustTask> justTask = new HashMap<>();
 
-    HashMap<Integer, EpicTask> epicTask = new HashMap<>();
+    public HashMap<Integer, EpicTask> epicTask = new HashMap<>();
 
-    HashMap<Integer, SubTask> subTask = new HashMap<>();
+    public HashMap<Integer, SubTask> subTask = new HashMap<>();
 
     int idTask = 0;
+
+    InMemoryHistoryManager history = new InMemoryHistoryManager() ;
 
     @Override
     public Integer saveJustTask(String name, String description) {
@@ -109,8 +110,15 @@ public class InMemoryTaskManager implements TaskManager {
         return list;
     }
     @Override
+    public Task getTask (Integer id) {
+        if (justTask.get(id) != null) return justTask.get(id);
+        if (epicTask.get(id) != null) return epicTask.get(id);
+        if (subTask.get(id) != null) return subTask.get(id);
+        else return null;
+    }
+
+    @Override
     public void showTask(Integer id) {
-        addHistory(id);
         if (justTask.get(id) != null) System.out.println("Задача №" + id + justTask.get(id));
         else if (epicTask.get(id) != null) {
             System.out.println("Эпик №" + id + epicTask.get(id));
@@ -184,21 +192,6 @@ public class InMemoryTaskManager implements TaskManager {
         else System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
     }
 
-    @Override
-    public List<Task> getHistory() {
-        return history ;
-    }
-    public void addHistory(Integer id) {
-        if (history.size() == 10) history.remove(0);
-        if (justTask.get(id) != null) history.add(justTask.get(id));
-        if (epicTask.get(id) != null) history.add(epicTask.get(id));
-        if (subTask.get(id) != null) history.add(subTask.get(id));
-        }
-    public void showHistory() {
-        for (Task view : history) {
-            System.out.println(view);
-        }
-    }
     void changeName(Integer id, String name){
         if (justTask.get(id) != null) justTask.get(id).setName(name);
         else if (subTask.get(id) != null) subTask.get(id).setName(name);
