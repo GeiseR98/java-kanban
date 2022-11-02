@@ -3,13 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface TaskManager {
-    HashMap<Integer, JustTask> justTask = new HashMap<>();
-    HashMap<Integer, EpicTask> epicTask = new HashMap<>();
-    HashMap<Integer, SubTask> subTask = new HashMap<>();
-
     List<Task> history = new ArrayList<>();
-
-    int idTask = 0;
 
     Integer saveJustTask(String name, String description);
     Integer saveEpicTask(String name, String description);
