@@ -1,3 +1,8 @@
+import History.InMemoryHistoryManager;
+import Tasks.Status;
+import Tasks.TaskManager;
+import utilit.Manager;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -35,7 +40,7 @@ public class Main {
         System.out.println(taskManager.getTask(6));
         System.out.println(taskManager.getTask(7));
         System.out.println(taskManager.getTask(8));
-        // System.out.println(InMemoryHistoryManager.history);  // получение истории списком
+        // System.out.println(History.InMemoryHistoryManager.history);  // получение истории списком
         // inMemoryHistoryManager.showHistory();                // получение истории "позадачно"
     }
 }

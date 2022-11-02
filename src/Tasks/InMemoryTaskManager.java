@@ -1,3 +1,8 @@
+package Tasks;
+
+import History.HistoryManager;
+import utilit.Manager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 

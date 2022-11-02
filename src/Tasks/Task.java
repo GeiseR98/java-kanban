@@ -1,4 +1,6 @@
-abstract class  Task {
+package Tasks;
+
+public abstract class  Task {
     private int id;
     private String name;
     private String description;
