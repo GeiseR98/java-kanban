@@ -9,9 +9,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     public HashMap<Integer, SubTask> subTask = new HashMap<>();
 
-    int idTask = 0;
+    HistoryManager historyManager = Manager.getDefaultHistory();
 
-    HistoryManager history = Manager.getDefaultHistory() ;
+    int idTask = 0;
 
     @Override
     public Integer saveJustTask(String name, String description) {
@@ -111,10 +111,18 @@ public class InMemoryTaskManager implements TaskManager {
     }
     @Override
     public Task getTask (Integer id) {
-        if (justTask.get(id) != null) return justTask.get(id);
-        if (epicTask.get(id) != null) return epicTask.get(id);
-        if (subTask.get(id) != null) return subTask.get(id);
-        else return null;
+        if (justTask.get(id) != null) {
+            historyManager.addHistory(justTask.get(id));
+            return justTask.get(id);
+        } else if (epicTask.get(id) != null) {
+            historyManager.addHistory(epicTask.get(id));
+            return epicTask.get(id);
+        } else if (subTask.get(id) != null) {
+            historyManager.addHistory(subTask.get(id));
+            return subTask.get(id);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -222,7 +230,9 @@ public class InMemoryTaskManager implements TaskManager {
         boolean inputStatus = false;
         if (status.equals(Status.NEW)
                 || status.equals(Status.IN_PROGRESS)
-                || status.equals(Status.DONE)) inputStatus = true;
+                || status.equals(Status.DONE)) {
+            inputStatus = true;
+        }
         return inputStatus;
     }
 }

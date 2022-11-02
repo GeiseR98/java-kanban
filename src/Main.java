@@ -3,33 +3,39 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Поехали!");
         TaskManager taskManager = Manager.getDefault();
-        taskManager.saveJustTask("Найти оружие", "лопата валяется рядом с трейлером");
-        taskManager.saveJustTask("Покормить Чампа", "нужно добыть где то собачье лакомство");
-        taskManager.saveEpicTask("понедельник", "пройтись по списку жены");
-        taskManager.saveEpicTask("вторник", "снова какой то список");
-        taskManager.saveSubTask("взять чек", "Чек находится в кабинете главы кампании Running With Scissors",  3);
-        taskManager.saveSubTask("обналичить чек", "Чек можно обналичить в Банке Парадайз",  3);
-        taskManager.saveSubTask("купить молоко", "Молоко продаётся в магазине 'счастливый Ганеш'",  3);
+        InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
+        taskManager.saveJustTask("кошки", "тишина любит кошек");
+        taskManager.saveJustTask("оружие", "на бутылке с зажигательной смесью," +
+                " можно увидеть типичную советскую этикетку с надписью 'В.М.Молотов' вместе с его фотографией");
+        taskManager.saveEpicTask("вторник", "пройтись по списку жены");
+        taskManager.saveEpicTask("труба", "за домом нашлась какая то труба, нужно узнать что там");
+        taskManager.saveSubTask("исповедоваться в грехах",
+                " - Вы внесли пожертвования в ящик у входа? - Да - Тогда вы прощены сын мой!",3);
+        taskManager.saveSubTask("Собрать подписи",
+                "Придется застегнуть ширинку - иначе квест не пройти.",  3);
+        taskManager.saveSubTask("Вернуть книгу",
+                "'Спаси дерево - сожги книги', 'Ахтунг - Гитлер написал книгу!', 'Книги - зло'",  3);
+        taskManager.saveSubTask("Получить автограф",
+                "'Скажи, а разве такие штуки не становятся более ценными, когда человек... эээ... помрёт?'",  3);
         taskManager.printAllJustTask();
         taskManager.printAllEpicTask();
         taskManager.printAllSubTask();
-        taskManager.changeDescription(1, "рядом с местом голосования вход в здание с игровыми автоматами, " +
-                "дальше черный ход и над выходом будет обрез");
-        taskManager.removeTask(2);
-        taskManager.removeTask(4);
-        taskManager.changeStatus(5, Status.DONE);
-        taskManager.showTask(3);
-        taskManager.showTask(1);
-        taskManager.showTask(5);
-        taskManager.showTask(6);
-        taskManager.showTask(3);
-        taskManager.showTask(1);
-        taskManager.showTask(6);
-        taskManager.showTask(5);
-        taskManager.showTask(3);
-        taskManager.showTask(1);
-        taskManager.showTask(1);
-        taskManager.showTask(1);
-        taskManager.showTask(5);
+        taskManager.changeDescription(6, "Подпиши петицию или я приду к тебе домой и убью твою собаку!");
+        taskManager.changeStatus(8, Status.DONE);
+        System.out.println(taskManager.getTask(1));
+        System.out.println(taskManager.getTask(2));
+        System.out.println(taskManager.getTask(3));
+        System.out.println(taskManager.getTask(4));
+        System.out.println(taskManager.getTask(5));
+        System.out.println(taskManager.getTask(6));
+        System.out.println(taskManager.getTask(7));
+        System.out.println(taskManager.getTask(8));
+        System.out.println(taskManager.getTask(4));
+        System.out.println(taskManager.getTask(5));
+        System.out.println(taskManager.getTask(6));
+        System.out.println(taskManager.getTask(7));
+        System.out.println(taskManager.getTask(8));
+        // System.out.println(InMemoryHistoryManager.history);  // получение истории списком
+        // inMemoryHistoryManager.showHistory();                // получение истории "позадачно"
     }
 }

@@ -26,5 +26,4 @@ public interface TaskManager {
 
     void changeDescription(Integer id, String description);
 
-
 }
