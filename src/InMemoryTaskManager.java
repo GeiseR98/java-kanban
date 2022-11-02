@@ -11,7 +11,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     int idTask = 0;
 
-    InMemoryHistoryManager history = new InMemoryHistoryManager() ;
+    HistoryManager history = Manager.getDefaultHistory() ;
 
     @Override
     public Integer saveJustTask(String name, String description) {
@@ -61,8 +61,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
-    public ArrayList<JustTask> getListAllJustTask() {
-        ArrayList<JustTask> list = new ArrayList<>();
+    public ArrayList<Task> getListAllJustTask() {
+        ArrayList<Task> list = new ArrayList<>();
         for (Integer key : justTask.keySet()) {
             list.add(justTask.get(key));
         }
@@ -102,8 +102,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
-    public ArrayList<SubTask> getListSubTask() {
-        ArrayList<SubTask> list = new ArrayList<>();
+    public ArrayList<Task> getListSubTask() {
+        ArrayList<Task> list = new ArrayList<>();
         for (Integer key : subTask.keySet()) {
             list.add(subTask.get(key));
         }

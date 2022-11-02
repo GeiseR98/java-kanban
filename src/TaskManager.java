@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.List;
 
 public interface TaskManager {
 
@@ -9,13 +8,13 @@ public interface TaskManager {
     Integer saveSubTask(String name, String description, Integer idMaster);
 
     void printAllJustTask();
-    ArrayList<JustTask> getListAllJustTask();
+    ArrayList<Task> getListAllJustTask();
 
     void printAllEpicTask();
     ArrayList<EpicTask> getListAllEpicTask();
 
     void printAllSubTask();
-    ArrayList<SubTask> getListSubTask();
+    ArrayList<Task> getListSubTask();
 
     Task getTask(Integer id);
 
@@ -26,5 +25,6 @@ public interface TaskManager {
     void changeStatus(Integer id, Status status);
 
     void changeDescription(Integer id, String description);
+
 
 }
