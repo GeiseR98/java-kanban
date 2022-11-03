@@ -1,6 +1,6 @@
-import History.InMemoryHistoryManager;
-import Tasks.Status;
-import Tasks.TaskManager;
+import history.InMemoryHistoryManager;
+import tasks.Status;
+import tasks.TaskManager;
 import utilit.Manager;
 
 public class Main {
