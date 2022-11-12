@@ -27,11 +27,20 @@ public class Main {
         taskManager.printAllSubTask();
         taskManager.changeDescription(6, "Подпиши петицию или я приду к тебе домой и убью твою собаку!");
         taskManager.changeStatus(8, Status.DONE);
-        taskManager.removeTask(5);
-        taskManager.removeTask(6);
-        taskManager.showTask(3);
-
-        // System.out.println(History.InMemoryHistoryManager.history);  // получение истории списком
-        // inMemoryHistoryManager.showHistory();                // получение истории "позадачно"
+        System.out.println(taskManager.getTask(1));
+        System.out.println(taskManager.getTask(2));
+        System.out.println(taskManager.getTask(3));
+        System.out.println(taskManager.getTask(4));
+        System.out.println(taskManager.getTask(5));
+        System.out.println(taskManager.getTask(6));
+        System.out.println(taskManager.getTask(7));
+        System.out.println(taskManager.getTask(8));
+        System.out.println(taskManager.getTask(4));
+        System.out.println(taskManager.getTask(5));
+        System.out.println(taskManager.getTask(6));
+        System.out.println(taskManager.getTask(7));
+        System.out.println(taskManager.getTask(8));
+        System.out.println(history.InMemoryHistoryManager.history);  // получение истории списком
+        inMemoryHistoryManager.showHistory();                // получение истории "позадачно"
     }
 }
