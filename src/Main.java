@@ -1,3 +1,4 @@
+import history.HistoryManager;
 import history.InMemoryHistoryManager;
 import tasks.Status;
 import tasks.TaskManager;
@@ -7,8 +8,9 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Поехали!");
-        TaskManager taskManager = Manager.getDefault();
         InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
+        TaskManager taskManager = Manager.getDefault();
+        HistoryManager historyManager = Manager.getDefaultHistory();
         taskManager.saveJustTask("кошки", "тишина любит кошек");
         taskManager.saveJustTask("оружие", "на бутылке с зажигательной смесью," +
                 " можно увидеть типичную советскую этикетку с надписью 'В.М.Молотов' вместе с его фотографией");
