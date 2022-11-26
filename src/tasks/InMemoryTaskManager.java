@@ -5,14 +5,15 @@ import utilit.Manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    public HashMap<Integer, JustTask> justTask = new HashMap<>();
+    public Map<Integer, JustTask> justTask = new HashMap<>();
 
-    public HashMap<Integer, EpicTask> epicTask = new HashMap<>();
+    public Map<Integer, EpicTask> epicTask = new HashMap<>();
 
-    public HashMap<Integer, SubTask> subTask = new HashMap<>();
+    public Map<Integer, SubTask> subTask = new HashMap<>();
 
     HistoryManager historyManager = Manager.getDefaultHistory();
 

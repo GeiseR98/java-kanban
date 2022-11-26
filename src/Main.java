@@ -24,9 +24,6 @@ public class Main {
                 "'Спаси дерево - сожги книги', 'Ахтунг - Гитлер написал книгу!', 'Книги - зло'",  3);
         taskManager.saveSubTask("Получить автограф",
                 "'Скажи, а разве такие штуки не становятся более ценными, когда человек... эээ... помрёт?'",  3);
-        taskManager.printAllJustTask();
-        taskManager.printAllEpicTask();
-        taskManager.printAllSubTask();
         taskManager.changeDescription(6, "Подпиши петицию или я приду к тебе домой и убью твою собаку!");
         taskManager.changeStatus(8, Status.DONE);
         System.out.println(taskManager.getTask(1));
@@ -42,7 +39,6 @@ public class Main {
         System.out.println(taskManager.getTask(6));
         System.out.println(taskManager.getTask(7));
         System.out.println(taskManager.getTask(8));
-        System.out.println(history.InMemoryHistoryManager.history);  // получение истории списком
-        inMemoryHistoryManager.showHistory();                // получение истории "позадачно"
+
     }
 }
