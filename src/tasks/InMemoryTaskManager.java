@@ -1,6 +1,7 @@
 package tasks;
 
 import history.HistoryManager;
+import history.InMemoryHistoryManager;
 import utilit.Manager;
 
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ public class InMemoryTaskManager implements TaskManager {
     public Map<Integer, SubTask> subTask = new HashMap<>();
 
     HistoryManager historyManager = Manager.getDefaultHistory();
+
+    InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
 
     int idTask = 0;
 
@@ -151,13 +154,16 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeTask(Integer id){
         if (justTask.get(id) != null){
             justTask.remove(id);
+            historyManager.remove(id);
             System.out.println("Задача №" + id + " успешно удалена...");
         } else if (epicTask.get(id) != null){
             if (epicTask.get(id).getListIdSubtask().size() != 0) {
                 for (int i = 0; i < epicTask.get(id).getListIdSubtask().size(); i++) {
                     subTask.remove(epicTask.get(id).getListIdSubtask().get(i));
+                    historyManager.remove(epicTask.get(id).getListIdSubtask().get(i));
                 }
                 epicTask.remove(id);
+                historyManager.remove(id);
                 System.out.println("Эпик №" + id + " успешно удален вместе с подзадачами.");
             } else {
                 /*
@@ -166,12 +172,14 @@ public class InMemoryTaskManager implements TaskManager {
                  эта строчка не влияет. Спасибо за внимательность)
                  */
                 epicTask.remove(id);
+                historyManager.remove(id);
                 System.out.println("Эпик №" + id + " успешно удален");
             }
         } else if (subTask.get(id) != null) {
             int idMaster = subTask.get(id).getIdMaster();
             epicTask.get(idMaster).getListIdSubtask().remove(id) ;
             subTask.remove(id);
+            historyManager.remove(id);
             checkEpicStatus(idMaster);
         } else {
             System.out.println("Такой задачи не обнаружено");
@@ -182,6 +190,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (Integer key : justTask.keySet()) justTask.remove(key);
         for (Integer key : subTask.keySet()) subTask.remove(key);
         for (Integer key : epicTask.keySet()) epicTask.remove(key);
+        inMemoryHistoryManager.removeAllHistory();
         System.out.println("Все задачи удалены");
     }
 

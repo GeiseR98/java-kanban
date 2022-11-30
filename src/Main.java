@@ -8,7 +8,6 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Поехали!");
-        InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
         TaskManager taskManager = Manager.getDefault();
         HistoryManager historyManager = Manager.getDefaultHistory();
         taskManager.saveJustTask("кошки", "тишина любит кошек");
@@ -27,18 +26,18 @@ public class Main {
         taskManager.changeDescription(6, "Подпиши петицию или я приду к тебе домой и убью твою собаку!");
         taskManager.changeStatus(8, Status.DONE);
         System.out.println(taskManager.getTask(1));
+        System.out.println(historyManager.getHistory());
+        System.out.println(historyManager.getHistory());
         System.out.println(taskManager.getTask(2));
+        System.out.println(historyManager.getHistory());
+        taskManager.removeTask(2);
+        System.out.println(historyManager.getHistory());
         System.out.println(taskManager.getTask(3));
-        System.out.println(taskManager.getTask(4));
-        System.out.println(taskManager.getTask(5));
-        System.out.println(taskManager.getTask(6));
-        System.out.println(taskManager.getTask(7));
+        System.out.println(historyManager.getHistory());
         System.out.println(taskManager.getTask(8));
-        System.out.println(taskManager.getTask(4));
-        System.out.println(taskManager.getTask(5));
-        System.out.println(taskManager.getTask(6));
-        System.out.println(taskManager.getTask(7));
-        System.out.println(taskManager.getTask(8));
-
+        System.out.println(historyManager.getHistory());
+        System.out.println(taskManager.getTask(3));
+        taskManager.removeTask(3);
+        System.out.println(historyManager.getHistory());
     }
 }
