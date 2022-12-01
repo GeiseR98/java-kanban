@@ -1,5 +1,6 @@
 package tasks;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
 
@@ -27,4 +28,5 @@ public interface TaskManager {
 
     void changeDescription(Integer id, String description);
 
+    List<Task>  getHistory();
 }

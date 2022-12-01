@@ -86,6 +86,8 @@ public class InMemoryHistoryManager implements HistoryManager {
     public boolean getNodeMapId (int id) {
         return nodeMap.containsKey(id);
     }
+
+    @Override
     public void removeAllHistory() {
         first = 0;
         last = 0;

@@ -6,6 +6,7 @@ import utilit.Manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -17,8 +18,6 @@ public class InMemoryTaskManager implements TaskManager {
     public Map<Integer, SubTask> subTask = new HashMap<>();
 
     HistoryManager historyManager = Manager.getDefaultHistory();
-
-    InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
 
     int idTask = 0;
 
@@ -190,7 +189,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (Integer key : justTask.keySet()) justTask.remove(key);
         for (Integer key : subTask.keySet()) subTask.remove(key);
         for (Integer key : epicTask.keySet()) epicTask.remove(key);
-        inMemoryHistoryManager.removeAllHistory();
+        historyManager.removeAllHistory();
         System.out.println("Все задачи удалены");
     }
 
@@ -229,6 +228,11 @@ public class InMemoryTaskManager implements TaskManager {
         else {
             System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
         }
+    }
+
+    @Override
+    public List<Task>  getHistory() {
+        return historyManager.getHistory();
     }
 
     void changeName(Integer id, String name){
