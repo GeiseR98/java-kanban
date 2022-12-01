@@ -36,7 +36,10 @@ public class Main {
         System.out.println(historyManager.getHistory());
         System.out.println(taskManager.getTask(8));
         System.out.println(historyManager.getHistory());
+        System.out.println(taskManager.getTask(7));
+        System.out.println(historyManager.getHistory());
         System.out.println(taskManager.getTask(3));
+        System.out.println(historyManager.getHistory());
         taskManager.removeTask(3);
         System.out.println(historyManager.getHistory());
     }

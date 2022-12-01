@@ -75,13 +75,13 @@ public class InMemoryHistoryManager implements HistoryManager {
                 nodeMap.get(node.idPrev).idNext = 0;
                 last = nodeMap.get(node.idPrev).task.getId();
             } else {
-                nodeMap.get(node.idPrev).idNext = nodeMap.get(node.idNext).idPrev;
+                nodeMap.get(node.idPrev).idNext = nodeMap.get(node.idNext).task.getId();
+                nodeMap.get(node.idNext).idPrev = nodeMap.get(node.idPrev).task.getId();
             }
         } else {
             first = 0;
             last = 0;
         }
-
     }
     public boolean getNodeMapId (int id) {
         return nodeMap.containsKey(id);

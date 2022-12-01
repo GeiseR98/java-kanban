@@ -159,11 +159,11 @@ public class InMemoryTaskManager implements TaskManager {
         } else if (epicTask.get(id) != null){
             if (epicTask.get(id).getListIdSubtask().size() != 0) {
                 for (int i = 0; i < epicTask.get(id).getListIdSubtask().size(); i++) {
-                    subTask.remove(epicTask.get(id).getListIdSubtask().get(i));
                     historyManager.remove(epicTask.get(id).getListIdSubtask().get(i));
+                    subTask.remove(epicTask.get(id).getListIdSubtask().get(i));
                 }
-                epicTask.remove(id);
                 historyManager.remove(id);
+                epicTask.remove(id);
                 System.out.println("Эпик №" + id + " успешно удален вместе с подзадачами.");
             } else {
                 /*
