@@ -27,10 +27,15 @@ public class Main {
         taskManager.changeStatus(8, Status.DONE);
         System.out.println(taskManager.getTask(1));
         System.out.println(historyManager.getHistory());
-        System.out.println(historyManager.getHistory());
         System.out.println(taskManager.getTask(2));
         System.out.println(historyManager.getHistory());
-        taskManager.removeTask(2);
+        System.out.println(taskManager.getTask(4));
+        System.out.println(historyManager.getHistory());
+        System.out.println(taskManager.getTask(1));
+        System.out.println(historyManager.getHistory());
+        taskManager.removeTask(1);
+        System.out.println(historyManager.getHistory());
+        taskManager.removeTask(4);
         System.out.println(historyManager.getHistory());
         System.out.println(taskManager.getTask(3));
         System.out.println(historyManager.getHistory());
