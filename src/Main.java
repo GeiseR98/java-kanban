@@ -34,7 +34,6 @@ public class Main {
         System.out.println(taskManager.getTask(1));
         System.out.println(taskManager.getHistory());
         taskManager.removeTask(1);
-        System.out.println(historyManager.getHistory());
         taskManager.removeTask(4);
         System.out.println(taskManager.getHistory());
         System.out.println(taskManager.getTask(3));
