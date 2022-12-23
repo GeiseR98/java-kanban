@@ -22,7 +22,7 @@ public class InMemoryTaskManager implements TaskManager {
     int idTask = 0;
 
     @Override
-    public Integer saveJustTask(String name, String description) {
+    public Integer addJustTask(String name, String description) {
         ++idTask;
         Status status = Status.NEW;
         if (!justTask.containsKey(idTask)) {
@@ -33,7 +33,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Integer saveEpicTask(String name, String description) {
+    public Integer addEpicTask(String name, String description) {
         ++idTask;
         Status status = Status.NEW;
         if (!epicTask.containsKey(idTask)) {
@@ -45,7 +45,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Integer saveSubTask(String name, String description, Integer idMaster) {
+    public Integer addSubTask(String name, String description, Integer idMaster) {
         ++idTask;
         Status status = Status.NEW;
         if (!epicTask.containsKey(idMaster)) {

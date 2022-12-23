@@ -5,9 +5,9 @@ import java.util.List;
 public interface TaskManager {
 
 
-    Integer saveJustTask(String name, String description);
-    Integer saveEpicTask(String name, String description);
-    Integer saveSubTask(String name, String description, Integer idMaster);
+    Integer addJustTask(String name, String description);
+    Integer addEpicTask(String name, String description);
+    Integer addSubTask(String name, String description, Integer idMaster);
 
     void printAllJustTask();
     ArrayList<Task> getListAllJustTask();
