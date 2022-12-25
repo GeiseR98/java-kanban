@@ -205,9 +205,6 @@ public class InMemoryTaskManager implements TaskManager {
         historyManager.removeAllHistory();
         System.out.println("Все задачи удалены");
     }
-
-
-
     @Override
     public void changeStatus(Integer id, Status status){
         if (checkInputStatus(status)) {
@@ -246,6 +243,7 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task>  getHistory() {
         return historyManager.getHistory();
     }
+
     public void setIdTask(int idTask) {
         this.idTask = idTask;
     }

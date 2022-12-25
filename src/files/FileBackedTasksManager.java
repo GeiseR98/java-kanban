@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
@@ -40,27 +41,36 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public Task getTask(Integer id) {
         return super.getTask(id);
     }
+
+    @Override
+    public void setIdTask(int idTask) {
+        super.setIdTask(idTask);
+    }
+
     void fromString(String path) {
+        ArrayList<Integer> listAllId = new ArrayList<>();
         String saves = readFile(path);
         String[] lines = saves.split("\r?\n");
         for (int i = 1; i < (lines.length - 2); i++) {
             String line = lines[i];
             if (line.contains(String.valueOf(Types.JUSTTASK))) {
-                addJustTask(recoveryJustTask(line));
+                listAllId.add(addJustTask(recoveryJustTask(line)));
             }
             if (line.contains(String.valueOf(Types.EPICTASK))) {
-                addEpicTask(recovertEpicTask(line));
+                listAllId.add(addEpicTask(recovertEpicTask(line)));
             }
             if (line.contains(String.valueOf(Types.SUBTASK))) {
-                addSubTask(recoverySubTask(line));
+                listAllId.add(addSubTask(recoverySubTask(line)));
             }
         }
-        String[] listId = lines[lines.length-1].split(",");
-        for (String id : listId) {
-            getTask(Integer.parseInt(id));
+        if (!listAllId.isEmpty()) {
+            setIdTask(Collections.max(listAllId));
+            String[] listId = lines[lines.length - 1].split(",");
+            for (String id : listId) {
+                getTask(Integer.parseInt(id));
+            }
         }
     }
-
     public JustTask recoveryJustTask(String line) {
         String[] elements = line.split(",");
         return new JustTask(Integer.parseInt(elements[0]), elements[2], elements[4], Status.valueOf(elements[3]));
