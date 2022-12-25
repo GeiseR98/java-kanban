@@ -10,11 +10,55 @@ import java.util.ArrayList;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
-    InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
     static boolean doSave = false;
 
-    static void main(String[] args) {
-
+    @Override
+    public Integer addJustTask(JustTask justTask) {
+        super.addJustTask(justTask);
+        if (doSave){
+            save();
+        }
+        return justTask.getId();
+    }
+    @Override
+    public Integer addEpicTask(EpicTask epicTask) {
+        super.addEpicTask(epicTask);
+        if (doSave){
+            save();
+        }
+        return epicTask.getId();
+    }
+    @Override
+    public Integer addSubTask(SubTask subTask) {
+        super.addSubTask(subTask);
+        if (doSave){
+            save();
+        }
+        return subTask.getId();
+    }
+    @Override
+    public Task getTask(Integer id) {
+        return super.getTask(id);
+    }
+    void fromString(String path) {
+        String saves = readFile(path);
+        String[] lines = saves.split("\r?\n");
+        for (int i = 1; i < (lines.length - 2); i++) {
+            String line = lines[i];
+            if (line.contains(String.valueOf(Types.JUSTTASK))) {
+                addJustTask(recoveryJustTask(line));
+            }
+            if (line.contains(String.valueOf(Types.EPICTASK))) {
+                addEpicTask(recovertEpicTask(line));
+            }
+            if (line.contains(String.valueOf(Types.SUBTASK))) {
+                addSubTask(recoverySubTask(line));
+            }
+        }
+        String[] listId = lines[lines.length-1].split(",");
+        for (String id : listId) {
+            getTask(Integer.parseInt(id));
+        }
     }
 
     public JustTask recoveryJustTask(String line) {
@@ -30,7 +74,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             listIdSubtask.add(Integer.parseInt(idSub));
         }
         return new EpicTask(
-                Integer.parseInt(elements[0]), elements[2], elements[4], Status.valueOf(elements[3]), listIdSubtask);
+                Integer.parseInt(elements[0]), elements[2], elements[4], status, listIdSubtask);
     }
     public SubTask recoverySubTask(String line) {
         String[] elements = line.split(",");
@@ -41,19 +85,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 Status.valueOf(elements[3]),
                 Integer.parseInt(elements[5]));
     }
-    void fromString(String path) {
-        String saves = readFile(path);
-        String[] lines = saves.split("\r?\n");
-        for (int i = 1; i < lines.length - 2; i++) {
-            String line = lines[i];
-            if (line.contains(String.valueOf(Types.JUSTTASK))) {
-                addJustTask(recoveryJustTask(line));
-            }
-            if (line.contains(String.valueOf(Types.EPICTASK))) {
-                addEpicTask(recovertEpicTask(line));
-            }
-        }
-    }
+
     public String readFile(String path) {
         try {
             return Files.readString(Path.of(path));
@@ -62,31 +94,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             return null;
         }
     }
-
-
-    @Override
-    public Integer addJustTask(JustTask justTask) {
-        super.addJustTask(justTask);
-        if (doSave){
-            save();
-        }
-        return justTask.getId();
-    }
-
-    @Override
-    public Integer addEpicTask(EpicTask epicTask) {
-        super.addEpicTask(epicTask);
-        save();
-        return epicTask.getId();
-    }
-
-    @Override
-    public Integer addSubTask(SubTask subTask) {
-        super.addSubTask(subTask);
-        save();
-        return subTask.getId();
-    }
-
     private void save() {
 
     }
@@ -100,7 +107,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     return line;
     }
     String toString(EpicTask epicTask) {
-        String line = null;
+        String line;
         StringBuilder listSub = new StringBuilder();
         for (Integer sub : epicTask.getListIdSubtask()) {
             listSub.append(sub);
@@ -116,7 +123,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return line;
     }
     String toString(SubTask subTask) {
-        String line = null;
+        String line;
         line = subTask.getId() + "," +
                 Types.SUBTASK + "," +
                 subTask.getName() + "," +
@@ -125,9 +132,4 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 subTask.getIdMaster();
         return line;
     }
-
-
-
-
-
 }

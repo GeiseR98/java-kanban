@@ -18,7 +18,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     HistoryManager historyManager = Manager.getDefaultHistory();
 
-    int idTask = 0;
+    int idTask = 0; // ИСПРАВИТЬ НА НАХОЖДЕНИЕ МАКСИМАЛЬНОГО
+
 
     @Override
     public JustTask createJustTask(String name, String description) {
@@ -241,10 +242,12 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
         }
     }
-
     @Override
     public List<Task>  getHistory() {
         return historyManager.getHistory();
+    }
+    public void setIdTask(int idTask) {
+        this.idTask = idTask;
     }
 
     void changeName(Integer id, String name){
