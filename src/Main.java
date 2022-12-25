@@ -1,14 +1,20 @@
+import files.FileBackedTasksManager;
 import history.HistoryManager;
 import tasks.Status;
 import tasks.TaskManager;
 import utilit.Manager;
 
+import java.io.IOException;
+
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         System.out.println("Поехали!");
         TaskManager taskManager = Manager.getDefault();
         HistoryManager historyManager = Manager.getDefaultHistory();
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
+        fileBackedTasksManager.fromString();
+
         taskManager.changeDescription(6, "Подпиши петицию или я приду к тебе домой и убью твою собаку!");
         taskManager.changeStatus(8, Status.DONE);
         System.out.println(taskManager.getTask(1));

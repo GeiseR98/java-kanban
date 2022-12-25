@@ -2,12 +2,12 @@ package files;
 
 import tasks.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.io.Reader;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
@@ -47,27 +47,34 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         super.setIdTask(idTask);
     }
 
-    void fromString(String path) {
+    public void fromString() throws IOException {
         ArrayList<Integer> listAllId = new ArrayList<>();
-        String saves = readFile(path);
-        String[] lines = saves.split("\r?\n");
-        for (int i = 1; i < (lines.length - 2); i++) {
-            String line = lines[i];
-            if (line.contains(String.valueOf(Types.JUSTTASK))) {
-                listAllId.add(addJustTask(recoveryJustTask(line)));
+
+
+        try (Reader reader = new FileReader("saves" + File.separator + "file.csv")) {
+
+            String saves = readFile(reader.toString());
+
+
+            String[] lines = saves.split("\r?\n");
+            for (int i = 1; i < (lines.length - 2); i++) {
+                String line = lines[i];
+                if (line.contains(String.valueOf(Types.JUSTTASK))) {
+                    listAllId.add(addJustTask(recoveryJustTask(line)));
+                }
+                if (line.contains(String.valueOf(Types.EPICTASK))) {
+                    listAllId.add(addEpicTask(recovertEpicTask(line)));
+                }
+                if (line.contains(String.valueOf(Types.SUBTASK))) {
+                    listAllId.add(addSubTask(recoverySubTask(line)));
+                }
             }
-            if (line.contains(String.valueOf(Types.EPICTASK))) {
-                listAllId.add(addEpicTask(recovertEpicTask(line)));
-            }
-            if (line.contains(String.valueOf(Types.SUBTASK))) {
-                listAllId.add(addSubTask(recoverySubTask(line)));
-            }
-        }
-        if (!listAllId.isEmpty()) {
-            setIdTask(Collections.max(listAllId));
-            String[] listId = lines[lines.length - 1].split(",");
-            for (String id : listId) {
-                getTask(Integer.parseInt(id));
+            if (!listAllId.isEmpty()) {
+                setIdTask(Collections.max(listAllId));
+                String[] listId = lines[lines.length - 1].split(",");
+                for (String id : listId) {
+                    getTask(Integer.parseInt(id));
+                }
             }
         }
     }

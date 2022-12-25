@@ -18,7 +18,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     HistoryManager historyManager = Manager.getDefaultHistory();
 
-    int idTask = 0; // ИСПРАВИТЬ НА НАХОЖДЕНИЕ МАКСИМАЛЬНОГО
+    int idTask = 0;
 
 
     @Override
