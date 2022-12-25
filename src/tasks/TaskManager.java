@@ -4,10 +4,12 @@ import java.util.List;
 
 public interface TaskManager {
 
-
-    Integer addJustTask(String name, String description);
-    Integer addEpicTask(String name, String description);
-    Integer addSubTask(String name, String description, Integer idMaster);
+    JustTask createJustTask(String name, String description);
+    Integer addJustTask(JustTask justTask);
+    EpicTask createEpicTask(String name, String description);
+    Integer addEpicTask(EpicTask epicTask);
+    SubTask createSubTask(String name, String description, Integer idMaster);
+    Integer addSubTask(SubTask subTask);
 
     void printAllJustTask();
     ArrayList<Task> getListAllJustTask();

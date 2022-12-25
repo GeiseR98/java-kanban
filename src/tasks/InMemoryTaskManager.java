@@ -1,7 +1,6 @@
 package tasks;
 
 import history.HistoryManager;
-import history.InMemoryHistoryManager;
 import utilit.Manager;
 
 import java.util.ArrayList;
@@ -11,84 +10,97 @@ import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    public Map<Integer, JustTask> justTask = new HashMap<>();
+    public Map<Integer, JustTask> justTasks = new HashMap<>();
 
-    public Map<Integer, EpicTask> epicTask = new HashMap<>();
+    public Map<Integer, EpicTask> epicTasks = new HashMap<>();
 
-    public Map<Integer, SubTask> subTask = new HashMap<>();
+    public Map<Integer, SubTask> subTasks = new HashMap<>();
 
     HistoryManager historyManager = Manager.getDefaultHistory();
 
     int idTask = 0;
 
     @Override
-    public Integer addJustTask(String name, String description) {
+    public JustTask createJustTask(String name, String description) {
         ++idTask;
         Status status = Status.NEW;
-        if (!justTask.containsKey(idTask)) {
-            justTask.put(idTask, new JustTask(idTask, name, description, status));
-            System.out.println("Задача сохранена под номером '" + idTask + "'");
+        return new JustTask(idTask, name, description, status);
+    }
+    @Override
+    public Integer addJustTask(JustTask justTask) {
+        if (!justTasks.containsKey(justTask.getId())) {
+            justTasks.put(justTask.getId(), justTask);
+            System.out.println("Задача сохранена под номером '" + justTask.getId() + "'");
         }
-        return idTask;
+        return justTask.getId();
     }
 
     @Override
-    public Integer addEpicTask(String name, String description) {
+    public EpicTask createEpicTask(String name, String description) {
         ++idTask;
         Status status = Status.NEW;
-        if (!epicTask.containsKey(idTask)) {
-            ArrayList<Integer> listIdSubtask = new ArrayList<>();
-            epicTask.put(idTask, new EpicTask(idTask, name, description, status, listIdSubtask));
-            System.out.println("Задача сохранена под номером '" + idTask + "'");
+        ArrayList<Integer> listIdSubtask = new ArrayList<>();
+        return new EpicTask(idTask, name, description, status, listIdSubtask);
+    }
+    @Override
+    public Integer addEpicTask(EpicTask epicTask) {
+        if (!epicTasks.containsKey(epicTask.getId())) {
+            epicTasks.put(epicTask.getId(), epicTask);
+            System.out.println("Задача сохранена под номером '" + epicTask.getId() + "'");
         }
-        return idTask;
+        return epicTask.getId();
     }
 
     @Override
-    public Integer addSubTask(String name, String description, Integer idMaster) {
+    public SubTask createSubTask(String name, String description, Integer idMaster) {
         ++idTask;
         Status status = Status.NEW;
-        if (!epicTask.containsKey(idMaster)) {
+        if (!epicTasks.containsKey(idMaster)) {
             System.out.println("Такого эпика не существует, создайте сначала эпик");
+            return null;
         } else {
-            if (!subTask.containsKey(idTask)) {
-                subTask.put(idTask, new SubTask(idTask, name, description, status, idMaster));
-                epicTask.get(idMaster).getListIdSubtask().add(idTask);
-                System.out.println("Задача сохранена под номером '" + idTask + "'");
-            }
+            return new SubTask(idTask, name, description, status, idMaster);
         }
-        checkEpicStatus(idMaster);
-        return idTask;
+    }
+    @Override
+    public Integer addSubTask(SubTask subTask) {
+        if (!subTasks.containsKey(subTask.getId())) {
+            subTasks.put(subTask.getId(), subTask);
+            epicTasks.get(subTask.getIdMaster()).getListIdSubtask().add(subTask.getId());
+            System.out.println("Задача сохранена под номером '" + subTask.getId() + "'");
+            }
+        checkEpicStatus(subTask.getIdMaster());
+        return subTask.getId();
     }
 
     @Override
     public void printAllJustTask() {
         System.out.println("Список задач: ");
-        for (Integer key : justTask.keySet()) {
-            System.out.println("Задача №" + key + justTask.get(key));
+        for (Integer key : justTasks.keySet()) {
+            System.out.println("Задача №" + key + justTasks.get(key));
         }
     }
     @Override
     public ArrayList<Task> getListAllJustTask() {
         ArrayList<Task> list = new ArrayList<>();
-        for (Integer key : justTask.keySet()) {
-            list.add(justTask.get(key));
+        for (Integer key : justTasks.keySet()) {
+            list.add(justTasks.get(key));
         }
         return list;
     }
     @Override
     public void printAllEpicTask() {
         System.out.println("Список эпиков: ");
-        for (Integer key : epicTask.keySet()) {
-            if (epicTask.get(key).getListIdSubtask().size() != 0) {
-                System.out.println("Эпик №" + key + epicTask.get(key));
+        for (Integer key : epicTasks.keySet()) {
+            if (epicTasks.get(key).getListIdSubtask().size() != 0) {
+                System.out.println("Эпик №" + key + epicTasks.get(key));
                 System.out.println("    подзадачи эпика: ");
-                for (int i = 0; i < epicTask.get(key).getListIdSubtask().size(); i++) {
-                    System.out.println("        подзадача №" + epicTask.get(key).getListIdSubtask().get(i)
-                            + " - " + subTask.get(epicTask.get(key).getListIdSubtask().get(i)).getName());
+                for (int i = 0; i < epicTasks.get(key).getListIdSubtask().size(); i++) {
+                    System.out.println("        подзадача №" + epicTasks.get(key).getListIdSubtask().get(i)
+                            + " - " + subTasks.get(epicTasks.get(key).getListIdSubtask().get(i)).getName());
                 }
             } else {
-                System.out.println("Эпик №" + key + epicTask.get(key));
+                System.out.println("Эпик №" + key + epicTasks.get(key));
                 System.out.println("    Подзадач ещё не добавлено ");
             }
         }
@@ -96,38 +108,38 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public ArrayList<EpicTask> getListAllEpicTask() {
         ArrayList<EpicTask> list = new ArrayList<>();
-        for (Integer key : epicTask.keySet()) {
-            list.add(epicTask.get(key));
+        for (Integer key : epicTasks.keySet()) {
+            list.add(epicTasks.get(key));
         }
         return list;
     }
     @Override
     public void printAllSubTask(){
         System.out.println("Список подзадач: ");
-        for (Integer key : subTask.keySet()) {
-            System.out.println("Подзадача №:" + key + subTask.get(key) + ", находится в эпике №"
-                    + subTask.get(key).getIdMaster());
+        for (Integer key : subTasks.keySet()) {
+            System.out.println("Подзадача №:" + key + subTasks.get(key) + ", находится в эпике №"
+                    + subTasks.get(key).getIdMaster());
         }
     }
     @Override
     public ArrayList<Task> getListSubTask() {
         ArrayList<Task> list = new ArrayList<>();
-        for (Integer key : subTask.keySet()) {
-            list.add(subTask.get(key));
+        for (Integer key : subTasks.keySet()) {
+            list.add(subTasks.get(key));
         }
         return list;
     }
     @Override
     public Task getTask (Integer id) {
-        if (justTask.get(id) != null) {
-            historyManager.addHistory(justTask.get(id));
-            return justTask.get(id);
-        } else if (epicTask.get(id) != null) {
-            historyManager.addHistory(epicTask.get(id));
-            return epicTask.get(id);
-        } else if (subTask.get(id) != null) {
-            historyManager.addHistory(subTask.get(id));
-            return subTask.get(id);
+        if (justTasks.get(id) != null) {
+            historyManager.addHistory(justTasks.get(id));
+            return justTasks.get(id);
+        } else if (epicTasks.get(id) != null) {
+            historyManager.addHistory(epicTasks.get(id));
+            return epicTasks.get(id);
+        } else if (subTasks.get(id) != null) {
+            historyManager.addHistory(subTasks.get(id));
+            return subTasks.get(id);
         } else {
             return null;
         }
@@ -135,34 +147,34 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void showTask(Integer id) {
-        if (justTask.get(id) != null) {
-            System.out.println("Задача №" + id + justTask.get(id));
+        if (justTasks.get(id) != null) {
+            System.out.println("Задача №" + id + justTasks.get(id));
         }
-        else if (epicTask.get(id) != null) {
-            System.out.println("Эпик №" + id + epicTask.get(id));
+        else if (epicTasks.get(id) != null) {
+            System.out.println("Эпик №" + id + epicTasks.get(id));
             System.out.println("    подзадачи эпика: ");
-            for (int i = 0; i < epicTask.get(id).getListIdSubtask().size(); i++) {
-                System.out.println("        подзадача №" + epicTask.get(id).getListIdSubtask().get(i)
-                        + " - " + subTask.get(epicTask.get(id).getListIdSubtask().get(i)).getName());
+            for (int i = 0; i < epicTasks.get(id).getListIdSubtask().size(); i++) {
+                System.out.println("        подзадача №" + epicTasks.get(id).getListIdSubtask().get(i)
+                        + " - " + subTasks.get(epicTasks.get(id).getListIdSubtask().get(i)).getName());
             }
-        } else if (subTask.get(id) != null) System.out.println("Подзадача №:" + id + subTask.get(id)
-                + ", находится в эпике №" + subTask.get(id).getIdMaster());
+        } else if (subTasks.get(id) != null) System.out.println("Подзадача №:" + id + subTasks.get(id)
+                + ", находится в эпике №" + subTasks.get(id).getIdMaster());
         else System.out.println("задачи с таким номером не обнаружено");
     }
     @Override
     public void removeTask(Integer id){
-        if (justTask.get(id) != null){
-            justTask.remove(id);
+        if (justTasks.get(id) != null){
+            justTasks.remove(id);
             historyManager.remove(id);
             System.out.println("Задача №" + id + " успешно удалена...");
-        } else if (epicTask.get(id) != null){
-            if (epicTask.get(id).getListIdSubtask().size() != 0) {
-                for (int i = 0; i < epicTask.get(id).getListIdSubtask().size(); i++) {
-                    historyManager.remove(epicTask.get(id).getListIdSubtask().get(i));
-                    subTask.remove(epicTask.get(id).getListIdSubtask().get(i));
+        } else if (epicTasks.get(id) != null){
+            if (epicTasks.get(id).getListIdSubtask().size() != 0) {
+                for (int i = 0; i < epicTasks.get(id).getListIdSubtask().size(); i++) {
+                    historyManager.remove(epicTasks.get(id).getListIdSubtask().get(i));
+                    subTasks.remove(epicTasks.get(id).getListIdSubtask().get(i));
                 }
                 historyManager.remove(id);
-                epicTask.remove(id);
+                epicTasks.remove(id);
                 System.out.println("Эпик №" + id + " успешно удален вместе с подзадачами.");
             } else {
                 /*
@@ -170,14 +182,14 @@ public class InMemoryTaskManager implements TaskManager {
                 Сделал эту ветку из-за разницы ответов. Я понимаю что на работоспособность программы,
                  эта строчка не влияет. Спасибо за внимательность)
                  */
-                epicTask.remove(id);
+                epicTasks.remove(id);
                 historyManager.remove(id);
                 System.out.println("Эпик №" + id + " успешно удален");
             }
-        } else if (subTask.get(id) != null) {
-            int idMaster = subTask.get(id).getIdMaster();
-            epicTask.get(idMaster).getListIdSubtask().remove(id) ;
-            subTask.remove(id);
+        } else if (subTasks.get(id) != null) {
+            int idMaster = subTasks.get(id).getIdMaster();
+            epicTasks.get(idMaster).getListIdSubtask().remove(id) ;
+            subTasks.remove(id);
             historyManager.remove(id);
             checkEpicStatus(idMaster);
         } else {
@@ -186,9 +198,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
     @Override
     public void removeAllTask(){
-        for (Integer key : justTask.keySet()) justTask.remove(key);
-        for (Integer key : subTask.keySet()) subTask.remove(key);
-        for (Integer key : epicTask.keySet()) epicTask.remove(key);
+        for (Integer key : justTasks.keySet()) justTasks.remove(key);
+        for (Integer key : subTasks.keySet()) subTasks.remove(key);
+        for (Integer key : epicTasks.keySet()) epicTasks.remove(key);
         historyManager.removeAllHistory();
         System.out.println("Все задачи удалены");
     }
@@ -198,14 +210,14 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void changeStatus(Integer id, Status status){
         if (checkInputStatus(status)) {
-            if (justTask.get(id) != null) {
-                justTask.get(id).setStatus(status);
+            if (justTasks.get(id) != null) {
+                justTasks.get(id).setStatus(status);
             }
-            else if (subTask.get(id) != null) {
-                int idMaster = subTask.get(id).getIdMaster();
-                subTask.get(id).setStatus(status);
+            else if (subTasks.get(id) != null) {
+                int idMaster = subTasks.get(id).getIdMaster();
+                subTasks.get(id).setStatus(status);
                 checkEpicStatus(idMaster);
-            } else if (epicTask.get(id) != null) {
+            } else if (epicTasks.get(id) != null) {
                 System.out.println("Вы не можете менять статус эпика, он рассчитывается исходя из статусов подзадач");
             } else {
                 System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
@@ -216,14 +228,14 @@ public class InMemoryTaskManager implements TaskManager {
     }
     @Override
     public void changeDescription(Integer id, String description){
-        if (justTask.get(id) != null) {
-            justTask.get(id).setDescription(description);
+        if (justTasks.get(id) != null) {
+            justTasks.get(id).setDescription(description);
         }
-        else if (subTask.get(id) != null) {
-            subTask.get(id).setDescription(description);
+        else if (subTasks.get(id) != null) {
+            subTasks.get(id).setDescription(description);
         }
-        else if (epicTask.get(id) != null) {
-            epicTask.get(id).setDescription(description);
+        else if (epicTasks.get(id) != null) {
+            epicTasks.get(id).setDescription(description);
         }
         else {
             System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
@@ -236,35 +248,35 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     void changeName(Integer id, String name){
-        if (justTask.get(id) != null) {
-            justTask.get(id).setName(name);
+        if (justTasks.get(id) != null) {
+            justTasks.get(id).setName(name);
         }
-        else if (subTask.get(id) != null) {
-            subTask.get(id).setName(name);
+        else if (subTasks.get(id) != null) {
+            subTasks.get(id).setName(name);
         }
-        else if (epicTask.get(id) != null) {
-            epicTask.get(id).setName(name);
+        else if (epicTasks.get(id) != null) {
+            epicTasks.get(id).setName(name);
         } else {
             System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
         }
     }
     private void checkEpicStatus(Integer idMaster){
-        if (epicTask.get(idMaster).getListIdSubtask().size() != 0){
+        if (epicTasks.get(idMaster).getListIdSubtask().size() != 0){
             int wordNew = 0;
             int wordDone = 0;
-            for (int i = 0; i < epicTask.get(idMaster).getListIdSubtask().size(); i++){
-                if (subTask.get(epicTask.get(idMaster).getListIdSubtask().get(i)).getStatus().equals(Status.NEW)){
+            for (int i = 0; i < epicTasks.get(idMaster).getListIdSubtask().size(); i++){
+                if (subTasks.get(epicTasks.get(idMaster).getListIdSubtask().get(i)).getStatus().equals(Status.NEW)){
                     wordNew++;
-                } else if (subTask.get(epicTask.get(idMaster).getListIdSubtask().get(i)).getStatus().equals(Status.DONE)){
+                } else if (subTasks.get(epicTasks.get(idMaster).getListIdSubtask().get(i)).getStatus().equals(Status.DONE)){
                     wordDone++;
                 }
             }
-            if (wordNew == epicTask.get(idMaster).getListIdSubtask().size()){
-                epicTask.get(idMaster).setStatus(Status.NEW);
-            } else if (wordDone == epicTask.get(idMaster).getListIdSubtask().size()){
-                epicTask.get(idMaster).setStatus(Status.DONE);
+            if (wordNew == epicTasks.get(idMaster).getListIdSubtask().size()){
+                epicTasks.get(idMaster).setStatus(Status.NEW);
+            } else if (wordDone == epicTasks.get(idMaster).getListIdSubtask().size()){
+                epicTasks.get(idMaster).setStatus(Status.DONE);
             } else {
-                epicTask.get(idMaster).setStatus(Status.IN_PROGRESS);
+                epicTasks.get(idMaster).setStatus(Status.IN_PROGRESS);
             }
         }
     }
