@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.io.Reader;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
@@ -47,34 +46,37 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         super.setIdTask(idTask);
     }
 
-    public void fromString() throws IOException {
+    public String readFile(String path) {
+        try {
+            String file = Files.readString(Path.of(path));
+            return file;
+        } catch (IOException e) {
+            System.out.println("Че то не работает");
+            return null;
+        }
+    }
+    public void fromString(String path) {
         ArrayList<Integer> listAllId = new ArrayList<>();
+        String file = readFile(path);
 
-
-        try (Reader reader = new FileReader("saves" + File.separator + "file.csv")) {
-
-            String saves = readFile(reader.toString());
-
-
-            String[] lines = saves.split("\r?\n");
-            for (int i = 1; i < (lines.length - 2); i++) {
-                String line = lines[i];
-                if (line.contains(String.valueOf(Types.JUSTTASK))) {
-                    listAllId.add(addJustTask(recoveryJustTask(line)));
-                }
-                if (line.contains(String.valueOf(Types.EPICTASK))) {
-                    listAllId.add(addEpicTask(recovertEpicTask(line)));
-                }
-                if (line.contains(String.valueOf(Types.SUBTASK))) {
-                    listAllId.add(addSubTask(recoverySubTask(line)));
-                }
+        String[] lines = file.split(File.separator);
+        for (int i = 1; i < (lines.length - 2); i++) {
+            String line = lines[i];
+            if (line.contains(String.valueOf(Types.JUSTTASK))) {
+                listAllId.add(addJustTask(recoveryJustTask(line)));
             }
-            if (!listAllId.isEmpty()) {
-                setIdTask(Collections.max(listAllId));
-                String[] listId = lines[lines.length - 1].split(",");
-                for (String id : listId) {
-                    getTask(Integer.parseInt(id));
-                }
+            if (line.contains(String.valueOf(Types.EPICTASK))) {
+                listAllId.add(addEpicTask(recovertEpicTask(line)));
+            }
+            if (line.contains(String.valueOf(Types.SUBTASK))) {
+                listAllId.add(addSubTask(recoverySubTask(line)));
+            }
+        }
+        if (!listAllId.isEmpty()) {
+            setIdTask(Collections.max(listAllId));
+            String[] listId = lines[lines.length - 1].split(",");
+            for (String id : listId) {
+                getTask(Integer.parseInt(id));
             }
         }
     }
@@ -103,14 +105,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 Integer.parseInt(elements[5]));
     }
 
-    public String readFile(String path) {
-        try {
-            return Files.readString(Path.of(path));
-        } catch (IOException e) {
-            System.out.println("Че то не работает");
-            return null;
-        }
-    }
+
     private void save() {
 
     }
