@@ -10,15 +10,15 @@ import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    public Map<Integer, JustTask> justTasks = new HashMap<>();
+    public static Map<Integer, JustTask> justTasks = new HashMap<>();
 
-    public Map<Integer, EpicTask> epicTasks = new HashMap<>();
+    public static Map<Integer, EpicTask> epicTasks = new HashMap<>();
 
-    public Map<Integer, SubTask> subTasks = new HashMap<>();
+    public static Map<Integer, SubTask> subTasks = new HashMap<>();
 
     HistoryManager historyManager = Manager.getDefaultHistory();
 
-    int idTask = 0;
+    private static int idTask = 0;
 
 
     @Override
@@ -244,8 +244,8 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
-    public void setIdTask(int idTask) {
-        this.idTask = idTask;
+    public void setIdTask(int idTaskMax) {
+        idTask = idTaskMax;
     }
 
     void changeName(Integer id, String name){

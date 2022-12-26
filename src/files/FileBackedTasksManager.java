@@ -9,17 +9,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
+    InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
     static boolean doSave = false;
 
     @Override
     public Integer addJustTask(JustTask justTask) {
-        super.addJustTask(justTask);
-        if (doSave){
-            save();
-        }
-        return justTask.getId();
+        return inMemoryTaskManager.addJustTask(justTask);
     }
+
     @Override
     public Integer addEpicTask(EpicTask epicTask) {
         super.addEpicTask(epicTask);
@@ -55,21 +53,21 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             return null;
         }
     }
-    public void fromString(String path) {
+    public void fromString() {
         ArrayList<Integer> listAllId = new ArrayList<>();
-        String file = readFile(path);
+        String file = readFile("saves" + File.separator + "file.csv");
 
-        String[] lines = file.split(File.separator);
+        String[] lines = file.split("\r?\n");
         for (int i = 1; i < (lines.length - 2); i++) {
             String line = lines[i];
             if (line.contains(String.valueOf(Types.JUSTTASK))) {
                 listAllId.add(addJustTask(recoveryJustTask(line)));
-            }
-            if (line.contains(String.valueOf(Types.EPICTASK))) {
+            } else if (line.contains(String.valueOf(Types.EPICTASK))) {
                 listAllId.add(addEpicTask(recovertEpicTask(line)));
-            }
-            if (line.contains(String.valueOf(Types.SUBTASK))) {
+            } else if (line.contains(String.valueOf(Types.SUBTASK))) {
                 listAllId.add(addSubTask(recoverySubTask(line)));
+            } else {
+                System.out.println("не считалось");
             }
         }
         if (!listAllId.isEmpty()) {
@@ -82,7 +80,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
     public JustTask recoveryJustTask(String line) {
         String[] elements = line.split(",");
-        return new JustTask(Integer.parseInt(elements[0]), elements[2], elements[4], Status.valueOf(elements[3]));
+        int id = Integer.parseInt(elements[0]);
+        String name = elements[2];
+        String description = elements[4];
+        Status status = Status.valueOf(elements[3]);
+        return new JustTask(id, name, description, status);
     }
     public EpicTask recovertEpicTask(String line) {
         Status status = Status.NEW;
