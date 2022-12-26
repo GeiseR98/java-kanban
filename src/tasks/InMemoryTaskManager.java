@@ -123,7 +123,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
-    public ArrayList<Task> getListSubTask() {
+    public ArrayList<Task> getListAllSubTask() {
         ArrayList<Task> list = new ArrayList<>();
         for (Integer key : subTasks.keySet()) {
             list.add(subTasks.get(key));
@@ -154,10 +154,15 @@ public class InMemoryTaskManager implements TaskManager {
         else if (epicTasks.get(id) != null) {
             System.out.println("Эпик №" + id + epicTasks.get(id));
             System.out.println("    подзадачи эпика: ");
-            for (int i = 0; i < epicTasks.get(id).getListIdSubtask().size(); i++) {
-                System.out.println("        подзадача №" + epicTasks.get(id).getListIdSubtask().get(i)
-                        + " - " + subTasks.get(epicTasks.get(id).getListIdSubtask().get(i)).getName());
+            if (epicTasks.get(id).getListIdSubtask().size() != 0) {
+                for (int i = 0; i < epicTasks.get(id).getListIdSubtask().size(); i++) {
+                    System.out.println("        подзадача №" + epicTasks.get(id).getListIdSubtask().get(i)
+                            + " - " + subTasks.get(epicTasks.get(id).getListIdSubtask().get(i)).getName());
+                }
+            } else {
+                System.out.println("Этот эпик ещё не имеет подзадач");
             }
+
         } else if (subTasks.get(id) != null) System.out.println("Подзадача №:" + id + subTasks.get(id)
                 + ", находится в эпике №" + subTasks.get(id).getIdMaster());
         else System.out.println("задачи с таким номером не обнаружено");

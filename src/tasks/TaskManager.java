@@ -18,7 +18,7 @@ public interface TaskManager {
     ArrayList<EpicTask> getListAllEpicTask();
 
     void printAllSubTask();
-    ArrayList<Task> getListSubTask();
+    ArrayList<Task> getListAllSubTask();
 
     Task getTask(Integer id);
 

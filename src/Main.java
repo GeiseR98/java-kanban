@@ -19,14 +19,12 @@ public class Main {
         } else {
             System.out.println("Невозможно прочитать файл. Возможно, файл не находится в нужной директории.");
         }
-        taskManager.addEpicTask(taskManager.createEpicTask("подзадача2", "описание"));
-        taskManager.addSubTask(taskManager.createSubTask("подзадача3", "описание", 8));
-        System.out.println(taskManager.getTask(1));
-        System.out.println(taskManager.getTask(5));
-        System.out.println(taskManager.getTask(9));
-        System.out.println(taskManager.getTask(2));
-        System.out.println(taskManager.getTask(7));
-        System.out.println(taskManager.getTask(8));
+
+        taskManager.addJustTask(taskManager.createJustTask("новый", "надоело"));
+        taskManager.addSubTask(taskManager.createSubTask("подзадача", "первая", 2));
+
         System.out.println(taskManager.getHistory());
+        taskManager.showTask(2);
+        fileBackedTasksManager.save();
     }
 }
