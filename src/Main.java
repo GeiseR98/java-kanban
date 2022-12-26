@@ -1,6 +1,6 @@
 import files.FileBackedTasksManager;
 import history.HistoryManager;
-import tasks.Task;
+import tasks.Status;
 import tasks.TaskManager;
 import utilit.Manager;
 
@@ -15,16 +15,16 @@ public class Main {
         HistoryManager historyManager = Manager.getDefaultHistory();
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
         if (fileBackedTasksManager.readFile("saves" + File.separator + "file.csv") != null) {
-            fileBackedTasksManager.fromString();
+            fileBackedTasksManager.loadFromFile();
         } else {
             System.out.println("Невозможно прочитать файл. Возможно, файл не находится в нужной директории.");
         }
 
-        taskManager.addJustTask(taskManager.createJustTask("новый", "надоело"));
-        taskManager.addSubTask(taskManager.createSubTask("подзадача", "первая", 2));
+        taskManager.changeStatus(6, Status.DONE);
+        //taskManager.addJustTask(taskManager.createJustTask("новый", "надоело"));
+        //taskManager.addSubTask(taskManager.createSubTask("подзадача", "первая", 2));
 
         System.out.println(taskManager.getHistory());
-        taskManager.showTask(2);
         fileBackedTasksManager.save();
     }
 }

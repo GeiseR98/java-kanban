@@ -11,10 +11,7 @@ import java.util.Collections;
 public class FileBackedTasksManager extends InMemoryTaskManager {
     InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
-    static boolean doSave = false;
-    static boolean doAddHistory = true;
-
-    @Override
+        @Override
     public Integer addJustTask(JustTask justTask) {
         return inMemoryTaskManager.addJustTask(justTask);
     }
@@ -42,6 +39,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     public void save() throws IOException { // сохранение всего, надо будет переделать на редактирование файла
+        remouveAndCreatFile();
         Writer fileWriter = new FileWriter("saves" + File.separator + "file.csv", true);
         fileWriter.write("id,type,name,status,description,epic\n");
         for (Task justTask : getListAllJustTask()){
@@ -64,6 +62,23 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         fileWriter.close();
     }
+    private void remouveAndCreatFile() {
+        try {
+            Files.delete(Path.of("saves" + File.separator + "file.csv"));
+        }
+        catch (IOException e) {
+            System.out.println("Произошла ошибка при удалении файла.");
+            e.printStackTrace();
+        }
+        try {
+            Files.createFile(Path.of("saves" + File.separator + "file.csv"));
+            // создайте файл
+        }
+        catch (IOException e) {
+            System.out.println("Произошла ошибка при создании файла.");
+            e.printStackTrace();
+        }
+    }
 
     public String readFile(String path) {
         try {
@@ -74,7 +89,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             return null;
         }
     }
-    public void fromString() {
+    public void loadFromFile() {
         ArrayList<Integer> listAllId = new ArrayList<>();
         String file = readFile("saves" + File.separator + "file.csv");
 
@@ -92,7 +107,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
 
         }
-        if (!listAllId.isEmpty()) {
+        if (!listAllId.isEmpty()) {     // если задачи не восстановились, то историю задач восстанавливать бессмысленно.
             setIdTask(Collections.max(listAllId));
             String[] listId = lines[lines.length - 1].split(",");
             for (String id : listId) {

@@ -1,21 +1,8 @@
-3,1id,type,name,status,description,epic
+id,type,name,status,description,epic
 1,JUSTTASK,Task1,NEW,Description task1
 3,JUSTTASK,Task1,NEW,Description task1
 4,JUSTTASK,новый,NEW,надоело
-6,JUSTTASK,новый,NEW,надоело
-2,EPICTASK,Task1,NEW,Description task1,5_7
-5,SUBTASK,подзадача,NEW,первая,2
-7,SUBTASK,подзадача,NEW,первая,2
-
-3,1id,type,name,status,description,epic
-1,JUSTTASK,Task1,NEW,Description task1
-3,JUSTTASK,Task1,NEW,Description task1
-4,JUSTTASK,новый,NEW,надоело
-6,JUSTTASK,новый,NEW,надоело
-8,JUSTTASK,новый,NEW,надоело
-2,EPICTASK,Task1,NEW,Description task1,5_7_9
-5,SUBTASK,подзадача,NEW,первая,2
-7,SUBTASK,подзадача,NEW,первая,2
-9,SUBTASK,подзадача,NEW,первая,2
+2,EPICTASK,Task1,DONE,Description task1,6
+6,SUBTASK,подзадача,DONE,первая,2
 
 3,1
