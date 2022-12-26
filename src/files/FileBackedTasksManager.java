@@ -12,20 +12,22 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
         @Override
-    public Integer addJustTask(JustTask justTask) {
-        return inMemoryTaskManager.addJustTask(justTask);
+    public Integer addJustTask(JustTask justTask) throws IOException {
+            super.addJustTask(justTask);
+            save();
+            return justTask.getId();
     }
 
     @Override
-    public Integer addEpicTask(EpicTask epicTask) {
+    public Integer addEpicTask(EpicTask epicTask) throws IOException {
         super.addEpicTask(epicTask);
-
+        save();
         return epicTask.getId();
     }
     @Override
-    public Integer addSubTask(SubTask subTask) {
+    public Integer addSubTask(SubTask subTask) throws IOException {
         super.addSubTask(subTask);
-
+        save();
         return subTask.getId();
     }
     @Override
@@ -89,7 +91,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             return null;
         }
     }
-    public void loadFromFile() {
+    public void loadFromFile() throws IOException {
         ArrayList<Integer> listAllId = new ArrayList<>();
         String file = readFile("saves" + File.separator + "file.csv");
 

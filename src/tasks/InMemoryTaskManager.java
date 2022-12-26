@@ -3,6 +3,7 @@ package tasks;
 import history.HistoryManager;
 import utilit.Manager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +29,7 @@ public class InMemoryTaskManager implements TaskManager {
         return new JustTask(idTask, name, description, status);
     }
     @Override
-    public Integer addJustTask(JustTask justTask) {
+    public Integer addJustTask(JustTask justTask) throws IOException {
         if (!justTasks.containsKey(justTask.getId())) {
             justTasks.put(justTask.getId(), justTask);
             System.out.println("Задача сохранена под номером '" + justTask.getId() + "'");
@@ -44,7 +45,7 @@ public class InMemoryTaskManager implements TaskManager {
         return new EpicTask(idTask, name, description, status, listIdSubtask);
     }
     @Override
-    public Integer addEpicTask(EpicTask epicTask) {
+    public Integer addEpicTask(EpicTask epicTask) throws IOException {
         if (!epicTasks.containsKey(epicTask.getId())) {
             epicTasks.put(epicTask.getId(), epicTask);
             System.out.println("Задача сохранена под номером '" + epicTask.getId() + "'");
@@ -64,7 +65,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
-    public Integer addSubTask(SubTask subTask) {
+    public Integer addSubTask(SubTask subTask) throws IOException {
         if (!subTasks.containsKey(subTask.getId())) {
             subTasks.put(subTask.getId(), subTask);
             epicTasks.get(subTask.getIdMaster()).getListIdSubtask().add(subTask.getId());
