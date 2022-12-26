@@ -1,5 +1,6 @@
 package tasks;
 
+import files.FileBackedTasksManager;
 import history.HistoryManager;
 import utilit.Manager;
 
@@ -132,17 +133,21 @@ public class InMemoryTaskManager implements TaskManager {
         return list;
     }
     @Override
-    public Task getTask (Integer id) {
+    public Task getTask (Integer id) throws IOException {
         if (justTasks.get(id) != null) {
             historyManager.addHistory(justTasks.get(id));
+            FileBackedTasksManager.save();
             return justTasks.get(id);
         } else if (epicTasks.get(id) != null) {
             historyManager.addHistory(epicTasks.get(id));
+            FileBackedTasksManager.save();
             return epicTasks.get(id);
         } else if (subTasks.get(id) != null) {
             historyManager.addHistory(subTasks.get(id));
+            FileBackedTasksManager.save();
             return subTasks.get(id);
         } else {
+            System.out.println("Задачи под таким номером не найдено");
             return null;
         }
     }
@@ -169,7 +174,7 @@ public class InMemoryTaskManager implements TaskManager {
         else System.out.println("задачи с таким номером не обнаружено");
     }
     @Override
-    public void removeTask(Integer id){
+    public void removeTask(Integer id) throws IOException {
         if (justTasks.get(id) != null){
             justTasks.remove(id);
             historyManager.remove(id);
@@ -199,7 +204,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
-    public void removeAllTask(){
+    public void removeAllTask() throws IOException {
         for (Integer key : justTasks.keySet()) justTasks.remove(key);
         for (Integer key : subTasks.keySet()) subTasks.remove(key);
         for (Integer key : epicTasks.keySet()) epicTasks.remove(key);
@@ -207,7 +212,7 @@ public class InMemoryTaskManager implements TaskManager {
         System.out.println("Все задачи удалены");
     }
     @Override
-    public void changeStatus(Integer id, Status status){
+    public void changeStatus(Integer id, Status status) throws IOException {
         if (checkInputStatus(status)) {
             if (justTasks.get(id) != null) {
                 justTasks.get(id).setStatus(status);
@@ -226,7 +231,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
-    public void changeDescription(Integer id, String description){
+    public void changeDescription(Integer id, String description) throws IOException {
         if (justTasks.get(id) != null) {
             justTasks.get(id).setDescription(description);
         }

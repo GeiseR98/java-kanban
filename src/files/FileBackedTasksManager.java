@@ -14,9 +14,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         @Override
     public Integer addJustTask(JustTask justTask) throws IOException {
-            super.addJustTask(justTask);
-            save();
-            return justTask.getId();
+        super.addJustTask(justTask);
+        save();
+        return justTask.getId();
     }
 
     @Override
@@ -32,8 +32,32 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return subTask.getId();
     }
     @Override
-    public Task getTask(Integer id) {
+    public Task getTask(Integer id) throws IOException {
         return super.getTask(id);
+    }
+
+    @Override
+    public void removeTask(Integer id) throws IOException {
+        super.removeTask(id);
+        save();
+    }
+
+    @Override
+    public void removeAllTask() throws IOException {
+        super.removeAllTask();
+        save();
+    }
+
+    @Override
+    public void changeStatus(Integer id, Status status) throws IOException {
+        super.changeStatus(id, status);
+        save();
+    }
+
+    @Override
+    public void changeDescription(Integer id, String description) throws IOException {
+        super.changeDescription(id, description);
+        save();
     }
 
     @Override

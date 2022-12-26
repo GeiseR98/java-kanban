@@ -21,15 +21,15 @@ public interface TaskManager {
     void printAllSubTask();
     ArrayList<Task> getListAllSubTask();
 
-    Task getTask(Integer id);
+    Task getTask(Integer id) throws IOException;
 
     void showTask(Integer id);
-    void removeTask(Integer id);
-    void removeAllTask();
+    void removeTask(Integer id) throws IOException;
+    void removeAllTask() throws IOException;
 
-    void changeStatus(Integer id, Status status);
+    void changeStatus(Integer id, Status status) throws IOException;
 
-    void changeDescription(Integer id, String description);
+    void changeDescription(Integer id, String description) throws IOException;
 
     List<Task>  getHistory();
 }

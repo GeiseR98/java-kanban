@@ -21,13 +21,12 @@ public class Main {
         }
 
 
-        taskManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
-        taskManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", 1));
+        fileBackedTasksManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
+        fileBackedTasksManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", 1));
         //System.out.println(taskManager.getTask(2));
         //System.out.println(taskManager.getTask(3));
         //System.out.println(taskManager.getTask(1));
 
         System.out.println(taskManager.getHistory());
-        fileBackedTasksManager.save();
     }
 }
