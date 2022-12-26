@@ -184,11 +184,6 @@ public class InMemoryTaskManager implements TaskManager {
                 epicTasks.remove(id);
                 System.out.println("Эпик №" + id + " успешно удален вместе с подзадачами.");
             } else {
-                /*
-                Комментарий: "можно не делать эту ветку, если нет подзадач код сделает то же самое."
-                Сделал эту ветку из-за разницы ответов. Я понимаю что на работоспособность программы,
-                 эта строчка не влияет. Спасибо за внимательность)
-                 */
                 epicTasks.remove(id);
                 historyManager.remove(id);
                 System.out.println("Эпик №" + id + " успешно удален");

@@ -1,8 +1,5 @@
-id,type,name,status,description,epic
-1,JUSTTASK,Task1,NEW,Description task1
-3,JUSTTASK,Task1,NEW,Description task1
-4,JUSTTASK,новый,NEW,надоело
-2,EPICTASK,Task1,DONE,Description task1,6
-6,SUBTASK,подзадача,DONE,первая,2
+id,тип,название,статус,описание,idMaster(для подзадач)
+1,EPICTASK,эпик,NEW,описание эпика,2
+2,SUBTASK,подзадача,NEW,описание подзадачи,1
 
-3,1
+История задач пуста

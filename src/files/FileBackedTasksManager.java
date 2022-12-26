@@ -1,6 +1,8 @@
 package files;
 
+import history.HistoryManager;
 import tasks.*;
+import utilit.Manager;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -9,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
         @Override
     public Integer addJustTask(JustTask justTask) throws IOException {
@@ -40,27 +41,36 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         super.setIdTask(idTask);
     }
 
-    public void save() throws IOException { // сохранение всего, надо будет переделать на редактирование файла
-        remouveAndCreatFile();
+    public static void save() throws IOException { // сохранение всего, надо будет переделать на редактирование файла
+            TaskManager taskManager = Manager.getDefault();
+            HistoryManager historyManager = Manager.getDefaultHistory();;
+            FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
+            // иначе не получилось сделать save статическим
+        fileBackedTasksManager.remouveAndCreatFile();
         Writer fileWriter = new FileWriter("saves" + File.separator + "file.csv", true);
-        fileWriter.write("id,type,name,status,description,epic\n");
-        for (Task justTask : getListAllJustTask()){
-            fileWriter.write(toString((JustTask) justTask)+ "\n");
+        fileWriter.write("id,тип,название,статус,описание,idMaster(для подзадач)\n");
+        for (Task justTask : taskManager.getListAllJustTask()){
+            fileWriter.write(fileBackedTasksManager.toString((JustTask) justTask)+ "\n");
         }
-        for (Task epicTasks : getListAllEpicTask()) {
-            fileWriter.write(toString((EpicTask) epicTasks) + "\n");
+        for (Task epicTasks : taskManager.getListAllEpicTask()) {
+            fileWriter.write(fileBackedTasksManager.toString((EpicTask) epicTasks) + "\n");
         }
-        for (Task subTask : getListAllSubTask()) {
-            fileWriter.write(toString((SubTask) subTask) + "\n");
+        for (Task subTask : taskManager.getListAllSubTask()) {
+            fileWriter.write(fileBackedTasksManager.toString((SubTask) subTask) + "\n");
         }
         fileWriter.write("\n");
-        StringBuilder listId = new StringBuilder();
-        for (Task id : getHistory()) {
-            listId.append(id.getId());
-            listId.append(",");
+        if (!historyManager.getHistory().isEmpty()) {
+            StringBuilder listId = new StringBuilder();
+            for (Task id : historyManager.getHistory()) {
+                listId.append(id.getId());
+                listId.append(",");
+            }
+            listId.deleteCharAt(listId.length() - 1);
+            fileWriter.write(String.valueOf(listId));
+        } else {
+            fileWriter.write("История задач пуста");
         }
-        listId.deleteCharAt(listId.length() - 1);
-        fileWriter.write(String.valueOf(listId));
+
 
         fileWriter.close();
     }
@@ -104,16 +114,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 listAllId.add(addEpicTask(recovertEpicTask(line)));
             } else if (line.contains(String.valueOf(Types.SUBTASK))) {
                 listAllId.add(addSubTask(recoverySubTask(line)));
-            } else {
-                System.out.println("Строка " + i);
             }
-
         }
         if (!listAllId.isEmpty()) {     // если задачи не восстановились, то историю задач восстанавливать бессмысленно.
             setIdTask(Collections.max(listAllId));
-            String[] listId = lines[lines.length - 1].split(",");
-            for (String id : listId) {
-                getTask(Integer.parseInt(id));
+
+            if (!lines[lines.length - 1].contains("История задач пуста") ) {
+                String[] listId = lines[lines.length - 1].split(",");
+                for (String id : listId) {
+                    getTask(Integer.parseInt(id));
+                }
             }
         }
     }
