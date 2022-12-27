@@ -30,7 +30,7 @@ public class InMemoryTaskManager implements TaskManager {
         return new JustTask(idTask, name, description, status);
     }
     @Override
-    public Integer addJustTask(JustTask justTask) throws IOException {
+    public Integer addJustTask(JustTask justTask){
         if (!justTasks.containsKey(justTask.getId())) {
             justTasks.put(justTask.getId(), justTask);
             System.out.println("Задача сохранена под номером '" + justTask.getId() + "'");
@@ -46,7 +46,7 @@ public class InMemoryTaskManager implements TaskManager {
         return new EpicTask(idTask, name, description, status, listIdSubtask);
     }
     @Override
-    public Integer addEpicTask(EpicTask epicTask) throws IOException {
+    public Integer addEpicTask(EpicTask epicTask){
         if (!epicTasks.containsKey(epicTask.getId())) {
             epicTasks.put(epicTask.getId(), epicTask);
             System.out.println("Задача сохранена под номером '" + epicTask.getId() + "'");
@@ -66,7 +66,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
-    public Integer addSubTask(SubTask subTask) throws IOException {
+    public Integer addSubTask(SubTask subTask){
         if (!subTasks.containsKey(subTask.getId())) {
             subTasks.put(subTask.getId(), subTask);
             epicTasks.get(subTask.getIdMaster()).getListIdSubtask().add(subTask.getId());
@@ -133,7 +133,7 @@ public class InMemoryTaskManager implements TaskManager {
         return list;
     }
     @Override
-    public Task getTask (Integer id) throws IOException {
+    public Task getTask (Integer id){
         if (justTasks.get(id) != null) {
             historyManager.addHistory(justTasks.get(id));
             FileBackedTasksManager.save();
@@ -174,7 +174,7 @@ public class InMemoryTaskManager implements TaskManager {
         else System.out.println("задачи с таким номером не обнаружено");
     }
     @Override
-    public void removeTask(Integer id) throws IOException {
+    public void removeTask(Integer id){
         if (justTasks.get(id) != null){
             justTasks.remove(id);
             historyManager.remove(id);
@@ -204,7 +204,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
-    public void removeAllTask() throws IOException {
+    public void removeAllTask(){
         for (Integer key : justTasks.keySet()) justTasks.remove(key);
         for (Integer key : subTasks.keySet()) subTasks.remove(key);
         for (Integer key : epicTasks.keySet()) epicTasks.remove(key);
@@ -212,7 +212,7 @@ public class InMemoryTaskManager implements TaskManager {
         System.out.println("Все задачи удалены");
     }
     @Override
-    public void changeStatus(Integer id, Status status) throws IOException {
+    public void changeStatus(Integer id, Status status){
         if (checkInputStatus(status)) {
             if (justTasks.get(id) != null) {
                 justTasks.get(id).setStatus(status);
@@ -231,7 +231,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
-    public void changeDescription(Integer id, String description) throws IOException {
+    public void changeDescription(Integer id, String description){
         if (justTasks.get(id) != null) {
             justTasks.get(id).setDescription(description);
         }

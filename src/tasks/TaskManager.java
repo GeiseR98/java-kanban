@@ -6,11 +6,11 @@ import java.util.List;
 public interface TaskManager {
 
     JustTask createJustTask(String name, String description);
-    Integer addJustTask(JustTask justTask) throws IOException;
+    Integer addJustTask(JustTask justTask);
     EpicTask createEpicTask(String name, String description);
-    Integer addEpicTask(EpicTask epicTask) throws IOException;
+    Integer addEpicTask(EpicTask epicTask);
     SubTask createSubTask(String name, String description, Integer idMaster);
-    Integer addSubTask(SubTask subTask) throws IOException;
+    Integer addSubTask(SubTask subTask);
 
     void printAllJustTask();
     ArrayList<Task> getListAllJustTask();
@@ -21,15 +21,15 @@ public interface TaskManager {
     void printAllSubTask();
     ArrayList<Task> getListAllSubTask();
 
-    Task getTask(Integer id) throws IOException;
+    Task getTask(Integer id);
 
     void showTask(Integer id);
-    void removeTask(Integer id) throws IOException;
-    void removeAllTask() throws IOException;
+    void removeTask(Integer id);
+    void removeAllTask();
 
-    void changeStatus(Integer id, Status status) throws IOException;
+    void changeStatus(Integer id, Status status);
 
-    void changeDescription(Integer id, String description) throws IOException;
+    void changeDescription(Integer id, String description);
 
     List<Task>  getHistory();
 }
