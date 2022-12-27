@@ -12,7 +12,7 @@ import java.util.Collections;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
-        @Override
+    @Override
     public Integer addJustTask(JustTask justTask) throws IOException {
         super.addJustTask(justTask);
         save();
@@ -25,15 +25,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         save();
         return epicTask.getId();
     }
+
     @Override
     public Integer addSubTask(SubTask subTask) throws IOException {
         super.addSubTask(subTask);
         save();
         return subTask.getId();
-    }
-    @Override
-    public Task getTask(Integer id) throws IOException {
-        return super.getTask(id);
     }
 
     @Override
@@ -66,15 +63,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     public static void save() throws IOException { // сохранение всего, надо будет переделать на редактирование файла
-            TaskManager taskManager = Manager.getDefault();
-            HistoryManager historyManager = Manager.getDefaultHistory();;
-            FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
-            // иначе не получилось сделать save статическим
+        TaskManager taskManager = Manager.getDefault();
+        HistoryManager historyManager = Manager.getDefaultHistory();
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
+        // иначе не получилось сделать save статическим
         fileBackedTasksManager.remouveAndCreatFile();
         Writer fileWriter = new FileWriter("saves" + File.separator + "file.csv", true);
         fileWriter.write("id,тип,название,статус,описание,idMaster(для подзадач)\n");
-        for (Task justTask : taskManager.getListAllJustTask()){
-            fileWriter.write(fileBackedTasksManager.toString((JustTask) justTask)+ "\n");
+        for (Task justTask : taskManager.getListAllJustTask()) {
+            fileWriter.write(fileBackedTasksManager.toString((JustTask) justTask) + "\n");
         }
         for (Task epicTasks : taskManager.getListAllEpicTask()) {
             fileWriter.write(fileBackedTasksManager.toString((EpicTask) epicTasks) + "\n");
@@ -94,23 +91,19 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         } else {
             fileWriter.write("История задач пуста");
         }
-
-
         fileWriter.close();
     }
+
     private void remouveAndCreatFile() {
         try {
             Files.delete(Path.of("saves" + File.separator + "file.csv"));
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Произошла ошибка при удалении файла.");
             e.printStackTrace();
         }
         try {
             Files.createFile(Path.of("saves" + File.separator + "file.csv"));
-            // создайте файл
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Произошла ошибка при создании файла.");
             e.printStackTrace();
         }
@@ -125,6 +118,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             return null;
         }
     }
+
     public void loadFromFile() throws IOException {
         ArrayList<Integer> listAllId = new ArrayList<>();
         String file = readFile("saves" + File.separator + "file.csv");
@@ -143,7 +137,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         if (!listAllId.isEmpty()) {     // если задачи не восстановились, то историю задач восстанавливать бессмысленно.
             setIdTask(Collections.max(listAllId));
 
-            if (!lines[lines.length - 1].contains("История задач пуста") ) {
+            if (!lines[lines.length - 1].contains("История задач пуста")) {
                 String[] listId = lines[lines.length - 1].split(",");
                 for (String id : listId) {
                     getTask(Integer.parseInt(id));
@@ -151,6 +145,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
         }
     }
+
     public JustTask recoveryJustTask(String line) {
         String[] elements = line.split(",");
         int id = Integer.parseInt(elements[0]);
@@ -159,6 +154,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         Status status = Status.valueOf(elements[3]);
         return new JustTask(id, name, description, status);
     }
+
     public EpicTask recovertEpicTask(String line) {
         Status status = Status.NEW;
         ArrayList<Integer> listIdSubtask = new ArrayList<>();
@@ -172,27 +168,20 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 listIdSubtask.add(Integer.parseInt(idSub));
             }
         }*/
-        return new EpicTask(
-                Integer.parseInt(elements[0]), elements[2], elements[4], status, listIdSubtask);
+        return new EpicTask(Integer.parseInt(elements[0]), elements[2], elements[4], status, listIdSubtask);
     }
+
     public SubTask recoverySubTask(String line) {
         String[] elements = line.split(",");
-        return new SubTask(
-                Integer.parseInt(elements[0]),
-                elements[2],
-                elements[4],
-                Status.valueOf(elements[3]),
-                Integer.parseInt(elements[5]));
+        return new SubTask(Integer.parseInt(elements[0]), elements[2], elements[4], Status.valueOf(elements[3]), Integer.parseInt(elements[5]));
     }
+
     String toString(JustTask justTask) {
         String line = null;
-        line = justTask.getId() + "," +
-                Types.JUSTTASK + "," +
-                justTask.getName() + "," +
-                justTask.getStatus() + "," +
-                justTask.getDescription();
-    return line;
+        line = justTask.getId() + "," + Types.JUSTTASK + "," + justTask.getName() + "," + justTask.getStatus() + "," + justTask.getDescription();
+        return line;
     }
+
     String toString(EpicTask epicTask) {
         String line;
         StringBuilder listSub = new StringBuilder();
@@ -203,22 +192,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
             listSub.deleteCharAt(listSub.length() - 1);
         }
-        line = epicTask.getId() + "," +
-                Types.EPICTASK + "," +
-                epicTask.getName() + "," +
-                epicTask.getStatus() + "," +
-                epicTask.getDescription() + "," +
-                listSub.toString();
+        line = epicTask.getId() + "," + Types.EPICTASK + "," + epicTask.getName() + "," + epicTask.getStatus() + "," + epicTask.getDescription() + "," + listSub.toString();
         return line;
     }
+
     String toString(SubTask subTask) {
         String line;
-        line = subTask.getId() + "," +
-                Types.SUBTASK + "," +
-                subTask.getName() + "," +
-                subTask.getStatus() + "," +
-                subTask.getDescription() + "," +
-                subTask.getIdMaster();
+        line = subTask.getId() + "," + Types.SUBTASK + "," + subTask.getName() + "," + subTask.getStatus() + "," + subTask.getDescription() + "," + subTask.getIdMaster();
         return line;
     }
 }
