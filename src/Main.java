@@ -21,9 +21,34 @@ public class Main {
         }
 
 
-         fileBackedTasksManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
-         fileBackedTasksManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", 1));
-         System.out.println(taskManager.getTask(2));
-         System.out.println(taskManager.getHistory());
+        // Создание задачи:
+        // fileBackedTasksManager.addJustTask(taskManager.createJustTask("задача", "описание задачи"));
+
+        // Создание эпика:
+        //fileBackedTasksManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
+
+        // Создание подзадачи:
+        //fileBackedTasksManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", (idMaster)));
+
+        // Изменить описание:
+        // fileBackedTasksManager.changeDescription(id);
+
+        // Изменить статус задачи (только для задач и подзадач, статус эпиков меняется самостоятельно):
+        // fileBackedTasksManager.changeStatus(id);
+
+        // Просмотреть задачу:
+        // System.out.println(taskManager.getTask(id));
+
+        // Просмотреть историю:
+        // System.out.println(taskManager.getHistory(id));
+
+        // Удалить задачу:
+        // fileBackedTasksManager.removeTask(id);
+
+        // Удалить все задачи:
+        // fileBackedTasksManager.removeAllTask();
+
+        // Очистить историю:
+        // historyManager.removeAllHistory();
     }
 }
