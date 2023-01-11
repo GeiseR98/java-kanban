@@ -1,5 +1,7 @@
 package tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class EpicTask extends Task {
@@ -11,8 +13,8 @@ public class EpicTask extends Task {
     }
 
 
-    public EpicTask(int id, String name, String description, Status status, ArrayList<Integer> listIdSubtask) {
-        super(id, name, description, status);
+    public EpicTask(int id, String name, String description, Status status, LocalDateTime startTime, Duration duration, ArrayList<Integer> listIdSubtask) {
+        super(id, name, description, status, startTime, duration);
         this.listIdSubtask = listIdSubtask;
     }
 
