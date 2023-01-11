@@ -8,8 +8,8 @@ public abstract class  Task {
     private String name;
     private String description;
     private Status status;
-    private final Duration duration;
-    private final LocalDateTime startTime;
+    private Duration duration;
+    private LocalDateTime startTime;
 
 
     public Task(int id, String name, String description, Status status, LocalDateTime startTime, Duration duration) {
@@ -32,6 +32,12 @@ public abstract class  Task {
     public void setStatus(Status status) {
         this.status = status;
     }
+    public void setStartTime(LocalDateTime startTime) { // проверять возможность
+        this.startTime = startTime;
+    }
+    public void setDuration(Duration duration) {       // проверять возможность
+        this.duration = duration;
+    }
 
     public int getId() {
         return id;
@@ -47,6 +53,12 @@ public abstract class  Task {
 
     public String getName() {
         return name;
+    }
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+    public Duration getDuration() {
+        return duration;
     }
     public LocalDateTime getEndTime() {
         return startTime.plus(duration);
