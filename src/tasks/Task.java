@@ -35,7 +35,7 @@ public abstract class  Task {
     public void setStartTime(LocalDateTime startTime) { // проверять возможность
         this.startTime = startTime;
     }
-    public void setDuration(Duration duration) {       // проверять возможность
+    public void setDuration(Duration duration) {        // проверять возможность
         this.duration = duration;
     }
 

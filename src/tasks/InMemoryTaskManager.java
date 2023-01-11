@@ -4,7 +4,8 @@ import files.FileBackedTasksManager;
 import history.HistoryManager;
 import utilit.Manager;
 
-import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,10 +25,10 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     @Override
-    public JustTask createJustTask(String name, String description) {
+    public JustTask createJustTask(String name, String description, LocalDateTime startTime, Duration duration) {
         ++idTask;
         Status status = Status.NEW;
-        return new JustTask(idTask, name, description, status);
+        return new JustTask(idTask, name, description, status, startTime,duration);
     }
     @Override
     public Integer addJustTask(JustTask justTask){
@@ -41,9 +42,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public EpicTask createEpicTask(String name, String description) {
         ++idTask;
+        LocalDateTime startTime = null;
+        Duration duration = null;
         Status status = Status.NEW;
         ArrayList<Integer> listIdSubtask = new ArrayList<>();
-        return new EpicTask(idTask, name, description, status, listIdSubtask);
+        return new EpicTask(idTask, name, description, status, startTime, duration, listIdSubtask);
     }
     @Override
     public Integer addEpicTask(EpicTask epicTask){
@@ -55,14 +58,18 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public SubTask createSubTask(String name, String description, Integer idMaster) {
+    public SubTask createSubTask(String name,
+                                 String description,
+                                 LocalDateTime startTime,
+                                 Duration duration,
+                                 Integer idMaster) {
         ++idTask;
         Status status = Status.NEW;
         if (!epicTasks.containsKey(idMaster)) {
             System.out.println("Такого эпика не существует, создайте сначала эпик");
             return null;
         } else {
-            return new SubTask(idTask, name, description, status, idMaster);
+            return new SubTask(idTask, name, description, status, startTime, duration, idMaster);
         }
     }
     @Override
