@@ -2,6 +2,7 @@ package tasks;
 
 import files.FileBackedTasksManager;
 import history.HistoryManager;
+import timeAndDate.InMemoryTimeManager;
 import utilit.Manager;
 
 import java.time.Duration;
@@ -20,6 +21,8 @@ public class InMemoryTaskManager implements TaskManager {
     public static Map<Integer, SubTask> subTasks = new HashMap<>();
 
     HistoryManager historyManager = Manager.getDefaultHistory();
+
+    InMemoryTimeManager timeManager = new InMemoryTimeManager();
 
     private static int idTask = 0;
 
@@ -44,9 +47,10 @@ public class InMemoryTaskManager implements TaskManager {
         ++idTask;
         LocalDateTime startTime = null;
         Duration duration = null;
+        LocalDateTime endTime = null;
         Status status = Status.NEW;
         ArrayList<Integer> listIdSubtask = new ArrayList<>();
-        return new EpicTask(idTask, name, description, status, startTime, duration, listIdSubtask);
+        return new EpicTask(idTask, name, description, status, startTime, duration, endTime, listIdSubtask);
     }
     @Override
     public Integer addEpicTask(EpicTask epicTask){

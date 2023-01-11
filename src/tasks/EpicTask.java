@@ -7,14 +7,23 @@ import java.util.ArrayList;
 public class EpicTask extends Task {
 
     private ArrayList<Integer> listIdSubtask;
+    private LocalDateTime endTime;
 
     public ArrayList<Integer> getListIdSubtask() {
         return listIdSubtask;
     }
 
 
-    public EpicTask(int id, String name, String description, Status status, LocalDateTime startTime, Duration duration, ArrayList<Integer> listIdSubtask) {
+    public EpicTask(int id,
+                    String name,
+                    String description,
+                    Status status,
+                    LocalDateTime startTime,
+                    Duration duration,
+                    LocalDateTime endTime,
+                    ArrayList<Integer> listIdSubtask) {
         super(id, name, description, status, startTime, duration);
+        this.endTime = endTime;
         this.listIdSubtask = listIdSubtask;
     }
 
