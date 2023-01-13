@@ -83,7 +83,7 @@ public class InMemoryTaskManager implements TaskManager {
             epicTasks.get(subTask.getIdMaster()).getListIdSubtask().add(subTask.getId());
             System.out.println("Задача сохранена под номером '" + subTask.getId() + "'");
             }
-        checkEpicStatus(subTask.getIdMaster());
+        calculationEpicStatus(subTask.getIdMaster());
         return subTask.getId();
     }
 
@@ -209,7 +209,7 @@ public class InMemoryTaskManager implements TaskManager {
             epicTasks.get(idMaster).getListIdSubtask().remove(id) ;
             subTasks.remove(id);
             historyManager.remove(id);
-            checkEpicStatus(idMaster);
+            calculationEpicStatus(idMaster);
         } else {
             System.out.println("Такой задачи не обнаружено");
         }
@@ -231,7 +231,7 @@ public class InMemoryTaskManager implements TaskManager {
             else if (subTasks.get(id) != null) {
                 int idMaster = subTasks.get(id).getIdMaster();
                 subTasks.get(id).setStatus(status);
-                checkEpicStatus(idMaster);
+                calculationEpicStatus(idMaster);
             } else if (epicTasks.get(id) != null) {
                 System.out.println("Вы не можете менять статус эпика, он рассчитывается исходя из статусов подзадач");
             } else {
@@ -278,7 +278,7 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
         }
     }
-    private void checkEpicStatus(Integer idMaster){
+    private void calculationEpicStatus(Integer idMaster){
         if (epicTasks.get(idMaster).getListIdSubtask().size() != 0){
             int wordNew = 0;
             int wordDone = 0;
@@ -296,6 +296,31 @@ public class InMemoryTaskManager implements TaskManager {
             } else {
                 epicTasks.get(idMaster).setStatus(Status.IN_PROGRESS);
             }
+        }
+    }
+    private void calculationEpicTime(Integer idMaster) {
+        if (epicTasks.get(idMaster).getListIdSubtask().size() != 0) {
+            LocalDateTime min = null;
+            LocalDateTime max = null;
+            for (int i = 0; i < epicTasks.get(idMaster).getListIdSubtask().size(); i++) {
+                if (min == null) {
+                    min = subTasks.get(epicTasks.get(idMaster).getListIdSubtask().get(i)).getStartTime();
+                    max = subTasks.get(epicTasks.get(idMaster).getListIdSubtask().get(i)).getStartTime().plus(
+                            subTasks.get(epicTasks.get(idMaster).getListIdSubtask().get(i)).getDuration());
+                } else {
+                    if (subTasks.get(epicTasks.get(idMaster).getListIdSubtask().get(i)).getStartTime().isBefore(min)) {
+                        min = subTasks.get(epicTasks.get(idMaster).getListIdSubtask().get(i)).getStartTime();
+                    }
+                    if (subTasks.get(epicTasks.get(idMaster).getListIdSubtask().get(i)).getStartTime().plus(
+                        subTasks.get(epicTasks.get(idMaster).getListIdSubtask().get(i)).getDuration()).isAfter(max)) {
+                        max = (subTasks.get(epicTasks.get(idMaster).getListIdSubtask().get(i)).getStartTime().plus(
+                                subTasks.get(epicTasks.get(idMaster).getListIdSubtask().get(i)).getDuration()));
+                    }
+                }
+            }
+            epicTasks.get(idMaster).setStartTime(min);
+            epicTasks.get(idMaster).setEndTime(max);
+            epicTasks.get(idMaster).setDuration(Duration.between(min,max));
         }
     }
     private boolean checkInputStatus(Status status){

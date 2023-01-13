@@ -30,7 +30,9 @@ public class EpicTask extends Task {
     public void setListIdSubtask(ArrayList<Integer> listIdSubtask) {
         this.listIdSubtask = listIdSubtask;
     }
-
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
     @Override
     public String toString() {
         return " - {" +
