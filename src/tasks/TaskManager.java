@@ -28,8 +28,6 @@ public interface TaskManager {
     ArrayList<Task> getListAllSubTask();
 
     Task getTask(Integer id);
-
-    void showTask(Integer id);
     void removeTask(Integer id);
     void removeAllTask();
 

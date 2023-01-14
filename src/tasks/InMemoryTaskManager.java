@@ -84,6 +84,7 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Задача сохранена под номером '" + subTask.getId() + "'");
             }
         calculationEpicStatus(subTask.getIdMaster());
+        calculationEpicTime(subTask.getIdMaster());
         return subTask.getId();
     }
 
@@ -163,8 +164,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    @Override
-    public void showTask(Integer id) {
+    public static void showTask(Integer id) {
         if (justTasks.get(id) != null) {
             System.out.println("Задача №" + id + justTasks.get(id));
         }
@@ -210,6 +210,7 @@ public class InMemoryTaskManager implements TaskManager {
             subTasks.remove(id);
             historyManager.remove(id);
             calculationEpicStatus(idMaster);
+            calculationEpicTime(idMaster);
         } else {
             System.out.println("Такой задачи не обнаружено");
         }
