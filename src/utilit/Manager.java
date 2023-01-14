@@ -15,8 +15,8 @@ public class Manager {
     public static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
     }
-//    public static TimeManager getDefaultTime() {
-//        return new InMemoryTimeManager();
-//    }
+    public static TimeManager getDefaultTime() {
+        return new InMemoryTimeManager();
+    }
 
 }

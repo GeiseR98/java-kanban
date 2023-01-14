@@ -1,5 +1,6 @@
 package timeAndDate;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 public interface TimeManager {
@@ -7,7 +8,7 @@ public interface TimeManager {
     void addFixedTime();
     void addTuskTime();
     void addDailyTime();
-    void findFreeTime();
+    LocalDateTime findFreeTime(LocalDateTime startTime, Duration duration);
 
 
 

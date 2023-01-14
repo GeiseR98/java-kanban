@@ -3,6 +3,7 @@ package tasks;
 import files.FileBackedTasksManager;
 import history.HistoryManager;
 import timeAndDate.InMemoryTimeManager;
+import timeAndDate.TimeManager;
 import utilit.Manager;
 
 import java.time.Duration;
@@ -22,7 +23,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     HistoryManager historyManager = Manager.getDefaultHistory();
 
-    InMemoryTimeManager timeManager = new InMemoryTimeManager();
+    TimeManager timeManager = Manager.getDefaultTime();
 
     private static int idTask = 0;
 
@@ -31,7 +32,11 @@ public class InMemoryTaskManager implements TaskManager {
     public JustTask createJustTask(String name, String description, LocalDateTime startTime, Duration duration) {
         ++idTask;
         Status status = Status.NEW;
-        return new JustTask(idTask, name, description, status, startTime,duration);
+        if (timeManager.checkingFreeTime(startTime, startTime.plus(duration))) {
+            return new JustTask(idTask, name, description, status, startTime, duration);
+        } else {
+            return new JustTask(idTask, name, description, status, timeManager.findFreeTime(startTime,duration), duration);
+        }
     }
     @Override
     public Integer addJustTask(JustTask justTask){
