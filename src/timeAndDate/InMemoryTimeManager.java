@@ -1,14 +1,13 @@
 package timeAndDate;
 
 import tasks.InMemoryTaskManager;
-import tasks.TaskManager;
+import tasks.Task;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryTimeManager implements TimeManager{
 
@@ -18,8 +17,15 @@ public class InMemoryTimeManager implements TimeManager{
     final byte statusTimeFixed = 3; // индекс фиксированой задачи
 
     Map<LocalDate, Day> year = new HashMap<>();
+    Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
-
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(prioritizedTasks);
+    }
+    public void addprioritizedTasks(Task task) {
+        prioritizedTasks.add(task);
+    }
 
     @Override
     public boolean checkingFreeTime(LocalDateTime startTime, LocalDateTime endTime) {
@@ -71,6 +77,9 @@ public class InMemoryTimeManager implements TimeManager{
         }
         return firstFreeTime;
     }
+
+
+
     private LocalTime searchNearestInterval(LocalDateTime localDateTime) {
         LocalTime time = localDateTime.toLocalTime();
         if (time.getMinute() >= 15) {

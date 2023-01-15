@@ -8,10 +8,7 @@ import utilit.Manager;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -22,11 +19,9 @@ public class InMemoryTaskManager implements TaskManager {
     public static Map<Integer, SubTask> subTasks = new HashMap<>();
 
     HistoryManager historyManager = Manager.getDefaultHistory();
-
     TimeManager timeManager = Manager.getDefaultTime();
 
     private static int idTask = 0;
-
 
     @Override
     public JustTask createJustTask(String name, String description, LocalDateTime startTime, Duration duration) {
@@ -265,6 +260,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task>  getHistory() {
         return historyManager.getHistory();
+    }
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        return timeManager.getPrioritizedTasks();
     }
 
     public void setIdTask(int idTaskMax) {
