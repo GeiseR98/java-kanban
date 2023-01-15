@@ -51,28 +51,36 @@ public class InMemoryTimeManager implements TimeManager{
     }
 
     @Override
-    public boolean checkingFreeTime(LocalDateTime startTime, LocalDateTime endTime) {
+    public boolean checkingFreeTime(LocalDateTime startTime, Duration duration) {
         // проверяет свободно ли время в указанном интервале
+        LocalDateTime endTime = startTime.plus(duration);
+        LocalDateTime firstInterval = LocalDateTime.of(startTime.toLocalDate(), searchNearestInterval(startTime));
+        LocalDateTime lastInterval = LocalDateTime.of(endTime.toLocalDate(), searchNearestInterval(endTime));
+        LocalDateTime nextInterval = firstInterval;
         boolean isFree = false;
-        LocalTime firstTime = searchNearestInterval(startTime);
-        LocalTime secondTime = searchNearestInterval(endTime);
-        while (firstTime.isBefore(secondTime) || firstTime.equals(secondTime)) {
-            if (!(year.get(startTime.toLocalDate()).day.containsKey(firstTime)) || year.get(startTime.toLocalDate()).day.get(firstTime).timeStatus == statusTimeFree) {
+        while (nextInterval.isBefore(lastInterval) || nextInterval.equals(lastInterval)) {
+            if (!year.containsKey(nextInterval.toLocalDate())) {
+                year.put(nextInterval.toLocalDate(), new Day());
+            }
+            if (!year.get(nextInterval.toLocalDate()).day.containsKey(nextInterval.toLocalTime())) {
+                year.get(nextInterval.toLocalDate()).day.put(nextInterval.toLocalTime(), new Interval(statusTimeFree));
+            }
+            if (year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).timeStatus == statusTimeFree) {
                 isFree = true;
-                firstTime = firstTime.plusMinutes(15);
-            } else if (year.get(startTime.toLocalDate()).day.get(firstTime).timeStatus == statusTimeDaily) {
+                nextInterval = nextInterval.plusMinutes(15);
+            } else if (year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).timeStatus == statusTimeDaily) {
                 System.out.println("Обычно в это время у вас ");
-                InMemoryTaskManager.showTask(year.get(startTime.toLocalDate()).day.get(firstTime).idTask);
-                // добавить в следующх обновлениях флажек на "заменить/не заменять"
+                InMemoryTaskManager.showTask(year.get(nextInterval.toLocalDate()).day.get(nextInterval).idTask);
+                // добавить в следующих обновлениях флажок на "заменить/переместить"
                 isFree = true;
-                firstTime = firstTime.plusMinutes(15);
-            } else if (year.get(startTime.toLocalDate()).day.get(firstTime).timeStatus == statusTimeTusk || year.get(startTime.toLocalDate()).day.get(firstTime).timeStatus == statusTimeFixed) {
-                System.out.println("В это время у вас:");
-                InMemoryTaskManager.showTask(year.get(startTime.toLocalDate()).day.get(firstTime).idTask);
+                nextInterval = nextInterval.plusMinutes(15);
+            } else if (year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).timeStatus == statusTimeTusk) {
                 isFree = false;
-                return false;
-                // для задач без фиксированого времени предлагать ближайшее свободное
-                
+                break;
+                // добавить вопрос о перемещении
+            } else {
+                isFree = false;
+                break;
             }
         }
         return isFree;

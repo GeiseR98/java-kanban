@@ -27,7 +27,7 @@ public class InMemoryTaskManager implements TaskManager {
     public JustTask createJustTask(String name, String description, LocalDateTime startTime, Duration duration) {
         ++idTask;
         Status status = Status.NEW;
-        if (timeManager.checkingFreeTime(startTime, startTime.plus(duration))) {
+        if (timeManager.checkingFreeTime(startTime, duration)) {
             return new JustTask(idTask, name, description, status, startTime, duration);
         } else {
             return new JustTask(idTask, name, description, status, timeManager.findFreeTime(startTime,duration), duration);

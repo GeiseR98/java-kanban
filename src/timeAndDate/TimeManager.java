@@ -9,7 +9,7 @@ import java.util.List;
 public interface TimeManager {
     void addPrioritizedTasks(Task task);
 
-    boolean checkingFreeTime(LocalDateTime startTime, LocalDateTime endTime);
+    boolean checkingFreeTime(LocalDateTime startTime, Duration duration);
     void addFixedTime(Task task);
 
     void addTuskTime();
