@@ -80,25 +80,27 @@ public class InMemoryTimeManager implements TimeManager{
     @Override
     public LocalDateTime findFreeTime(LocalDateTime startTime, Duration duration) {
         // ищет свободное время
-        LocalDateTime firstFreeTime = LocalDateTime.of(startTime.toLocalDate(), searchNearestInterval(startTime));
-        LocalDateTime nextTime = firstFreeTime;
-        int amountInterval = (int) Math.ceil(duration.toMinutes() / 15.0);
+        LocalDateTime firstFreeInterval = LocalDateTime.of(startTime.toLocalDate(), searchNearestInterval(startTime));
+        LocalDateTime nextFreeInterval = firstFreeInterval;
+        int amountInterval = (int) Math.ceil((Duration.between(firstFreeInterval, startTime.plus(duration))).toMinutes() / 15.0);
         int amountFreeInterval = 0;
-        while (amountFreeInterval <= amountInterval) {
-            if (!(year.get(nextTime.toLocalDate()).day.containsKey(nextTime.toLocalTime())) ||
-            year.get(nextTime.toLocalDate()).day.get(nextTime.toLocalTime()).timeStatus == statusTimeFree) {
-                if (amountFreeInterval == 0) {
-                    firstFreeTime = nextTime;
-                }
-                if (amountFreeInterval != amountInterval) {
-                    nextTime = nextTime.plusMinutes(15);
-                }
+        while (amountFreeInterval < amountInterval) {
+            if (!year.containsKey(nextFreeInterval.toLocalDate())) {
+                year.put(nextFreeInterval.toLocalDate(), new Day());
+            }
+            if (!year.get(nextFreeInterval.toLocalDate()).day.containsKey(nextFreeInterval.toLocalTime())) {
+                year.get(nextFreeInterval.toLocalDate()).day.put(nextFreeInterval.toLocalTime(), new Interval(statusTimeFree));
+            }
+            if (year.get(nextFreeInterval.toLocalDate()).day.get(nextFreeInterval.toLocalTime()).timeStatus == statusTimeFree) {
                 amountFreeInterval += 1;
+                nextFreeInterval = nextFreeInterval.plusMinutes(15);
             } else {
                 amountFreeInterval = 0;
+                nextFreeInterval = nextFreeInterval.plusMinutes(15);
+                firstFreeInterval = nextFreeInterval;
             }
         }
-        return firstFreeTime;
+        return firstFreeInterval;
     }
 
 
@@ -142,6 +144,9 @@ public class InMemoryTimeManager implements TimeManager{
        public Interval(byte timeStatus, int idTask) {
            this.timeStatus = timeStatus;
            this.idTask = idTask;
+       }
+       public Interval(byte timeStatus) {
+           this.timeStatus = timeStatus;
        }
     }
     class Day {
