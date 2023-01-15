@@ -37,6 +37,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Integer addJustTask(JustTask justTask){
         if (!justTasks.containsKey(justTask.getId())) {
             justTasks.put(justTask.getId(), justTask);
+            timeManager.addPrioritizedTasks(justTask);
             System.out.println("Задача сохранена под номером '" + justTask.getId() + "'");
         }
         return justTask.getId();
@@ -85,6 +86,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
         calculationEpicStatus(subTask.getIdMaster());
         calculationEpicTime(subTask.getIdMaster());
+        timeManager.addPrioritizedTasks(subTask);
         return subTask.getId();
     }
 

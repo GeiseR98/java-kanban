@@ -7,8 +7,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TimeManager {
+    void addPrioritizedTasks(Task task);
+
     boolean checkingFreeTime(LocalDateTime startTime, LocalDateTime endTime);
-    void addFixedTime();
+    void addFixedTime(Task task);
+
     void addTuskTime();
     void addDailyTime();
     LocalDateTime findFreeTime(LocalDateTime startTime, Duration duration);
