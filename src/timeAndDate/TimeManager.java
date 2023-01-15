@@ -12,8 +12,9 @@ public interface TimeManager {
     boolean checkingFreeTime(LocalDateTime startTime, Duration duration);
     void addFixedTime(Task task);
 
-    void addTuskTime();
+    void addTuskTime(Task task);
     void addDailyTime();
     LocalDateTime findFreeTime(LocalDateTime startTime, Duration duration);
+    LocalDateTime findFreeTime( Duration duration);
     List<Task> getPrioritizedTasks();
 }

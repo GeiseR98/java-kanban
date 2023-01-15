@@ -28,10 +28,23 @@ public class InMemoryTaskManager implements TaskManager {
         ++idTask;
         Status status = Status.NEW;
         if (timeManager.checkingFreeTime(startTime, duration)) {
-            return new JustTask(idTask, name, description, status, startTime, duration);
+            JustTask justTask = new JustTask(idTask, name, description, status, startTime, duration);
+            timeManager.addFixedTime(justTask);
+            return justTask;
         } else {
-            return new JustTask(idTask, name, description, status, timeManager.findFreeTime(startTime,duration), duration);
+            System.out.println("Ближайшее свободное время: " + timeManager.findFreeTime(duration));
+            return null; // заменить на исключение
         }
+    }
+    @Override
+    public JustTask createJustTask(String name, String description, Duration duration) {
+        ++idTask;
+        Status status = Status.NEW;
+        LocalDateTime startTime = timeManager.findFreeTime(duration);
+        JustTask justTask = new JustTask(idTask, name, description, status, startTime, duration);
+        timeManager.addTuskTime(justTask);
+        return justTask;
+
     }
     @Override
     public Integer addJustTask(JustTask justTask){
@@ -72,9 +85,33 @@ public class InMemoryTaskManager implements TaskManager {
         Status status = Status.NEW;
         if (!epicTasks.containsKey(idMaster)) {
             System.out.println("Такого эпика не существует, создайте сначала эпик");
-            return null;
+            return null; // заменить на исключения
         } else {
-            return new SubTask(idTask, name, description, status, startTime, duration, idMaster);
+            if (timeManager.checkingFreeTime(startTime, duration)) {
+                SubTask subTask = new SubTask(idTask, name, description, status, startTime, duration, idMaster);
+                timeManager.addFixedTime(subTask);
+                return subTask;
+            } else {
+                System.out.println("Ближайшее свободное время: " + timeManager.findFreeTime(duration));
+                return null; // заменить на исключение
+            }
+        }
+    }
+    @Override
+    public SubTask createSubTask(String name,
+                                 String description,
+                                 Duration duration,
+                                 Integer idMaster) {
+        ++idTask;
+        Status status = Status.NEW;
+        if (!epicTasks.containsKey(idMaster)) {
+            System.out.println("Такого эпика не существует, создайте сначала эпик");
+            return null; // заменить на исключения
+        } else {
+            LocalDateTime startTime = timeManager.findFreeTime(duration);
+            SubTask subTask = new SubTask(idTask, name, description, status, startTime, duration, idMaster);
+            timeManager.addTuskTime(subTask);
+            return subTask;
         }
     }
     @Override

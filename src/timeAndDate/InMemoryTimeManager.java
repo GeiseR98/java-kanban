@@ -49,7 +49,28 @@ public class InMemoryTimeManager implements TimeManager{
             }
         }
     }
-
+    @Override
+    public void addTuskTime(Task task) {
+        LocalDateTime endTime = task.getStartTime().plus(task.getDuration());
+        LocalDateTime firstInterval = LocalDateTime.of(task.getStartTime().toLocalDate(), searchNearestInterval(task.getStartTime()));
+        LocalDateTime lastInterval = LocalDateTime.of(endTime.toLocalDate(), searchNearestInterval(endTime));
+        LocalDateTime nextInterval = firstInterval;
+        while (nextInterval.isBefore(lastInterval) || nextInterval.equals(lastInterval)) {
+            if (!year.containsKey(nextInterval.toLocalDate())) {
+                year.put(nextInterval.toLocalDate(), new Day());
+            }
+            if (!year.get(nextInterval.toLocalDate()).day.containsKey(nextInterval.toLocalTime())) {
+                year.get(nextInterval.toLocalDate()).day.put(nextInterval.toLocalTime(), new Interval(statusTimeTusk, task.getId()));
+            }
+            if (year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).timeStatus == statusTimeFree ||
+                    year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).timeStatus == statusTimeDaily
+            ) {
+                year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).timeStatus = statusTimeTusk;
+                year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).idTask = task.getId();
+                nextInterval = nextInterval.plusMinutes(15);
+            }
+        }
+    }
     @Override
     public boolean checkingFreeTime(LocalDateTime startTime, Duration duration) {
         // проверяет свободно ли время в указанном интервале
@@ -110,9 +131,32 @@ public class InMemoryTimeManager implements TimeManager{
         }
         return firstFreeInterval;
     }
-
-
-
+    @Override
+    public LocalDateTime findFreeTime(Duration duration) {
+        // ищет свободное время
+        LocalDateTime startTime = LocalDateTime.now().plusMinutes(15);
+        LocalDateTime firstFreeInterval = LocalDateTime.of(startTime.toLocalDate(), searchNearestInterval(startTime));
+        LocalDateTime nextFreeInterval = firstFreeInterval;
+        int amountInterval = (int) Math.ceil((Duration.between(firstFreeInterval, startTime.plus(duration))).toMinutes() / 15.0);
+        int amountFreeInterval = 0;
+        while (amountFreeInterval < amountInterval) {
+            if (!year.containsKey(nextFreeInterval.toLocalDate())) {
+                year.put(nextFreeInterval.toLocalDate(), new Day());
+            }
+            if (!year.get(nextFreeInterval.toLocalDate()).day.containsKey(nextFreeInterval.toLocalTime())) {
+                year.get(nextFreeInterval.toLocalDate()).day.put(nextFreeInterval.toLocalTime(), new Interval(statusTimeFree));
+            }
+            if (year.get(nextFreeInterval.toLocalDate()).day.get(nextFreeInterval.toLocalTime()).timeStatus == statusTimeFree) {
+                amountFreeInterval += 1;
+                nextFreeInterval = nextFreeInterval.plusMinutes(15);
+            } else {
+                amountFreeInterval = 0;
+                nextFreeInterval = nextFreeInterval.plusMinutes(15);
+                firstFreeInterval = nextFreeInterval;
+            }
+        }
+        return firstFreeInterval;
+    }
     private LocalTime searchNearestInterval(LocalDateTime localDateTime) {
         LocalTime time = localDateTime.toLocalTime();
         if (time.getMinute() >= 15) {
@@ -127,24 +171,12 @@ public class InMemoryTimeManager implements TimeManager{
             return LocalTime.of(time.getHour(), 00);
         }
     }
-
-
-
-    @Override
-    public void addTuskTime() {
-        // добаввляет задачу подбирая под неё первое свободное время
-    }
-
     @Override
     public void addDailyTime() {
         // метод будет добавлять повседневное занятие
         // начиная от new до конца "года", или указанного срока
         // можно добавить реализацию с графиком...
     }
-
-
-
-
     class Interval {
        byte timeStatus;
        int idTask;

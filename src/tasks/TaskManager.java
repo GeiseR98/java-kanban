@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface TaskManager {
     JustTask createJustTask(String name, String description, LocalDateTime startTime, Duration duration);
+    JustTask createJustTask(String name, String description, Duration duration);
 
     Integer addJustTask(JustTask justTask);
     EpicTask createEpicTask(String name, String description);
@@ -14,6 +15,10 @@ public interface TaskManager {
     SubTask createSubTask(String name,
                           String description,
                           LocalDateTime startTime,
+                          Duration duration,
+                          Integer idMaster);
+    SubTask createSubTask(String name,
+                          String description,
                           Duration duration,
                           Integer idMaster);
     Integer addSubTask(SubTask subTask);
