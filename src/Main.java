@@ -2,10 +2,12 @@ import files.FileBackedTasksManager;
 import history.HistoryManager;
 import tasks.Status;
 import tasks.TaskManager;
+import timeAndDate.TimeManager;
 import utilit.Manager;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 
 public class Main {
 
@@ -13,6 +15,7 @@ public class Main {
         System.out.println("Поехали!");
         TaskManager taskManager = Manager.getDefault();
         HistoryManager historyManager = Manager.getDefaultHistory();
+        TimeManager timeManager = Manager.getDefaultTime();
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
         if (fileBackedTasksManager.readFile("saves" + File.separator + "file.csv") != null) {
             fileBackedTasksManager.loadFromFile();
@@ -21,14 +24,22 @@ public class Main {
         }
 
 
-        // Создание задачи:
-        // fileBackedTasksManager.addJustTask(taskManager.createJustTask("задача", "описание задачи"));
+
 
         // Создание эпика:
-        //fileBackedTasksManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
+//        fileBackedTasksManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
 
+        // Создание задачи:
+        fileBackedTasksManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(120)));
+        System.out.println(taskManager.getTask(1));
+        System.out.println(taskManager.getHistory());
+
+//        fileBackedTasksManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(120)));
+//        fileBackedTasksManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(120)));
+//        fileBackedTasksManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(120)));
         // Создание подзадачи:
-        //fileBackedTasksManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", (idMaster)));
+//        fileBackedTasksManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(10), 1));
+//        fileBackedTasksManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(150), 1));
 
         // Изменить описание:
         // fileBackedTasksManager.changeDescription(id);

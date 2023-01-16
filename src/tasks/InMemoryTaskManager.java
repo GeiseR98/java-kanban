@@ -2,7 +2,6 @@ package tasks;
 
 import files.FileBackedTasksManager;
 import history.HistoryManager;
-import timeAndDate.InMemoryTimeManager;
 import timeAndDate.TimeManager;
 import utilit.Manager;
 
@@ -44,7 +43,6 @@ public class InMemoryTaskManager implements TaskManager {
         JustTask justTask = new JustTask(idTask, name, description, status, startTime, duration);
         timeManager.addTuskTime(justTask);
         return justTask;
-
     }
     @Override
     public Integer addJustTask(JustTask justTask){
@@ -299,6 +297,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task>  getHistory() {
         return historyManager.getHistory();
+    }
+    @Override
+    public byte getStatusTime(LocalDateTime startTime) {
+        return timeManager.getStatusTime(startTime);
     }
     @Override
     public List<Task> getPrioritizedTasks() {

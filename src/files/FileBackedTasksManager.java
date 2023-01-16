@@ -2,15 +2,22 @@ package files;
 
 import history.HistoryManager;
 import tasks.*;
+import timeAndDate.TimeManager;
 import utilit.Manager;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
+    @Override
+    public byte getStatusTime(LocalDateTime startTime) {
+        return super.getStatusTime(startTime);
+    }
 
     @Override
     public Integer addJustTask(JustTask justTask){
@@ -66,12 +73,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         TaskManager taskManager = Manager.getDefault();
         HistoryManager historyManager = Manager.getDefaultHistory();
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
+        TimeManager timeManager = Manager.getDefaultTime();
         // иначе не получилось сделать save статическим
         fileBackedTasksManager.remouveAndCreatFile();
         Writer fileWriter = null;
         try {
             fileWriter = new FileWriter("saves" + File.separator + "file.csv", true);
-            fileWriter.write("id,тип,название,статус,описание,idMaster(для подзадач)\n");
+            fileWriter.write("id,тип,название,статус,описание,начало,продолжительность,окончание,statusTime,idMaster(для подзадач)\n");
         for (Task justTask : taskManager.getListAllJustTask()) {
             fileWriter.write(fileBackedTasksManager.toString((JustTask) justTask) + "\n");
         }
@@ -163,28 +171,26 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         String name = elements[2];
         String description = elements[4];
         Status status = Status.valueOf(elements[3]);
-        return new JustTask(id, name, description, status);
+        LocalDateTime startTime = LocalDateTime.parse(elements[5]);
+        Duration duration = Duration.parse(elements[6]);
+        JustTask justTask = new JustTask(id, name, description, status, startTime, duration);
+        recoveryTusk(justTask, Byte.parseByte(elements[8]));
+        return justTask;
     }
 
     public EpicTask recovertEpicTask(String line) {
         Status status = Status.NEW;
         ArrayList<Integer> listIdSubtask = new ArrayList<>();
         String[] elements = line.split(",");
-
-
-    /*  кусок кода понадобится при будущих обновлениях
-        if (elements.length == 6) {
-            String[] listIdSub = elements[5].split("_");
-            for (String idSub : listIdSub) {
-                listIdSubtask.add(Integer.parseInt(idSub));
-            }
-        }*/
         return new EpicTask(Integer.parseInt(elements[0]), elements[2], elements[4], status, listIdSubtask);
     }
 
     public SubTask recoverySubTask(String line) {
         String[] elements = line.split(",");
-        return new SubTask(Integer.parseInt(elements[0]), elements[2], elements[4], Status.valueOf(elements[3]), Integer.parseInt(elements[5]));
+        SubTask subTask = new SubTask(Integer.parseInt(elements[0]), elements[2], elements[4], Status.valueOf(elements[3]),
+                LocalDateTime.parse(elements[5]), Duration.parse(elements[6]), Integer.parseInt(elements[9]));
+        timeManager.recoveryTusk(subTask, Byte.parseByte(elements[8]));
+        return subTask;
     }
 
     String toString(JustTask justTask) {
@@ -193,7 +199,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 Types.JUSTTASK + "," +
                 justTask.getName() + "," +
                 justTask.getStatus() + "," +
-                justTask.getDescription();
+                justTask.getDescription() + "," +
+                justTask.getStartTime() + "," +
+                justTask.getDuration() + "," +
+                justTask.getEndTime() + ",";
+                getStatusTime(justTask.getStartTime());
         return line;
     }
 
@@ -212,6 +222,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 epicTask.getName() + "," +
                 epicTask.getStatus() + "," +
                 epicTask.getDescription() + "," +
+                epicTask.getStartTime() + "," +
+                epicTask.getDuration() + "," +
+                epicTask.getEndTime() + "," +
                 listSub.toString();
         return line;
     }
@@ -223,6 +236,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 subTask.getName() + "," +
                 subTask.getStatus() + "," +
                 subTask.getDescription() + "," +
+                subTask.getStartTime() + "," +
+                subTask.getDuration() + "," +
+                subTask.getEndTime() + "," +
                 subTask.getIdMaster();
         return line;
     }

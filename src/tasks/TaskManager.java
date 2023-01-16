@@ -41,5 +41,6 @@ public interface TaskManager {
     void changeDescription(Integer id, String description);
 
     List<Task>  getHistory();
+    byte getStatusTime(LocalDateTime startTime);
     List<Task> getPrioritizedTasks();
 }
