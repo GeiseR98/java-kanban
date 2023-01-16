@@ -18,7 +18,7 @@ public class Main {
         TimeManager timeManager = Manager.getDefaultTime();
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
         if (fileBackedTasksManager.readFile("saves" + File.separator + "file.csv") != null) {
-            fileBackedTasksManager.loadFromFile();
+            FileBackedTasksManager.loadFromFile();
         } else {
             System.out.println("Невозможно прочитать файл. Возможно, файл не находится в нужной директории.");
         }
@@ -30,9 +30,15 @@ public class Main {
 //        fileBackedTasksManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
 
         // Создание задачи:
-        fileBackedTasksManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(120)));
-        System.out.println(taskManager.getTask(1));
-        System.out.println(taskManager.getHistory());
+        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(120)));
+        taskManager.getTask(1);
+        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", taskManager.getTask(1).getEndTime().plusMinutes(30), Duration.ofMinutes(120)));
+        System.out.println(taskManager.getStatusTime(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(120)).getStartTime()));
+        System.out.println(taskManager.getStatusTime(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(120)).getStartTime()));
+
+        FileBackedTasksManager.save();
+//        System.out.println(taskManager.getTask(1));
+//        System.out.println(taskManager.getHistory());
 
 //        fileBackedTasksManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(120)));
 //        fileBackedTasksManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(120)));

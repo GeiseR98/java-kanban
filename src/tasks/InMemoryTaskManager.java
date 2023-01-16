@@ -2,6 +2,7 @@ package tasks;
 
 import files.FileBackedTasksManager;
 import history.HistoryManager;
+import timeAndDate.InMemoryTimeManager;
 import timeAndDate.TimeManager;
 import utilit.Manager;
 
@@ -27,7 +28,7 @@ public class InMemoryTaskManager implements TaskManager {
         ++idTask;
         Status status = Status.NEW;
         if (timeManager.checkingFreeTime(startTime, duration)) {
-            JustTask justTask = new JustTask(idTask, name, description, status, startTime, duration);
+            JustTask justTask = new JustTask(idTask, name, description, status, startTime, duration, InMemoryTimeManager.timeStatusFixed);
             timeManager.addFixedTime(justTask);
             return justTask;
         } else {
@@ -40,7 +41,7 @@ public class InMemoryTaskManager implements TaskManager {
         ++idTask;
         Status status = Status.NEW;
         LocalDateTime startTime = timeManager.findFreeTime(duration);
-        JustTask justTask = new JustTask(idTask, name, description, status, startTime, duration);
+        JustTask justTask = new JustTask(idTask, name, description, status, startTime, duration, InMemoryTimeManager.statusTimeTusk);
         timeManager.addTuskTime(justTask);
         return justTask;
     }
@@ -86,7 +87,7 @@ public class InMemoryTaskManager implements TaskManager {
             return null; // заменить на исключения
         } else {
             if (timeManager.checkingFreeTime(startTime, duration)) {
-                SubTask subTask = new SubTask(idTask, name, description, status, startTime, duration, idMaster);
+                SubTask subTask = new SubTask(idTask, name, description, status, startTime, duration, InMemoryTimeManager.timeStatusFixed, idMaster);
                 timeManager.addFixedTime(subTask);
                 return subTask;
             } else {
@@ -107,7 +108,7 @@ public class InMemoryTaskManager implements TaskManager {
             return null; // заменить на исключения
         } else {
             LocalDateTime startTime = timeManager.findFreeTime(duration);
-            SubTask subTask = new SubTask(idTask, name, description, status, startTime, duration, idMaster);
+            SubTask subTask = new SubTask(idTask, name, description, status, startTime, duration, InMemoryTimeManager.statusTimeTusk, idMaster);
             timeManager.addTuskTime(subTask);
             return subTask;
         }
@@ -300,11 +301,15 @@ public class InMemoryTaskManager implements TaskManager {
     }
     @Override
     public byte getStatusTime(LocalDateTime startTime) {
-        return timeManager.getStatusTime(startTime);
+        byte b = timeManager.getStatusTime(startTime);
+        return b;
     }
     @Override
     public List<Task> getPrioritizedTasks() {
         return timeManager.getPrioritizedTasks();
+    }
+    public void recoveryTimeTask (Task task, byte statusTime) {
+        timeManager.recoveryTimeTusk(task, statusTime);
     }
 
     public void setIdTask(int idTaskMax) {

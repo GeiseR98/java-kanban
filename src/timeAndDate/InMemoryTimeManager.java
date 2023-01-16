@@ -11,10 +11,10 @@ import java.util.*;
 
 public class InMemoryTimeManager implements TimeManager{
 
-    final byte statusTimeFree = 0;  // индекс свободного времени
-    final byte statusTimeDaily = 1; // индекс повседневных заданий
-    final byte statusTimeTusk = 2;  // индекс обычной задачи
-    final byte statusTimeFixed = 3; // индекс фиксированой задачи
+    public final static byte statusTimeFree = 0;  // индекс свободного времени
+    public final static byte statusTimeDaily = 1; // индекс повседневных заданий
+    public final static byte statusTimeTusk = 2;  // индекс обычной задачи
+    public final static byte timeStatusFixed = 3; // индекс фиксированой задачи
 
     Map<LocalDate, Day> year = new HashMap<>();
     Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
@@ -38,12 +38,12 @@ public class InMemoryTimeManager implements TimeManager{
                 year.put(nextInterval.toLocalDate(), new Day());
             }
             if (!year.get(nextInterval.toLocalDate()).day.containsKey(nextInterval.toLocalTime())) {
-                year.get(nextInterval.toLocalDate()).day.put(nextInterval.toLocalTime(), new Interval(statusTimeFixed, task.getId()));
+                year.get(nextInterval.toLocalDate()).day.put(nextInterval.toLocalTime(), new Interval(timeStatusFixed, task.getId()));
             }
             if (year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).timeStatus == statusTimeFree ||
                 year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).timeStatus == statusTimeDaily
             ) {
-                year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).timeStatus = statusTimeFixed;
+                year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).timeStatus = timeStatusFixed;
                 year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).idTask = task.getId();
                 nextInterval = nextInterval.plusMinutes(15);
             }
@@ -72,7 +72,7 @@ public class InMemoryTimeManager implements TimeManager{
         }
     }
     @Override
-    public void recoveryTusk (Task task, byte statusTime) {
+    public void recoveryTimeTusk(Task task, byte statusTime) {
         LocalDateTime endTime = task.getStartTime().plus(task.getDuration());
         LocalDateTime firstInterval = LocalDateTime.of(task.getStartTime().toLocalDate(), searchNearestInterval(task.getStartTime()));
         LocalDateTime lastInterval = LocalDateTime.of(endTime.toLocalDate(), searchNearestInterval(endTime));
@@ -188,16 +188,7 @@ public class InMemoryTimeManager implements TimeManager{
 
     @Override
     public byte getStatusTime(LocalDateTime startTime) {
-        if (!year.isEmpty()) {
-            if (!year.get(startTime.toLocalDate()).day.isEmpty()) {
-                return year.get(startTime.toLocalDate()).day.get(searchNearestInterval(startTime)).timeStatus;
-            } else {
-                System.out.println("Day не создался");
-            }
-        } else {
-            System.out.println("Year не создался");
-        }
-        return 5;
+        return year.get(startTime.toLocalDate()).day.get(searchNearestInterval(startTime)).timeStatus;
     }
 
     @Override

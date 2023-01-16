@@ -15,17 +15,12 @@ import java.util.Collections;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     @Override
-    public byte getStatusTime(LocalDateTime startTime) {
-        return super.getStatusTime(startTime);
-    }
-
-    @Override
     public Integer addJustTask(JustTask justTask){
         super.addJustTask(justTask);
+        recoveryTimeTask(justTask, justTask.getTimeStatus());
         save();
         return justTask.getId();
     }
-
     @Override
     public Integer addEpicTask(EpicTask epicTask){
         super.addEpicTask(epicTask);
@@ -39,7 +34,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         save();
         return subTask.getId();
     }
-
     @Override
     public void removeTask(Integer id){
         super.removeTask(id);
@@ -138,31 +132,33 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    public void loadFromFile() throws IOException {
+    public static FileBackedTasksManager loadFromFile() throws IOException {
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
         ArrayList<Integer> listAllId = new ArrayList<>();
-        String file = readFile("saves" + File.separator + "file.csv");
+        String file = fileBackedTasksManager.readFile("saves" + File.separator + "file.csv");
 
         String[] lines = file.split("\r?\n");
         for (int i = 1; i < (lines.length - 2); i++) {
             String line = lines[i];
             if (line.contains(String.valueOf(Types.JUSTTASK))) {
-                listAllId.add(addJustTask(recoveryJustTask(line)));
+                listAllId.add(fileBackedTasksManager.addJustTask(fileBackedTasksManager.recoveryJustTask(line)));
             } else if (line.contains(String.valueOf(Types.EPICTASK))) {
-                listAllId.add(addEpicTask(recovertEpicTask(line)));
+                listAllId.add(fileBackedTasksManager.addEpicTask(fileBackedTasksManager.recovertEpicTask(line)));
             } else if (line.contains(String.valueOf(Types.SUBTASK))) {
-                listAllId.add(addSubTask(recoverySubTask(line)));
+                listAllId.add(fileBackedTasksManager.addSubTask(fileBackedTasksManager.recoverySubTask(line)));
             }
         }
         if (!listAllId.isEmpty()) {     // если задачи не восстановились, то историю задач восстанавливать бессмысленно.
-            setIdTask(Collections.max(listAllId));
+            fileBackedTasksManager.setIdTask(Collections.max(listAllId));
 
             if (!lines[lines.length - 1].contains("История задач пуста")) {
                 String[] listId = lines[lines.length - 1].split(",");
                 for (String id : listId) {
-                    getTask(Integer.parseInt(id));
+                    fileBackedTasksManager.getTask(Integer.parseInt(id));
                 }
             }
         }
+        return fileBackedTasksManager;
     }
 
     public JustTask recoveryJustTask(String line) {
@@ -173,8 +169,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         Status status = Status.valueOf(elements[3]);
         LocalDateTime startTime = LocalDateTime.parse(elements[5]);
         Duration duration = Duration.parse(elements[6]);
-        JustTask justTask = new JustTask(id, name, description, status, startTime, duration);
-        recoveryTusk(justTask, Byte.parseByte(elements[8]));
+        JustTask justTask = new JustTask(id, name, description, status, startTime, duration, Byte.parseByte(elements[8]));
+        recoveryTimeTask(justTask, Byte.parseByte(elements[8]));
         return justTask;
     }
 
@@ -188,12 +184,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public SubTask recoverySubTask(String line) {
         String[] elements = line.split(",");
         SubTask subTask = new SubTask(Integer.parseInt(elements[0]), elements[2], elements[4], Status.valueOf(elements[3]),
-                LocalDateTime.parse(elements[5]), Duration.parse(elements[6]), Integer.parseInt(elements[9]));
-        timeManager.recoveryTusk(subTask, Byte.parseByte(elements[8]));
+                LocalDateTime.parse(elements[5]), Duration.parse(elements[6]), Byte.parseByte(elements[8]), Integer.parseInt(elements[9]));
+        recoveryTimeTask(subTask, Byte.parseByte(elements[8]));
         return subTask;
     }
-
     String toString(JustTask justTask) {
+
+
         String line;
         line = justTask.getId() + "," +
                 Types.JUSTTASK + "," +
@@ -202,8 +199,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 justTask.getDescription() + "," +
                 justTask.getStartTime() + "," +
                 justTask.getDuration() + "," +
-                justTask.getEndTime() + ",";
-                getStatusTime(justTask.getStartTime());
+                justTask.getEndTime() + "," +
+                justTask.getTimeStatus();
+
         return line;
     }
 
