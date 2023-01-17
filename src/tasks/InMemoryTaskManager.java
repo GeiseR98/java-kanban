@@ -29,7 +29,6 @@ public class InMemoryTaskManager implements TaskManager {
         Status status = Status.NEW;
         if (timeManager.checkingFreeTime(startTime, duration)) {
             JustTask justTask = new JustTask(idTask, name, description, status, startTime, duration, InMemoryTimeManager.timeStatusFixed);
-            timeManager.addFixedTime(justTask);
             return justTask;
         } else {
             System.out.println("Ближайшее свободное время: " + timeManager.findFreeTime(duration));
@@ -42,19 +41,26 @@ public class InMemoryTaskManager implements TaskManager {
         Status status = Status.NEW;
         LocalDateTime startTime = timeManager.findFreeTime(duration);
         JustTask justTask = new JustTask(idTask, name, description, status, startTime, duration, InMemoryTimeManager.statusTimeTusk);
-        timeManager.addTuskTime(justTask);
         return justTask;
     }
     @Override
     public Integer addJustTask(JustTask justTask){
         if (!justTasks.containsKey(justTask.getId())) {
             justTasks.put(justTask.getId(), justTask);
-            timeManager.addPrioritizedTasks(justTask);
+            addPrioritizedTasks(justTask);
+            //recoveryTimeTask(justTask, justTask.getTimeStatus());
             System.out.println("Задача сохранена под номером '" + justTask.getId() + "'");
         }
         return justTask.getId();
     }
-
+    public void recoveryTimeTask(Task task, byte statusTime) {
+        timeManager.recoveryTimeTask(task, statusTime);
+    }
+    @Override
+    public void addPrioritizedTasks(Task task) {
+        timeManager.addPrioritizedTasks(task);
+        FileBackedTasksManager.save();
+    }
     @Override
     public EpicTask createEpicTask(String name, String description) {
         ++idTask;
@@ -308,9 +314,7 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getPrioritizedTasks() {
         return timeManager.getPrioritizedTasks();
     }
-    public void recoveryTimeTask (Task task, byte statusTime) {
-        timeManager.recoveryTimeTusk(task, statusTime);
-    }
+
 
     public void setIdTask(int idTaskMax) {
         idTask = idTaskMax;

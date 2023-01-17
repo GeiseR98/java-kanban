@@ -12,7 +12,7 @@ public interface TimeManager {
     void addFixedTime(Task task);
     void addTuskTime(Task task);
     void addDailyTime();
-    void recoveryTimeTusk(Task task, byte statusTime);
+    void recoveryTimeTask(Task task, byte statusTime);
     byte getStatusTime(LocalDateTime startTime);
     LocalDateTime findFreeTime(LocalDateTime startTime, Duration duration);
     LocalDateTime findFreeTime( Duration duration);

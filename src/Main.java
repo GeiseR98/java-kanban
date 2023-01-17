@@ -8,15 +8,15 @@ import utilit.Manager;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Поехали!");
         TaskManager taskManager = Manager.getDefault();
-        HistoryManager historyManager = Manager.getDefaultHistory();
-        TimeManager timeManager = Manager.getDefaultTime();
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
+        TimeManager timeManager = Manager.getDefaultTime();
         if (fileBackedTasksManager.readFile("saves" + File.separator + "file.csv") != null) {
             FileBackedTasksManager.loadFromFile();
         } else {
@@ -30,22 +30,21 @@ public class Main {
 //        fileBackedTasksManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
 
         // Создание задачи:
-        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(120)));
-        taskManager.getTask(1);
-        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", taskManager.getTask(1).getEndTime().plusMinutes(30), Duration.ofMinutes(120)));
-        System.out.println(taskManager.getStatusTime(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(120)).getStartTime()));
-        System.out.println(taskManager.getStatusTime(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(120)).getStartTime()));
+        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(29)));
+        taskManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
+        fileBackedTasksManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(10), 10));
+        fileBackedTasksManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(150), 10));
+        System.out.println("в таске " + taskManager.getPrioritizedTasks());
+        System.out.println("в беке " + fileBackedTasksManager.getPrioritizedTasks());
+        System.out.println("в тайм " + timeManager.getPrioritizedTasks());
+        System.out.println(taskManager.getTask(2));
 
-        FileBackedTasksManager.save();
+//        FileBackedTasksManager.save();
 //        System.out.println(taskManager.getTask(1));
 //        System.out.println(taskManager.getHistory());
 
-//        fileBackedTasksManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(120)));
-//        fileBackedTasksManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(120)));
-//        fileBackedTasksManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(120)));
         // Создание подзадачи:
-//        fileBackedTasksManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(10), 1));
-//        fileBackedTasksManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(150), 1));
+
 
         // Изменить описание:
         // fileBackedTasksManager.changeDescription(id);

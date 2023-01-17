@@ -15,9 +15,20 @@ import java.util.Collections;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     @Override
+    public void recoveryTimeTask(Task task, byte statusTime) {
+        super.recoveryTimeTask(task, statusTime);
+        save();
+    }
+
+    @Override
+    public void addPrioritizedTasks(Task task) {
+        super.addPrioritizedTasks(task);
+        save();
+    }
+
+    @Override
     public Integer addJustTask(JustTask justTask){
         super.addJustTask(justTask);
-        recoveryTimeTask(justTask, justTask.getTimeStatus());
         save();
         return justTask.getId();
     }
@@ -141,11 +152,19 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         for (int i = 1; i < (lines.length - 2); i++) {
             String line = lines[i];
             if (line.contains(String.valueOf(Types.JUSTTASK))) {
-                listAllId.add(fileBackedTasksManager.addJustTask(fileBackedTasksManager.recoveryJustTask(line)));
+                JustTask justTask = fileBackedTasksManager.recoveryJustTask(line);
+                fileBackedTasksManager.addJustTask(justTask);
+                listAllId.add(justTask.getId());
+                fileBackedTasksManager.recoveryTimeTask(justTask, justTask.getTimeStatus());
             } else if (line.contains(String.valueOf(Types.EPICTASK))) {
-                listAllId.add(fileBackedTasksManager.addEpicTask(fileBackedTasksManager.recovertEpicTask(line)));
+                EpicTask epicTask = fileBackedTasksManager.recovertEpicTask(line);
+                fileBackedTasksManager.addEpicTask(epicTask);
+                listAllId.add(epicTask.getId());
             } else if (line.contains(String.valueOf(Types.SUBTASK))) {
-                listAllId.add(fileBackedTasksManager.addSubTask(fileBackedTasksManager.recoverySubTask(line)));
+                SubTask subTask = fileBackedTasksManager.recoverySubTask(line);
+                fileBackedTasksManager.addSubTask(subTask);
+                listAllId.add(subTask.getId());
+                fileBackedTasksManager.recoveryTimeTask(subTask, subTask.getTimeStatus());
             }
         }
         if (!listAllId.isEmpty()) {     // если задачи не восстановились, то историю задач восстанавливать бессмысленно.
@@ -170,7 +189,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         LocalDateTime startTime = LocalDateTime.parse(elements[5]);
         Duration duration = Duration.parse(elements[6]);
         JustTask justTask = new JustTask(id, name, description, status, startTime, duration, Byte.parseByte(elements[8]));
-        recoveryTimeTask(justTask, Byte.parseByte(elements[8]));
         return justTask;
     }
 
@@ -183,9 +201,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public SubTask recoverySubTask(String line) {
         String[] elements = line.split(",");
-        SubTask subTask = new SubTask(Integer.parseInt(elements[0]), elements[2], elements[4], Status.valueOf(elements[3]),
-                LocalDateTime.parse(elements[5]), Duration.parse(elements[6]), Byte.parseByte(elements[8]), Integer.parseInt(elements[9]));
-        recoveryTimeTask(subTask, Byte.parseByte(elements[8]));
+        int id = Integer.parseInt(elements[0]);
+        String name = elements[2];
+        String description = elements[4];
+        Status status = Status.valueOf(elements[3]);
+        LocalDateTime startTime = LocalDateTime.parse(elements[5]);
+        Duration duration = Duration.parse(elements[6]);
+        int idMaster = Integer.parseInt(elements[9]);
+        SubTask subTask = new SubTask(id, name, description, status,startTime, duration, Byte.parseByte(elements[8]), idMaster);
         return subTask;
     }
     String toString(JustTask justTask) {
@@ -237,6 +260,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 subTask.getStartTime() + "," +
                 subTask.getDuration() + "," +
                 subTask.getEndTime() + "," +
+                subTask.getTimeStatus() + "," +
                 subTask.getIdMaster();
         return line;
     }

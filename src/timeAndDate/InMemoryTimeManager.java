@@ -16,8 +16,8 @@ public class InMemoryTimeManager implements TimeManager{
     public final static byte statusTimeTusk = 2;  // индекс обычной задачи
     public final static byte timeStatusFixed = 3; // индекс фиксированой задачи
 
-    Map<LocalDate, Day> year = new HashMap<>();
-    Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+    static Map<LocalDate, Day> year = new HashMap<>();
+    static Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
     @Override
     public List<Task> getPrioritizedTasks() {
@@ -72,7 +72,7 @@ public class InMemoryTimeManager implements TimeManager{
         }
     }
     @Override
-    public void recoveryTimeTusk(Task task, byte statusTime) {
+    public void recoveryTimeTask(Task task, byte statusTime) {
         LocalDateTime endTime = task.getStartTime().plus(task.getDuration());
         LocalDateTime firstInterval = LocalDateTime.of(task.getStartTime().toLocalDate(), searchNearestInterval(task.getStartTime()));
         LocalDateTime lastInterval = LocalDateTime.of(endTime.toLocalDate(), searchNearestInterval(endTime));
