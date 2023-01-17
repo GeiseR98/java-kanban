@@ -32,8 +32,8 @@ public class Main {
         // Создание задачи:
         taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(29)));
         taskManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
-        fileBackedTasksManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(10), 10));
-        fileBackedTasksManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(150), 10));
+        fileBackedTasksManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(10), 4));
+        fileBackedTasksManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(150), 4));
         System.out.println("в таске " + taskManager.getPrioritizedTasks());
         System.out.println("в беке " + fileBackedTasksManager.getPrioritizedTasks());
         System.out.println("в тайм " + timeManager.getPrioritizedTasks());
