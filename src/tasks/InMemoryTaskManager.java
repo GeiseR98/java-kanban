@@ -140,8 +140,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
-    public ArrayList<Task> getListAllJustTask() {
-        ArrayList<Task> list = new ArrayList<>();
+    public ArrayList<JustTask> getListAllJustTask() {
+        ArrayList<JustTask> list = new ArrayList<>();
         for (Integer key : justTasks.keySet()) {
             list.add(justTasks.get(key));
         }
@@ -181,8 +181,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
-    public ArrayList<Task> getListAllSubTask() {
-        ArrayList<Task> list = new ArrayList<>();
+    public ArrayList<SubTask> getListAllSubTask() {
+        ArrayList<SubTask> list = new ArrayList<>();
         for (Integer key : subTasks.keySet()) {
             list.add(subTasks.get(key));
         }

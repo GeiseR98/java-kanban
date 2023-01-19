@@ -1,7 +1,5 @@
 package tasks;
-import timeAndDate.TimeManager;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,13 +25,13 @@ public interface TaskManager {
     Integer addSubTask(SubTask subTask);
 
     void printAllJustTask();
-    ArrayList<Task> getListAllJustTask();
+    ArrayList<JustTask> getListAllJustTask();
 
     void printAllEpicTask();
     ArrayList<EpicTask> getListAllEpicTask();
 
     void printAllSubTask();
-    ArrayList<Task> getListAllSubTask();
+    ArrayList<SubTask> getListAllSubTask();
 
     Task getTask(Integer id);
     void removeTask(Integer id);
