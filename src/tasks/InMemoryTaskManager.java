@@ -48,7 +48,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (!justTasks.containsKey(justTask.getId())) {
             justTasks.put(justTask.getId(), justTask);
             addPrioritizedTasks(justTask);
-            //recoveryTimeTask(justTask, justTask.getTimeStatus());
+            recoveryTimeTask(justTask, justTask.getTimeStatus());
             System.out.println("Задача сохранена под номером '" + justTask.getId() + "'");
         }
         return justTask.getId();

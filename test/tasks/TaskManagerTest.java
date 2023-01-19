@@ -1,5 +1,6 @@
 package tasks;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import timeAndDate.InMemoryTimeManager;
 import timeAndDate.TimeManager;
@@ -14,15 +15,14 @@ abstract class TaskManagerTest<T extends TaskManager> {
     T taskManager;
 
     int idTask = 0;
-
-     JustTask createJustTask(String name, String description, LocalDateTime startTime, Duration duration) {
-             ++idTask;
-             Status status = Status.NEW;
-             JustTask justTask = new JustTask(1, name, description, status, startTime, duration, InMemoryTimeManager.timeStatusFixed);
-             return justTask;
-    }
+//     JustTask createJustTask(String name, String description, LocalDateTime startTime, Duration duration) {
+//             ++idTask;
+//             Status status = Status.NEW;
+//             JustTask justTask = new JustTask(1, name, description, status, startTime, duration, InMemoryTimeManager.timeStatusFixed);
+//             return justTask;
+//    }
     @Test
-    public void shouldCreateJustTask() {
+    public void shouldCreateJustTaskWithoutTime() {
         JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(29));
         assertNotEquals(0, justTask.getId());
         assertEquals(++idTask, justTask.getId());
@@ -32,11 +32,23 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertNotNull(justTask.getStartTime());
         assertNotNull(justTask.getDuration());
         assertNotEquals(0, justTask.getTimeStatus());
-        assertEquals(2, justTask.getTimeStatus());
+        assertEquals(InMemoryTimeManager.statusTimeTusk, justTask.getTimeStatus());
     }
 
     @Test
-    void testCreateJustTask() {
+    public void shouldCreateJustTaskWithTime() {
+        LocalDateTime startTime = LocalDateTime.now().plusMinutes(15);
+        JustTask justTask = taskManager.createJustTask("задача", "описание задачи", startTime, Duration.ofMinutes(29));
+        assertNotEquals(0, justTask.getId());
+        assertEquals(startTime, justTask.getStartTime());
+        assertEquals(++idTask, justTask.getId());
+        assertNotNull(justTask.getName());
+        assertNotNull(justTask.getDescription());
+        assertNotNull(justTask.getStatus());
+        assertNotNull(justTask.getStartTime());
+        assertNotNull(justTask.getDuration());
+        assertNotEquals(0, justTask.getTimeStatus());
+        assertEquals(InMemoryTimeManager.timeStatusFixed, justTask.getTimeStatus());
     }
 
     @Test
