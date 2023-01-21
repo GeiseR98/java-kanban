@@ -1,5 +1,6 @@
 import files.FileBackedTasksManager;
 import history.HistoryManager;
+import tasks.InMemoryTaskManager;
 import tasks.Status;
 import tasks.TaskManager;
 import timeAndDate.TimeManager;
@@ -23,6 +24,8 @@ public class Main {
             System.out.println("Невозможно прочитать файл. Возможно, файл не находится в нужной директории.");
         }
 
+        InMemoryTaskManager.autoSave = true;
+
 
 
 
@@ -37,7 +40,7 @@ public class Main {
         System.out.println("в таске " + taskManager.getPrioritizedTasks());
         System.out.println("в беке " + fileBackedTasksManager.getPrioritizedTasks());
         System.out.println("в тайм " + timeManager.getPrioritizedTasks());
-        System.out.println(taskManager.getTask(2));
+//        System.out.println(taskManager.getTask(2));
 
 //        FileBackedTasksManager.save();
 //        System.out.println(taskManager.getTask(1));

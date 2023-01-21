@@ -23,6 +23,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     private static int idTask = 0;
 
+    public static boolean autoSave = false;
+
     @Override
     public JustTask createJustTask(String name, String description, LocalDateTime startTime, Duration duration) {
         ++idTask;
@@ -40,7 +42,7 @@ public class InMemoryTaskManager implements TaskManager {
         ++idTask;
         Status status = Status.NEW;
         LocalDateTime startTime = timeManager.findFreeTime(duration);
-        JustTask justTask = new JustTask(idTask, name, description, status, startTime, duration, InMemoryTimeManager.statusTimeTusk);
+        JustTask justTask = new JustTask(idTask, name, description, status, startTime, duration, InMemoryTimeManager.timeStatusTusk);
         return justTask;
     }
     @Override
@@ -50,6 +52,9 @@ public class InMemoryTaskManager implements TaskManager {
             addPrioritizedTasks(justTask);
             recoveryTimeTask(justTask, justTask.getTimeStatus());
             System.out.println("Задача сохранена под номером '" + justTask.getId() + "'");
+            if (autoSave) {
+                FileBackedTasksManager.save();
+            }
         }
         return justTask.getId();
     }
@@ -59,7 +64,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addPrioritizedTasks(Task task) {
         timeManager.addPrioritizedTasks(task);
-        FileBackedTasksManager.save();
     }
     @Override
     public EpicTask createEpicTask(String name, String description) {
@@ -76,6 +80,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (!epicTasks.containsKey(epicTask.getId())) {
             epicTasks.put(epicTask.getId(), epicTask);
             System.out.println("Задача сохранена под номером '" + epicTask.getId() + "'");
+            if (autoSave) {
+                FileBackedTasksManager.save();
+            }
         }
         return epicTask.getId();
     }
@@ -114,7 +121,7 @@ public class InMemoryTaskManager implements TaskManager {
             return null; // заменить на исключения
         } else {
             LocalDateTime startTime = timeManager.findFreeTime(duration);
-            SubTask subTask = new SubTask(idTask, name, description, status, startTime, duration, InMemoryTimeManager.statusTimeTusk, idMaster);
+            SubTask subTask = new SubTask(idTask, name, description, status, startTime, duration, InMemoryTimeManager.timeStatusTusk, idMaster);
             timeManager.addTuskTime(subTask);
             return subTask;
         }
@@ -129,6 +136,9 @@ public class InMemoryTaskManager implements TaskManager {
         calculationEpicStatus(subTask.getIdMaster());
         calculationEpicTime(subTask.getIdMaster());
         timeManager.addPrioritizedTasks(subTask);
+        if (autoSave) {
+            FileBackedTasksManager.save();
+        }
         return subTask.getId();
     }
 
@@ -190,22 +200,23 @@ public class InMemoryTaskManager implements TaskManager {
     }
     @Override
     public Task getTask (Integer id){
+        Task task = null;
         if (justTasks.get(id) != null) {
             historyManager.addHistory(justTasks.get(id));
-            FileBackedTasksManager.save();
-            return justTasks.get(id);
+            task = justTasks.get(id);
         } else if (epicTasks.get(id) != null) {
             historyManager.addHistory(epicTasks.get(id));
-            FileBackedTasksManager.save();
-            return epicTasks.get(id);
+            task = epicTasks.get(id);
         } else if (subTasks.get(id) != null) {
             historyManager.addHistory(subTasks.get(id));
-            FileBackedTasksManager.save();
-            return subTasks.get(id);
+            task = subTasks.get(id);
         } else {
             System.out.println("Задачи под таким номером не найдено");
-            return null;
         }
+        if (autoSave) {
+            FileBackedTasksManager.save();
+        }
+        return task;
     }
 
     public static void showTask(Integer id) {
@@ -234,6 +245,9 @@ public class InMemoryTaskManager implements TaskManager {
             justTasks.remove(id);
             historyManager.remove(id);
             System.out.println("Задача №" + id + " успешно удалена...");
+            if (autoSave) {
+                FileBackedTasksManager.save();
+            }
         } else if (epicTasks.get(id) != null){
             if (epicTasks.get(id).getListIdSubtask().size() != 0) {
                 for (int i = 0; i < epicTasks.get(id).getListIdSubtask().size(); i++) {
@@ -243,10 +257,16 @@ public class InMemoryTaskManager implements TaskManager {
                 historyManager.remove(id);
                 epicTasks.remove(id);
                 System.out.println("Эпик №" + id + " успешно удален вместе с подзадачами.");
+                if (autoSave) {
+                    FileBackedTasksManager.save();
+                }
             } else {
                 epicTasks.remove(id);
                 historyManager.remove(id);
                 System.out.println("Эпик №" + id + " успешно удален");
+                if (autoSave) {
+                    FileBackedTasksManager.save();
+                }
             }
         } else if (subTasks.get(id) != null) {
             int idMaster = subTasks.get(id).getIdMaster();
@@ -255,6 +275,10 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.remove(id);
             calculationEpicStatus(idMaster);
             calculationEpicTime(idMaster);
+            System.out.println("Задача №" + id + " успешно удалена...");
+            if (autoSave) {
+                FileBackedTasksManager.save();
+            }
         } else {
             System.out.println("Такой задачи не обнаружено");
         }
@@ -266,17 +290,26 @@ public class InMemoryTaskManager implements TaskManager {
         for (Integer key : epicTasks.keySet()) epicTasks.remove(key);
         historyManager.removeAllHistory();
         System.out.println("Все задачи удалены");
+        if (autoSave) {
+            FileBackedTasksManager.save();
+        }
     }
     @Override
     public void changeStatus(Integer id, Status status){
         if (checkInputStatus(status)) {
             if (justTasks.get(id) != null) {
                 justTasks.get(id).setStatus(status);
+                if (autoSave) {
+                    FileBackedTasksManager.save();
+                }
             }
             else if (subTasks.get(id) != null) {
                 int idMaster = subTasks.get(id).getIdMaster();
                 subTasks.get(id).setStatus(status);
                 calculationEpicStatus(idMaster);
+                if (autoSave) {
+                    FileBackedTasksManager.save();
+                }
             } else if (epicTasks.get(id) != null) {
                 System.out.println("Вы не можете менять статус эпика, он рассчитывается исходя из статусов подзадач");
             } else {
@@ -290,12 +323,21 @@ public class InMemoryTaskManager implements TaskManager {
     public void changeDescription(Integer id, String description){
         if (justTasks.get(id) != null) {
             justTasks.get(id).setDescription(description);
+            if (autoSave) {
+                FileBackedTasksManager.save();
+            }
         }
         else if (subTasks.get(id) != null) {
             subTasks.get(id).setDescription(description);
+            if (autoSave) {
+                FileBackedTasksManager.save();
+            }
         }
         else if (epicTasks.get(id) != null) {
             epicTasks.get(id).setDescription(description);
+            if (autoSave) {
+                FileBackedTasksManager.save();
+            }
         }
         else {
             System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
@@ -323,12 +365,21 @@ public class InMemoryTaskManager implements TaskManager {
     void changeName(Integer id, String name){
         if (justTasks.get(id) != null) {
             justTasks.get(id).setName(name);
+            if (autoSave) {
+                FileBackedTasksManager.save();
+            }
         }
         else if (subTasks.get(id) != null) {
             subTasks.get(id).setName(name);
+            if (autoSave) {
+                FileBackedTasksManager.save();
+            }
         }
         else if (epicTasks.get(id) != null) {
             epicTasks.get(id).setName(name);
+            if (autoSave) {
+                FileBackedTasksManager.save();
+            }
         } else {
             System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
         }

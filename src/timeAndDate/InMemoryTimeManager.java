@@ -13,7 +13,7 @@ public class InMemoryTimeManager implements TimeManager{
 
     public final static byte statusTimeFree = 0;  // индекс свободного времени
     public final static byte statusTimeDaily = 1; // индекс повседневных заданий
-    public final static byte statusTimeTusk = 2;  // индекс обычной задачи
+    public final static byte timeStatusTusk = 2;  // индекс обычной задачи
     public final static byte timeStatusFixed = 3; // индекс фиксированой задачи
 
     static Map<LocalDate, Day> year = new HashMap<>();
@@ -60,12 +60,12 @@ public class InMemoryTimeManager implements TimeManager{
                 year.put(nextInterval.toLocalDate(), new Day());
             }
             if (!year.get(nextInterval.toLocalDate()).day.containsKey(nextInterval.toLocalTime())) {
-                year.get(nextInterval.toLocalDate()).day.put(nextInterval.toLocalTime(), new Interval(statusTimeTusk, task.getId()));
+                year.get(nextInterval.toLocalDate()).day.put(nextInterval.toLocalTime(), new Interval(timeStatusTusk, task.getId()));
             }
             if (year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).timeStatus == statusTimeFree ||
                     year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).timeStatus == statusTimeDaily
             ) {
-                year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).timeStatus = statusTimeTusk;
+                year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).timeStatus = timeStatusTusk;
                 year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).idTask = task.getId();
                 nextInterval = nextInterval.plusMinutes(15);
             }
@@ -109,7 +109,7 @@ public class InMemoryTimeManager implements TimeManager{
                 // добавить в следующих обновлениях флажок на "заменить/переместить"
                 isFree = true;
                 nextInterval = nextInterval.plusMinutes(15);
-            } else if (year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).timeStatus == statusTimeTusk) {
+            } else if (year.get(nextInterval.toLocalDate()).day.get(nextInterval.toLocalTime()).timeStatus == timeStatusTusk) {
                 isFree = false;
                 break;
                 // добавить вопрос о перемещении
