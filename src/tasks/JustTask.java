@@ -2,6 +2,7 @@ package tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class JustTask extends Task{
     private byte timeStatus;
@@ -17,5 +18,18 @@ public class JustTask extends Task{
 
     public void setTimeStatus(byte timeStatus) {
         this.timeStatus = timeStatus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof JustTask)) return false;
+        JustTask justTask = (JustTask) o;
+        return getTimeStatus() == justTask.getTimeStatus();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getTimeStatus());
     }
 }

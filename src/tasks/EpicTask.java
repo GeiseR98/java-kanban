@@ -2,6 +2,7 @@ package tasks;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class EpicTask extends Task {
 
@@ -58,5 +59,18 @@ public class EpicTask extends Task {
                 ", описание: '" + super.getDescription() + '\'' +
                 ", статус: '" + super.getStatus() + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EpicTask)) return false;
+        EpicTask epicTask = (EpicTask) o;
+        return getListIdSubtask().equals(epicTask.getListIdSubtask()) && getEndTime().equals(epicTask.getEndTime());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getListIdSubtask(), getEndTime());
     }
 }

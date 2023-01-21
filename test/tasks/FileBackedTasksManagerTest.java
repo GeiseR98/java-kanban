@@ -1,5 +1,6 @@
 package tasks;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 class FileBackedTasksManagerTest extends TaskManagerTest<InMemoryTaskManager> {
@@ -7,5 +8,9 @@ class FileBackedTasksManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     public void beforeEach() {
         taskManager = new InMemoryTaskManager();
         taskManager.setIdTask(0);
+    }
+    @AfterEach
+    public void afterEach() {
+        removeAllTask();
     }
 }

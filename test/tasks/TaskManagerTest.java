@@ -47,10 +47,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
     @Test
     void shouldJustTaskAddInListJustTasks() {
-        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(29)));
+        JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(29));
+        taskManager.addJustTask(justTask);
         List<JustTask> justTasks = taskManager.getListAllJustTask();
         assertFalse(justTasks.isEmpty());
         assertEquals(1, justTasks.size());
+        assertEquals(justTask, InMemoryTaskManager.justTasks.get(justTask.getId()));
      }
     @Test
     void shouldCreateEpicTask() {
@@ -101,11 +103,13 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
     @Test
     public void shouldCreateSubTaskWithoutStartTime() {
+        EpicTask epicTask = taskManager.createEpicTask("Epic", "description");
+        taskManager.addEpicTask(epicTask);
         String name = "название";
         String description = "описание";
         Duration duration = Duration.ofMinutes(29);
-        Integer idMaster = 1;
-        SubTask subTask = taskManager.createSubTask(name, description, Duration.ofMinutes(29), idMaster);
+        Integer idMaster = epicTask.getId();
+        SubTask subTask = taskManager.createSubTask(name, description, Duration.ofMinutes(15), idMaster);
         assertNotNull(subTask.getStartTime());
         assertEquals(name, subTask.getName());
         assertEquals(description, subTask.getDescription());
@@ -116,6 +120,13 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void addSubTask() {
+        EpicTask epicTask = taskManager.createEpicTask("Epic", "description");
+        taskManager.addEpicTask(epicTask);
+        SubTask subTask = taskManager.createSubTask("задача", "описание задачи", Duration.ofMinutes(15), epicTask.getId());
+        taskManager.addSubTask(subTask);
+        assertFalse(taskManager.getListAllSubTask().isEmpty());
+        assertEquals(1, taskManager.getListAllSubTask().size());
+        assertEquals(subTask, InMemoryTaskManager.subTasks.get(subTask.getId()));
     }
 
     @Test

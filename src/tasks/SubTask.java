@@ -2,6 +2,7 @@ package tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class SubTask extends Task {
 
@@ -35,5 +36,18 @@ public class SubTask extends Task {
                 ", описание: '" + super.getDescription() + '\'' +
                 ", статус: '" + super.getStatus() + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SubTask)) return false;
+        SubTask subTask = (SubTask) o;
+        return getTimeStatus() == subTask.getTimeStatus() && getIdMaster().equals(subTask.getIdMaster());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getIdMaster(), getTimeStatus());
     }
 }

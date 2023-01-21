@@ -2,8 +2,14 @@ package tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public abstract class  Task {
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, status, duration, startTime);
+    }
+
     private int id;
     private String name;
     private String description;
@@ -79,5 +85,4 @@ public abstract class  Task {
                 ", статус: '" + status + '\'' +
                 '}';
     }
-
 }
