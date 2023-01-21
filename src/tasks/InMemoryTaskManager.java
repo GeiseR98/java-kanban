@@ -33,8 +33,7 @@ public class InMemoryTaskManager implements TaskManager {
             JustTask justTask = new JustTask(idTask, name, description, status, startTime, duration, InMemoryTimeManager.timeStatusFixed);
             return justTask;
         } else {
-            System.out.println("Ближайшее свободное время: " + timeManager.findFreeTime(duration));
-            return null; // заменить на исключение
+            throw new UnsupportedOperationException("Ближайшее свободное время: " + timeManager.findFreeTime(duration));
         }
     }
     @Override
@@ -58,13 +57,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return justTask.getId();
     }
-    public void recoveryTimeTask(Task task, byte statusTime) {
-        timeManager.recoveryTimeTask(task, statusTime);
-    }
-    @Override
-    public void addPrioritizedTasks(Task task) {
-        timeManager.addPrioritizedTasks(task);
-    }
     @Override
     public EpicTask createEpicTask(String name, String description) {
         ++idTask;
@@ -86,7 +78,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return epicTask.getId();
     }
-
     @Override
     public SubTask createSubTask(String name,
                                  String description,
@@ -96,16 +87,14 @@ public class InMemoryTaskManager implements TaskManager {
         ++idTask;
         Status status = Status.NEW;
         if (!epicTasks.containsKey(idMaster)) {
-            System.out.println("Такого эпика не существует, создайте сначала эпик");
-            return null; // заменить на исключения
+            throw new IllegalStateException("Такого эпика не существует, создайте сначала эпик");
         } else {
             if (timeManager.checkingFreeTime(startTime, duration)) {
                 SubTask subTask = new SubTask(idTask, name, description, status, startTime, duration, InMemoryTimeManager.timeStatusFixed, idMaster);
                 timeManager.addFixedTime(subTask);
                 return subTask;
             } else {
-                System.out.println("Ближайшее свободное время: " + timeManager.findFreeTime(duration));
-                return null; // заменить на исключение
+                throw new UnsupportedOperationException("Ближайшее свободное время: " + timeManager.findFreeTime(duration));
             }
         }
     }
@@ -117,8 +106,7 @@ public class InMemoryTaskManager implements TaskManager {
         ++idTask;
         Status status = Status.NEW;
         if (!epicTasks.containsKey(idMaster)) {
-            System.out.println("Такого эпика не существует, создайте сначала эпик");
-            return null; // заменить на исключения
+            throw new IllegalStateException("Такого эпика не существует, создайте сначала эпик");
         } else {
             LocalDateTime startTime = timeManager.findFreeTime(duration);
             SubTask subTask = new SubTask(idTask, name, description, status, startTime, duration, InMemoryTimeManager.timeStatusTusk, idMaster);
@@ -133,6 +121,7 @@ public class InMemoryTaskManager implements TaskManager {
             epicTasks.get(subTask.getIdMaster()).getListIdSubtask().add(subTask.getId());
             System.out.println("Задача сохранена под номером '" + subTask.getId() + "'");
             }
+        recoveryTimeTask(subTask, subTask.getTimeStatus());
         calculationEpicStatus(subTask.getIdMaster());
         calculationEpicTime(subTask.getIdMaster());
         timeManager.addPrioritizedTasks(subTask);
@@ -141,7 +130,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return subTask.getId();
     }
-
     @Override
     public void printAllJustTask() {
         System.out.println("Список задач: ");
@@ -201,56 +189,38 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTask (Integer id){
         Task task = null;
-        if (justTasks.get(id) != null) {
+        if (justTasks.containsKey(id)) {
             historyManager.addHistory(justTasks.get(id));
             task = justTasks.get(id);
-        } else if (epicTasks.get(id) != null) {
+        } else if (epicTasks.containsKey(id)) {
             historyManager.addHistory(epicTasks.get(id));
             task = epicTasks.get(id);
-        } else if (subTasks.get(id) != null) {
+        } else if (subTasks.containsKey(id)) {
             historyManager.addHistory(subTasks.get(id));
             task = subTasks.get(id);
         } else {
-            System.out.println("Задачи под таким номером не найдено");
+            throw new UnsupportedOperationException("Задачи под таким номером не найдено");
         }
         if (autoSave) {
             FileBackedTasksManager.save();
         }
         return task;
     }
-
-    public static void showTask(Integer id) {
-        if (justTasks.get(id) != null) {
-            System.out.println("Задача №" + id + justTasks.get(id));
-        }
-        else if (epicTasks.get(id) != null) {
-            System.out.println("Эпик №" + id + epicTasks.get(id));
-            System.out.println("    подзадачи эпика: ");
-            if (epicTasks.get(id).getListIdSubtask().size() != 0) {
-                for (int i = 0; i < epicTasks.get(id).getListIdSubtask().size(); i++) {
-                    System.out.println("        подзадача №" + epicTasks.get(id).getListIdSubtask().get(i)
-                            + " - " + subTasks.get(epicTasks.get(id).getListIdSubtask().get(i)).getName());
-                }
-            } else {
-                System.out.println("Этот эпик ещё не имеет подзадач");
-            }
-
-        } else if (subTasks.get(id) != null) System.out.println("Подзадача №:" + id + subTasks.get(id)
-                + ", находится в эпике №" + subTasks.get(id).getIdMaster());
-        else System.out.println("задачи с таким номером не обнаружено");
-    }
     @Override
     public void removeTask(Integer id){
-        if (justTasks.get(id) != null){
+        if (justTasks.containsKey(id)){
+            recoveryTimeTask(justTasks.get(id), InMemoryTimeManager.statusTimeFree);
             justTasks.remove(id);
             historyManager.remove(id);
             System.out.println("Задача №" + id + " успешно удалена...");
+
             if (autoSave) {
                 FileBackedTasksManager.save();
             }
-        } else if (epicTasks.get(id) != null){
+        } else if (epicTasks.containsKey(id)){
             if (epicTasks.get(id).getListIdSubtask().size() != 0) {
                 for (int i = 0; i < epicTasks.get(id).getListIdSubtask().size(); i++) {
+                    recoveryTimeTask(subTasks.get(epicTasks.get(id).getListIdSubtask().get(i)), InMemoryTimeManager.statusTimeFree);
                     historyManager.remove(epicTasks.get(id).getListIdSubtask().get(i));
                     subTasks.remove(epicTasks.get(id).getListIdSubtask().get(i));
                 }
@@ -268,9 +238,10 @@ public class InMemoryTaskManager implements TaskManager {
                     FileBackedTasksManager.save();
                 }
             }
-        } else if (subTasks.get(id) != null) {
+        } else if (subTasks.containsKey(id)) {
             int idMaster = subTasks.get(id).getIdMaster();
             epicTasks.get(idMaster).getListIdSubtask().remove(id) ;
+            recoveryTimeTask(subTasks.get(id), InMemoryTimeManager.statusTimeFree);
             subTasks.remove(id);
             historyManager.remove(id);
             calculationEpicStatus(idMaster);
@@ -280,7 +251,7 @@ public class InMemoryTaskManager implements TaskManager {
                 FileBackedTasksManager.save();
             }
         } else {
-            System.out.println("Такой задачи не обнаружено");
+            throw new UnsupportedOperationException("Такой задачи не обнаружено");
         }
     }
     @Override
@@ -344,7 +315,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
-    public List<Task>  getHistory() {
+    public List<Task> getHistory() {
         return historyManager.getHistory();
     }
     @Override
@@ -356,12 +327,35 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getPrioritizedTasks() {
         return timeManager.getPrioritizedTasks();
     }
+    public static void showTask(Integer id) {
+        if (justTasks.get(id) != null) {
+            System.out.println("Задача №" + id + justTasks.get(id));
+        }
+        else if (epicTasks.get(id) != null) {
+            System.out.println("Эпик №" + id + epicTasks.get(id));
+            System.out.println("    подзадачи эпика: ");
+            if (epicTasks.get(id).getListIdSubtask().size() != 0) {
+                for (int i = 0; i < epicTasks.get(id).getListIdSubtask().size(); i++) {
+                    System.out.println("        подзадача №" + epicTasks.get(id).getListIdSubtask().get(i)
+                            + " - " + subTasks.get(epicTasks.get(id).getListIdSubtask().get(i)).getName());
+                }
+            } else {
+                System.out.println("Этот эпик ещё не имеет подзадач");
+            }
 
-
+        } else if (subTasks.get(id) != null) System.out.println("Подзадача №:" + id + subTasks.get(id)
+                + ", находится в эпике №" + subTasks.get(id).getIdMaster());
+        else System.out.println("задачи с таким номером не обнаружено");
+    }
+    public void recoveryTimeTask(Task task, byte statusTime) {
+        timeManager.recoveryTimeTask(task, statusTime);
+    }
+    public void addPrioritizedTasks(Task task) {
+        timeManager.addPrioritizedTasks(task);
+    }
     public void setIdTask(int idTaskMax) {
         idTask = idTaskMax;
     }
-
     void changeName(Integer id, String name){
         if (justTasks.get(id) != null) {
             justTasks.get(id).setName(name);

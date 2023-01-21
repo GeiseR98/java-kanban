@@ -11,7 +11,6 @@ public interface TaskManager {
 
     Integer addJustTask(JustTask justTask);
     EpicTask createEpicTask(String name, String description);
-    void addPrioritizedTasks(Task task);
     Integer addEpicTask(EpicTask epicTask);
     SubTask createSubTask(String name,
                           String description,

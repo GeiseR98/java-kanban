@@ -6,5 +6,6 @@ class FileBackedTasksManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     @BeforeEach
     public void beforeEach() {
         taskManager = new InMemoryTaskManager();
+        taskManager.setIdTask(0);
     }
 }

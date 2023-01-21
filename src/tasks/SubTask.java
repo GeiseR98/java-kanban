@@ -27,7 +27,6 @@ public class SubTask extends Task {
         return timeStatus;
 
     }
-
     @Override
     public String toString() {
         return " - {" +
