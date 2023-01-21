@@ -32,6 +32,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(duration, justTask.getDuration());
         assertEquals(InMemoryTimeManager.timeStatusFixed, justTask.getTimeStatus());
     }
+
     @Test
     public void shouldCreateJustTaskWithoutStartTime() {
         String name = "название";
@@ -45,6 +46,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(duration, justTask.getDuration());
         assertEquals(InMemoryTimeManager.timeStatusTusk, justTask.getTimeStatus());
     }
+
     @Test
     void shouldJustTaskAddInListJustTasks() {
         JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(29));
@@ -54,6 +56,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(1, justTasks.size());
         assertEquals(justTask, InMemoryTaskManager.justTasks.get(justTask.getId()));
      }
+
     @Test
     void shouldCreateEpicTask() {
         String name = "название";
@@ -64,13 +67,17 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(Status.NEW, epicTask.getStatus());
         assertEquals(description, epicTask.getDescription());
     }
+
     @Test
     void shouldEpicTaskAddInListEpicTasks() {
-        taskManager.addEpicTask(taskManager.createEpicTask("Epic", "description"));
+        EpicTask epicTask = taskManager.createEpicTask("Epic", "description");
+        taskManager.addEpicTask(epicTask);
         List<EpicTask> epicTasks = taskManager.getListAllEpicTask();
         assertFalse(epicTasks.isEmpty());
         assertEquals(1, epicTasks.size());
+        assertEquals(epicTask, InMemoryTaskManager.epicTasks.get(epicTask.getId()));
     }
+
     @Test
     void subtaskWillNotBeCreatedWithAnIncorrectEpicNumber() {
         String name = "название";
@@ -83,6 +90,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 );
         Assertions.assertEquals("Такого эпика не существует, создайте сначала эпик", ex.getMessage());
     }
+
 
     @Test
     public void shouldCreateSubTaskWithStartTime() {
@@ -101,13 +109,14 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(duration, subTask.getDuration());
         assertEquals(InMemoryTimeManager.timeStatusFixed, subTask.getTimeStatus());
     }
+
     @Test
     public void shouldCreateSubTaskWithoutStartTime() {
         EpicTask epicTask = taskManager.createEpicTask("Epic", "description");
         taskManager.addEpicTask(epicTask);
         String name = "название";
         String description = "описание";
-        Duration duration = Duration.ofMinutes(29);
+        Duration duration = Duration.ofMinutes(15);
         Integer idMaster = epicTask.getId();
         SubTask subTask = taskManager.createSubTask(name, description, Duration.ofMinutes(15), idMaster);
         assertNotNull(subTask.getStartTime());
@@ -119,7 +128,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void addSubTask() {
+    void shouldSubTaskAddInListSubTasks() {
         EpicTask epicTask = taskManager.createEpicTask("Epic", "description");
         taskManager.addEpicTask(epicTask);
         SubTask subTask = taskManager.createSubTask("задача", "описание задачи", Duration.ofMinutes(15), epicTask.getId());
@@ -130,29 +139,14 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void printAllJustTask() {
-    }
-
-    @Test
     void getListAllJustTask() {
     }
-
-    @Test
-    void printAllEpicTask() {
-    }
-
     @Test
     void getListAllEpicTask() {
     }
-
-    @Test
-    void printAllSubTask() {
-    }
-
     @Test
     void getListAllSubTask() {
     }
-
     @Test
     void getTask() {
     }

@@ -58,6 +58,9 @@ public class EpicTask extends Task {
                 " название: '" + super.getName() + '\'' +
                 ", описание: '" + super.getDescription() + '\'' +
                 ", статус: '" + super.getStatus() + '\'' +
+                ", начало: '" + super.getStartTime() + '\'' +
+                ", продолжительность: '" + super.getDuration() + '\'' +
+                ", окончание: '" + super.getEndTime() + '\'' +
                 '}';
     }
 
@@ -65,8 +68,9 @@ public class EpicTask extends Task {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof EpicTask)) return false;
+        if (!super.equals(o)) return false;
         EpicTask epicTask = (EpicTask) o;
-        return getListIdSubtask().equals(epicTask.getListIdSubtask()) && getEndTime().equals(epicTask.getEndTime());
+        return getListIdSubtask().equals(epicTask.getListIdSubtask()) && Objects.equals(getEndTime(), epicTask.getEndTime());
     }
 
     @Override

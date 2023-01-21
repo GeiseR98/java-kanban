@@ -8,10 +8,10 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager>{
     @BeforeEach
     public void beforeEach() {
         taskManager = new InMemoryTaskManager();
-        taskManager.setIdTask(0);
     }
     @AfterEach
     public void afterEach() {
-        removeAllTask();
+        taskManager.removeAllTask();
+        taskManager.setIdTask(0);
     }
 }

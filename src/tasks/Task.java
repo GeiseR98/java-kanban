@@ -85,4 +85,13 @@ public abstract class  Task {
                 ", статус: '" + status + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Task)) return false;
+        Task task = (Task) o;
+        return getId() == task.getId() && getName().equals(task.getName())
+                && getDescription().equals(task.getDescription()) && getStatus() == task.getStatus();
+    }
 }
