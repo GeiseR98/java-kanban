@@ -30,31 +30,23 @@ public class Main {
 
 
 
-        // Создание эпика:
+//        Создание эпика:
 //        fileBackedTasksManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
 
-        // Создание задачи:
-        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(29)));
-        taskManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
-        taskManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(10), 4));
-        taskManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(150), 4));
-        System.out.println("в таске " + taskManager.getPrioritizedTasks());
-        System.out.println("в беке " + fileBackedTasksManager.getPrioritizedTasks());
-        System.out.println("в тайм " + timeManager.getPrioritizedTasks());
-//        System.out.println(taskManager.getTask(2));
+//        Создание задачи:
+//        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(29)));
 
-//        FileBackedTasksManager.save();
-//        System.out.println(taskManager.getTask(1));
+//        System.out.println(taskManager.getTask(4));
 //        System.out.println(taskManager.getHistory());
 
         // Создание подзадачи:
-
+        // taskManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(10), 4));
 
         // Изменить описание:
-        // fileBackedTasksManager.changeDescription(id);
+        // taskManager.changeDescription(id);
 
         // Изменить статус задачи (только для задач и подзадач, статус эпиков меняется самостоятельно):
-        // fileBackedTasksManager.changeStatus(id);
+        // taskManager.changeStatus(id);
 
         // Просмотреть задачу:
         // System.out.println(taskManager.getTask(id));
@@ -63,10 +55,10 @@ public class Main {
         // System.out.println(taskManager.getHistory(id));
 
         // Удалить задачу:
-        // fileBackedTasksManager.removeTask(id);
+        // taskManager.removeTask(id);
 
         // Удалить все задачи:
-        // fileBackedTasksManager.removeAllTask();
+        // taskManager.removeAllTask();
 
         // Очистить историю:
         // historyManager.removeAllHistory();
