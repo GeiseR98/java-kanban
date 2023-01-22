@@ -259,9 +259,6 @@ public class InMemoryTaskManager implements TaskManager {
         if (!justTasks.isEmpty()) {
             for (Integer key : justTasks.keySet()) removeTask(key);
         }
-        if (!subTasks.isEmpty()) {
-            for (Integer key : subTasks.keySet()) removeTask(key);
-        }
         if (!epicTasks.isEmpty()) {
             for (Integer key : epicTasks.keySet()) removeTask(key);
         }

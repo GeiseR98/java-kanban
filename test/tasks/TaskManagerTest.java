@@ -1,5 +1,6 @@
 package tasks;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,26 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     T taskManager;
     InMemoryTimeManager timeManager = new InMemoryTimeManager();
+
+
+    EpicTask createEpicTask(int idTask) {
+        String name = "эпик";
+        String description = "описание";
+        LocalDateTime startTime = null;
+        Duration duration = null;
+        LocalDateTime endTime = null;
+        Status status = Status.NEW;
+        ArrayList<Integer> listIdSubtask = new ArrayList<>();
+        return new EpicTask(idTask, name, description, status, startTime, duration, endTime, listIdSubtask);
+    }
+    SubTask createSubTask(int id, int idMaster) {
+        String name = "эпик";
+        String description = "описание";
+        Status status = Status.NEW;
+        Duration duration = Duration.ofMinutes(14);
+        LocalDateTime startTime = timeManager.findFreeTime(duration);
+        return new SubTask(id, name, description, status, startTime, duration, InMemoryTimeManager.timeStatusTusk, idMaster);
+    }
 
     @Test
     public void shouldCreateJustTaskWithStartTime() {
@@ -141,7 +162,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getListAllJustTask() {
+    void getListAllJustTaskTest() {
         JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
         taskManager.addJustTask(justTask);
         List<JustTask> list = new ArrayList<>();
@@ -150,7 +171,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertArrayEquals(list.toArray(), taskManager.getListAllJustTask().toArray());
     }
     @Test
-    void getListAllEpicTask() {
+    void getListAllEpicTaskTest() {
         EpicTask epicTask = taskManager.createEpicTask("задача", "описание задачи");
         taskManager.addEpicTask(epicTask);
         List<EpicTask> list = new ArrayList<>();
@@ -159,7 +180,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertArrayEquals(list.toArray(), taskManager.getListAllEpicTask().toArray());
     }
     @Test
-    void getListAllSubTask() {
+    void getListAllSubTaskTest() {
         EpicTask epicTask = taskManager.createEpicTask("задача", "описание задачи");
         taskManager.addEpicTask(epicTask);
         SubTask subTask = taskManager.createSubTask("задача", "описание задачи", Duration.ofMinutes(15), epicTask.getId());
@@ -170,7 +191,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertArrayEquals(list.toArray(), taskManager.getListAllSubTask().toArray());
     }
     @Test
-    void getTask() {
+    void getTaskTest() {
         JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
         taskManager.addJustTask(justTask);
         EpicTask epicTask = taskManager.createEpicTask("задача", "описание задачи");
@@ -187,7 +208,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Assertions.assertEquals("Задачи под таким номером не найдено", ex.getMessage(), "getTask работает верно при вызове не существующей задачи");
     }
     @Test
-    void removeTask() {
+    void removeTaskTest() {
         JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
         taskManager.addJustTask(justTask);
         EpicTask epicTask1 = taskManager.createEpicTask("задача", "описание задачи");
@@ -235,7 +256,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void removeAllTask() {
+    void removeAllTaskTest() {
         JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
         taskManager.addJustTask(justTask);
         EpicTask epicTask1 = taskManager.createEpicTask("задача", "описание задачи");
@@ -261,9 +282,76 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void changeStatus() {
+    void shouldChangeStatusForJustTask() {
+        JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
+        taskManager.addJustTask(justTask);
+        justTask.setStatus(Status.IN_PROGRESS);
+        assertEquals(Status.IN_PROGRESS, justTask.getStatus());
+        justTask.setStatus(Status.DONE);
+        assertEquals(Status.DONE, justTask.getStatus());
     }
-
+    @Test
+    void shouldChangeStatusForSubTask() {
+        EpicTask epicTask = taskManager.createEpicTask("задача", "описание задачи");
+        taskManager.addEpicTask(epicTask);
+        SubTask subTask = taskManager.createSubTask("задача", "описание задачи", Duration.ofMinutes(15), epicTask.getId());
+        taskManager.addSubTask(subTask);
+        subTask.setStatus(Status.IN_PROGRESS);
+        assertEquals(Status.IN_PROGRESS, subTask.getStatus());
+        subTask.setStatus(Status.DONE);
+        assertEquals(Status.DONE, subTask.getStatus());
+    }
+    @Test
+    void shouldChangeStatusForEpicTaskWithOutSubTusk() {
+        EpicTask epicTask = createEpicTask(1);
+        taskManager.addEpicTask(epicTask);
+        assertEquals(Status.NEW, epicTask.getStatus(), "Статус epicTask-а с пустым списком подзадач: NEW");
+    }
+    @Test
+    void shouldChangeStatusForEpicTaskWithSubTaskNEWAndNEW() {
+        EpicTask epicTask = createEpicTask(1);
+        taskManager.addEpicTask(epicTask);
+        SubTask subTask1 = createSubTask(2,1);
+        taskManager.addSubTask(subTask1);
+        SubTask subTask = createSubTask(4,1);
+        taskManager.addSubTask(subTask);
+        assertEquals(Status.NEW, epicTask.getStatus(), "Статус epicTask-а с подзадачами NEW и NEW: NEW");
+    }
+    @Test
+    void shouldChangeStatusForEpicTaskWithSubTaskNEWAndDONE() {
+        EpicTask epicTask = createEpicTask(1);
+        taskManager.addEpicTask(epicTask);
+        SubTask subTask1 = createSubTask(2,1);
+        taskManager.addSubTask(subTask1);
+        SubTask subTask = createSubTask(4,1);
+        taskManager.addSubTask(subTask);
+        taskManager.changeStatus(4, Status.DONE);
+        assertEquals(Status.IN_PROGRESS, epicTask.getStatus(), "Статус epicTask-а с подзадачами NEW и DONE: IN_PROGRESS");
+    }
+    @Test
+    void shouldChangeStatusForEpicTaskWithSubTaskDONEAndDONE() {
+        EpicTask epicTask = createEpicTask(1);
+        taskManager.addEpicTask(epicTask);
+        SubTask subTask1 = createSubTask(2,1);
+        taskManager.addSubTask(subTask1);
+        SubTask subTask = createSubTask(4,1);
+        taskManager.addSubTask(subTask);
+        taskManager.changeStatus(4, Status.DONE);
+        taskManager.changeStatus(2, Status.DONE);
+        assertEquals(Status.DONE, epicTask.getStatus(), "Статус epicTask-а с подзадачами DONE и DONE: DONE");
+    }
+    @Test
+    void shouldChangeStatusForEpicTaskWithSubTaskIN_PROGRESSAndIN_PROGRESS() {
+        EpicTask epicTask = createEpicTask(1);
+        taskManager.addEpicTask(epicTask);
+        SubTask subTask1 = createSubTask(2,1);
+        taskManager.addSubTask(subTask1);
+        SubTask subTask = createSubTask(4,1);
+        taskManager.addSubTask(subTask);
+        taskManager.changeStatus(4, Status.IN_PROGRESS);
+        taskManager.changeStatus(2, Status.IN_PROGRESS);
+        assertEquals(Status.IN_PROGRESS, epicTask.getStatus(), "Статус epicTask-а с подзадачами IN_PROGRESS и IN_PROGRESS: IN_PROGRESS");
+    }
     @Test
     void changeDescription() {
     }
