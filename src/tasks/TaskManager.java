@@ -35,9 +35,8 @@ public interface TaskManager {
     Task getTask(Integer id);
     void removeTask(Integer id);
     void removeAllTask();
-
+    void changeName(Integer id, String name);
     void changeStatus(Integer id, Status status);
-
     void changeDescription(Integer id, String description);
 
     List<Task>  getHistory();

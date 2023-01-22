@@ -264,6 +264,29 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
+    public void changeName(Integer id, String name){
+        if (justTasks.get(id) != null) {
+            justTasks.get(id).setName(name);
+            if (autoSave) {
+                FileBackedTasksManager.save();
+            }
+        }
+        else if (subTasks.get(id) != null) {
+            subTasks.get(id).setName(name);
+            if (autoSave) {
+                FileBackedTasksManager.save();
+            }
+        }
+        else if (epicTasks.get(id) != null) {
+            epicTasks.get(id).setName(name);
+            if (autoSave) {
+                FileBackedTasksManager.save();
+            }
+        } else {
+            System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
+        }
+    }
+    @Override
     public void changeStatus(Integer id, Status status){
         if (checkInputStatus(status)) {
             if (justTasks.get(id) != null) {
@@ -353,28 +376,6 @@ public class InMemoryTaskManager implements TaskManager {
     }
     public void setIdTask(int idTaskMax) {
         idTask = idTaskMax;
-    }
-    void changeName(Integer id, String name){
-        if (justTasks.get(id) != null) {
-            justTasks.get(id).setName(name);
-            if (autoSave) {
-                FileBackedTasksManager.save();
-            }
-        }
-        else if (subTasks.get(id) != null) {
-            subTasks.get(id).setName(name);
-            if (autoSave) {
-                FileBackedTasksManager.save();
-            }
-        }
-        else if (epicTasks.get(id) != null) {
-            epicTasks.get(id).setName(name);
-            if (autoSave) {
-                FileBackedTasksManager.save();
-            }
-        } else {
-            System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
-        }
     }
     private void calculationEpicStatus(Integer idMaster){
         if (epicTasks.get(idMaster).getListIdSubtask().size() != 0){

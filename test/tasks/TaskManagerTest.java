@@ -353,7 +353,34 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(Status.IN_PROGRESS, epicTask.getStatus(), "Статус epicTask-а с подзадачами IN_PROGRESS и IN_PROGRESS: IN_PROGRESS");
     }
     @Test
-    void changeDescription() {
+    void changeDescriptionTest() {
+        JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
+        taskManager.addJustTask(justTask);
+        EpicTask epicTask = taskManager.createEpicTask("задача", "описание задачи");
+        taskManager.addEpicTask(epicTask);
+        SubTask subTask = taskManager.createSubTask("задача", "описание задачи", Duration.ofMinutes(15), epicTask.getId());
+        taskManager.addSubTask(subTask);
+        taskManager.changeDescription(justTask.getId(),"новое описание");
+        taskManager.changeDescription(epicTask.getId(),"новое описание");
+        taskManager.changeDescription(subTask.getId(),"новое описание");
+        assertEquals("новое описание", justTask.getDescription(), "метод изменяет описание jastTask-а");
+        assertEquals("новое описание", epicTask.getDescription(),"метод изменяет описание jastTask-а");
+        assertEquals("новое описание", subTask.getDescription(), "метод изменяет описание jastTask-а");
+    }
+    @Test
+    void changeNameTest() {
+        JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
+        taskManager.addJustTask(justTask);
+        EpicTask epicTask = taskManager.createEpicTask("задача", "описание задачи");
+        taskManager.addEpicTask(epicTask);
+        SubTask subTask = taskManager.createSubTask("задача", "описание задачи", Duration.ofMinutes(15), epicTask.getId());
+        taskManager.addSubTask(subTask);
+        taskManager.changeName(justTask.getId(),"новое имя");
+        taskManager.changeName(epicTask.getId(),"новое имя");
+        taskManager.changeName(subTask.getId(),"новое имя");
+        assertEquals("новое имя", justTask.getName(), "метод изменяет имя justTask-а");
+        assertEquals("новое имя", epicTask.getName(),"метод изменяет имя epicTask-а");
+        assertEquals("новое имя", subTask.getName(), "метод изменяет имя subTask-а");
     }
 
     @Test
