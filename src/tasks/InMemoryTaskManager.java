@@ -188,7 +188,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
     @Override
     public Task getTask (Integer id){
-        Task task = null;
+        Task task;
         if (justTasks.containsKey(id)) {
             historyManager.addHistory(justTasks.get(id));
             task = justTasks.get(id);

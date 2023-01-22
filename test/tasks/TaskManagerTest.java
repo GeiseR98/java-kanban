@@ -171,6 +171,20 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
     @Test
     void getTask() {
+        JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
+        taskManager.addJustTask(justTask);
+        EpicTask epicTask = taskManager.createEpicTask("задача", "описание задачи");
+        taskManager.addEpicTask(epicTask);
+        SubTask subTask = taskManager.createSubTask("задача", "описание задачи", Duration.ofMinutes(15), epicTask.getId());
+        taskManager.addSubTask(subTask);
+        assertEquals(justTask, taskManager.getTask(justTask.getId()), "getTask работает верно при вызове существующего justTask-а");
+        assertEquals(epicTask, taskManager.getTask(epicTask.getId()), "getTask работает верно при вызове существующего epicTask-а");
+        assertEquals(subTask, taskManager.getTask(subTask.getId()), "getTask работает верно при вызове существующего subTask-а");
+        UnsupportedOperationException ex = assertThrows(
+                UnsupportedOperationException.class,
+                () -> taskManager.getTask(-1)
+        );
+        Assertions.assertEquals("Задачи под таким номером не найдено", ex.getMessage(), "getTask работает верно при вызове не существующей задачи");
     }
 
     @Test
