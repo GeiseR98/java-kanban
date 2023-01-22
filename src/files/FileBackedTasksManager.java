@@ -19,13 +19,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         super.recoveryTimeTask(task, statusTime);
         save();
     }
-
-    @Override
-    public void addPrioritizedTasks(Task task) {
-        super.addPrioritizedTasks(task);
-        save();
-    }
-
     @Override
     public Integer addJustTask(JustTask justTask){
         super.addJustTask(justTask);

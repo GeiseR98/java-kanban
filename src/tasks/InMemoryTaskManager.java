@@ -48,8 +48,8 @@ public class InMemoryTaskManager implements TaskManager {
     public Integer addJustTask(JustTask justTask){
         if (!justTasks.containsKey(justTask.getId())) {
             justTasks.put(justTask.getId(), justTask);
-            addPrioritizedTasks(justTask);
-            recoveryTimeTask(justTask, justTask.getTimeStatus());
+            timeManager.addPrioritizedTasks(justTask);
+            timeManager.recoveryTimeTask(justTask, justTask.getTimeStatus());
             System.out.println("Задача сохранена под номером '" + justTask.getId() + "'");
             if (autoSave) {
                 FileBackedTasksManager.save();
@@ -121,7 +121,7 @@ public class InMemoryTaskManager implements TaskManager {
             epicTasks.get(subTask.getIdMaster()).getListIdSubtask().add(subTask.getId());
             System.out.println("Задача сохранена под номером '" + subTask.getId() + "'");
             }
-        recoveryTimeTask(subTask, subTask.getTimeStatus());
+        timeManager.recoveryTimeTask(subTask, subTask.getTimeStatus());
         calculationEpicStatus(subTask.getIdMaster());
         calculationEpicTime(subTask.getIdMaster());
         timeManager.addPrioritizedTasks(subTask);
@@ -209,7 +209,8 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeTask(Integer id){
         if (justTasks.containsKey(id)){
-            recoveryTimeTask(justTasks.get(id), InMemoryTimeManager.statusTimeFree);
+            timeManager.recoveryTimeTask(justTasks.get(id), InMemoryTimeManager.statusTimeFree);
+            timeManager.removeTaskFromPrioritizedTasks(justTasks.get(id));
             justTasks.remove(id);
             historyManager.remove(id);
             System.out.println("Задача №" + id + " успешно удалена...");
@@ -220,7 +221,8 @@ public class InMemoryTaskManager implements TaskManager {
         } else if (epicTasks.containsKey(id)){
             if (epicTasks.get(id).getListIdSubtask().size() != 0) {
                 for (int i = 0; i < epicTasks.get(id).getListIdSubtask().size(); i++) {
-                    recoveryTimeTask(subTasks.get(epicTasks.get(id).getListIdSubtask().get(i)), InMemoryTimeManager.statusTimeFree);
+                    timeManager.removeTaskFromPrioritizedTasks(subTasks.get(epicTasks.get(id).getListIdSubtask().get(i)));
+                    timeManager.recoveryTimeTask(subTasks.get(epicTasks.get(id).getListIdSubtask().get(i)), InMemoryTimeManager.statusTimeFree);
                     historyManager.remove(epicTasks.get(id).getListIdSubtask().get(i));
                     subTasks.remove(epicTasks.get(id).getListIdSubtask().get(i));
                 }
@@ -241,7 +243,8 @@ public class InMemoryTaskManager implements TaskManager {
         } else if (subTasks.containsKey(id)) {
             int idMaster = subTasks.get(id).getIdMaster();
             epicTasks.get(idMaster).getListIdSubtask().remove(id) ;
-            recoveryTimeTask(subTasks.get(id), InMemoryTimeManager.statusTimeFree);
+            timeManager.removeTaskFromPrioritizedTasks(subTasks.get(id));
+            timeManager.recoveryTimeTask(subTasks.get(id), InMemoryTimeManager.statusTimeFree);
             subTasks.remove(id);
             historyManager.remove(id);
             calculationEpicStatus(idMaster);
@@ -340,13 +343,11 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
     @Override
-    public byte getStatusTime(LocalDateTime startTime) {
-        byte b = timeManager.getStatusTime(startTime);
-        return b;
-    }
-    @Override
     public List<Task> getPrioritizedTasks() {
         return timeManager.getPrioritizedTasks();
+    }
+    public byte getStatusTime(LocalDateTime startTime) {
+        return timeManager.getStatusTime(startTime);
     }
     public static void showTask(Integer id) {
         if (justTasks.get(id) != null) {
@@ -371,9 +372,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void recoveryTimeTask(Task task, byte statusTime) {
         timeManager.recoveryTimeTask(task, statusTime);
     }
-    public void addPrioritizedTasks(Task task) {
-        timeManager.addPrioritizedTasks(task);
-    }
+
     public void setIdTask(int idTaskMax) {
         idTask = idTaskMax;
     }

@@ -114,7 +114,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Assertions.assertEquals("Такого эпика не существует, создайте сначала эпик", ex.getMessage());
     }
 
-
     @Test
     public void shouldCreateSubTaskWithStartTime() {
         EpicTask epicTask = taskManager.createEpicTask("Epic", "description");
@@ -170,6 +169,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertNotNull(taskManager.getListAllJustTask().toArray());
         assertArrayEquals(list.toArray(), taskManager.getListAllJustTask().toArray());
     }
+
     @Test
     void getListAllEpicTaskTest() {
         EpicTask epicTask = taskManager.createEpicTask("задача", "описание задачи");
@@ -179,6 +179,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertNotNull(taskManager.getListAllEpicTask().toArray());
         assertArrayEquals(list.toArray(), taskManager.getListAllEpicTask().toArray());
     }
+
     @Test
     void getListAllSubTaskTest() {
         EpicTask epicTask = taskManager.createEpicTask("задача", "описание задачи");
@@ -190,6 +191,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertNotNull(taskManager.getListAllSubTask().toArray());
         assertArrayEquals(list.toArray(), taskManager.getListAllSubTask().toArray());
     }
+
     @Test
     void getTaskTest() {
         JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
@@ -207,6 +209,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         );
         Assertions.assertEquals("Задачи под таким номером не найдено", ex.getMessage(), "getTask работает верно при вызове не существующей задачи");
     }
+
     @Test
     void removeTaskTest() {
         JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
@@ -290,6 +293,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         justTask.setStatus(Status.DONE);
         assertEquals(Status.DONE, justTask.getStatus());
     }
+
     @Test
     void shouldChangeStatusForSubTask() {
         EpicTask epicTask = taskManager.createEpicTask("задача", "описание задачи");
@@ -301,12 +305,14 @@ abstract class TaskManagerTest<T extends TaskManager> {
         subTask.setStatus(Status.DONE);
         assertEquals(Status.DONE, subTask.getStatus());
     }
+
     @Test
     void shouldChangeStatusForEpicTaskWithOutSubTusk() {
         EpicTask epicTask = createEpicTask(1);
         taskManager.addEpicTask(epicTask);
         assertEquals(Status.NEW, epicTask.getStatus(), "Статус epicTask-а с пустым списком подзадач: NEW");
     }
+
     @Test
     void shouldChangeStatusForEpicTaskWithSubTaskNEWAndNEW() {
         EpicTask epicTask = createEpicTask(1);
@@ -317,6 +323,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addSubTask(subTask);
         assertEquals(Status.NEW, epicTask.getStatus(), "Статус epicTask-а с подзадачами NEW и NEW: NEW");
     }
+
     @Test
     void shouldChangeStatusForEpicTaskWithSubTaskNEWAndDONE() {
         EpicTask epicTask = createEpicTask(1);
@@ -328,6 +335,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.changeStatus(4, Status.DONE);
         assertEquals(Status.IN_PROGRESS, epicTask.getStatus(), "Статус epicTask-а с подзадачами NEW и DONE: IN_PROGRESS");
     }
+
     @Test
     void shouldChangeStatusForEpicTaskWithSubTaskDONEAndDONE() {
         EpicTask epicTask = createEpicTask(1);
@@ -340,6 +348,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.changeStatus(2, Status.DONE);
         assertEquals(Status.DONE, epicTask.getStatus(), "Статус epicTask-а с подзадачами DONE и DONE: DONE");
     }
+
     @Test
     void shouldChangeStatusForEpicTaskWithSubTaskIN_PROGRESSAndIN_PROGRESS() {
         EpicTask epicTask = createEpicTask(1);
@@ -352,6 +361,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.changeStatus(2, Status.IN_PROGRESS);
         assertEquals(Status.IN_PROGRESS, epicTask.getStatus(), "Статус epicTask-а с подзадачами IN_PROGRESS и IN_PROGRESS: IN_PROGRESS");
     }
+
     @Test
     void changeDescriptionTest() {
         JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
@@ -367,6 +377,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals("новое описание", epicTask.getDescription(),"метод изменяет описание jastTask-а");
         assertEquals("новое описание", subTask.getDescription(), "метод изменяет описание jastTask-а");
     }
+
     @Test
     void changeNameTest() {
         JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
@@ -384,14 +395,26 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getHistory() {
+    void getHistoryWithEmptyList() {
+        assertTrue(taskManager.getHistory().isEmpty(), "история задач пуста");
     }
-
     @Test
-    void getStatusTime() {
+    void getHistoryWithNotEmptyList() {
+        JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
+        taskManager.addJustTask(justTask);
+        taskManager.getTask(justTask.getId());
+        assertFalse(taskManager.getHistory().isEmpty(), "история задач не пуста");
+        assertEquals(1, taskManager.getHistory().size(), "история задач не пуста");
     }
-
     @Test
-    void getPrioritizedTasks() {
+    void getPrioritizedTasksWithEmptyList() {
+        assertTrue(taskManager.getPrioritizedTasks().isEmpty(), "список задач пуст");
+    }
+    @Test
+    void getPrioritizedWithNotEmptyList() {
+        JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
+        taskManager.addJustTask(justTask);
+        assertFalse(taskManager.getPrioritizedTasks().isEmpty(), "список задач не пуст");
+        assertEquals(1, timeManager.getPrioritizedTasks().size(), "список задач не пуст");
     }
 }

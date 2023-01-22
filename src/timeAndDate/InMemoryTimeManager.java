@@ -21,11 +21,15 @@ public class InMemoryTimeManager implements TimeManager{
 
     @Override
     public List<Task> getPrioritizedTasks() {
-        return new ArrayList<>(prioritizedTasks);
+        return new ArrayList<>(InMemoryTimeManager.prioritizedTasks);
     }
     @Override
     public void addPrioritizedTasks(Task task) {
         prioritizedTasks.add(task);
+    }
+    @Override
+    public void removeTaskFromPrioritizedTasks(Task task) {
+        prioritizedTasks.remove(task);
     }
     @Override
     public void addFixedTime(Task task) {
@@ -185,12 +189,10 @@ public class InMemoryTimeManager implements TimeManager{
             return LocalTime.of(time.getHour(), 00);
         }
     }
-
     @Override
     public byte getStatusTime(LocalDateTime startTime) {
         return year.get(startTime.toLocalDate()).day.get(searchNearestInterval(startTime)).timeStatus;
     }
-
     @Override
     public void addDailyTime() {
         // метод будет добавлять повседневное занятие

@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface TimeManager {
     void addPrioritizedTasks(Task task);
+    void removeTaskFromPrioritizedTasks(Task task);
+    List<Task> getPrioritizedTasks();
     boolean checkingFreeTime(LocalDateTime startTime, Duration duration);
     void addFixedTime(Task task);
     void addTuskTime(Task task);
@@ -16,5 +18,5 @@ public interface TimeManager {
     byte getStatusTime(LocalDateTime startTime);
     LocalDateTime findFreeTime(LocalDateTime startTime, Duration duration);
     LocalDateTime findFreeTime( Duration duration);
-    List<Task> getPrioritizedTasks();
+
 }
