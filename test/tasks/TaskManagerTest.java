@@ -1,14 +1,9 @@
 package tasks;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import timeAndDate.InMemoryTimeManager;
-import timeAndDate.TimeManager;
-import utilit.Manager;
 
-import java.lang.reflect.Array;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -398,6 +393,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     void getHistoryWithEmptyList() {
         assertTrue(taskManager.getHistory().isEmpty(), "история задач пуста");
     }
+
     @Test
     void getHistoryWithNotEmptyList() {
         JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
@@ -406,10 +402,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertFalse(taskManager.getHistory().isEmpty(), "история задач не пуста");
         assertEquals(1, taskManager.getHistory().size(), "история задач не пуста");
     }
+
     @Test
     void getPrioritizedTasksWithEmptyList() {
         assertTrue(taskManager.getPrioritizedTasks().isEmpty(), "список задач пуст");
     }
+
     @Test
     void getPrioritizedWithNotEmptyList() {
         JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));

@@ -14,6 +14,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
+
+    private static String fileName;
+
+    public static void setFileName(String fileName) {
+        FileBackedTasksManager.fileName = fileName;
+    }
+
+    public static String getFileName() {
+        return fileName;
+    }
+
     @Override
     public void recoveryTimeTask(Task task, byte statusTime) {
         super.recoveryTimeTask(task, statusTime);
@@ -71,12 +82,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         TaskManager taskManager = Manager.getDefault();
         HistoryManager historyManager = Manager.getDefaultHistory();
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
-        TimeManager timeManager = Manager.getDefaultTime();
-        // иначе не получилось сделать save статическим
         fileBackedTasksManager.remouveAndCreatFile();
         Writer fileWriter = null;
         try {
-            fileWriter = new FileWriter("saves" + File.separator + "file.csv", true);
+            fileWriter = new FileWriter("saves" + File.separator + getFileName(), true);
             fileWriter.write("id,тип,название,статус,описание,начало,продолжительность,окончание,statusTime,idMaster(для подзадач)\n");
         for (Task justTask : taskManager.getListAllJustTask()) {
             fileWriter.write(fileBackedTasksManager.toString((JustTask) justTask) + "\n");
@@ -114,13 +123,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private void remouveAndCreatFile() {
         try {
-            Files.delete(Path.of("saves" + File.separator + "file.csv"));
+            Files.delete(Path.of("saves" + File.separator + getFileName()));
         } catch (IOException e) {
             System.out.println("Произошла ошибка при удалении файла.");
             e.printStackTrace();
         }
         try {
-            Files.createFile(Path.of("saves" + File.separator + "file.csv"));
+            Files.createFile(Path.of("saves" + File.separator + getFileName()));
         } catch (IOException e) {
             System.out.println("Произошла ошибка при создании файла.");
             e.printStackTrace();
@@ -139,7 +148,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public static FileBackedTasksManager loadFromFile() throws IOException {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
         ArrayList<Integer> listAllId = new ArrayList<>();
-        String file = fileBackedTasksManager.readFile("saves" + File.separator + "file.csv");
+        String file = fileBackedTasksManager.readFile("saves" + File.separator + getFileName());
 
         String[] lines = file.split("\r?\n");
         for (int i = 1; i < (lines.length - 2); i++) {

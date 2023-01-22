@@ -15,6 +15,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Поехали!");
+        FileBackedTasksManager.setFileName("file.csv");
         TaskManager taskManager = Manager.getDefault();
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
         TimeManager timeManager = Manager.getDefaultTime();
