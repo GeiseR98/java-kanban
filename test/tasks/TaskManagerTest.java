@@ -186,9 +186,52 @@ abstract class TaskManagerTest<T extends TaskManager> {
         );
         Assertions.assertEquals("Задачи под таким номером не найдено", ex.getMessage(), "getTask работает верно при вызове не существующей задачи");
     }
-
     @Test
     void removeTask() {
+        JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
+        taskManager.addJustTask(justTask);
+        EpicTask epicTask1 = taskManager.createEpicTask("задача", "описание задачи");
+        taskManager.addEpicTask(epicTask1);
+        EpicTask epicTask2 = taskManager.createEpicTask("задача", "описание задачи");
+        taskManager.addEpicTask(epicTask2);
+        SubTask subTask1 = taskManager.createSubTask("задача", "описание задачи", Duration.ofMinutes(15), epicTask1.getId());
+        taskManager.addSubTask(subTask1);
+        SubTask subTask2 = taskManager.createSubTask("задача", "описание задачи", Duration.ofMinutes(15), epicTask1.getId());
+        taskManager.addSubTask(subTask2);
+        taskManager.removeTask(justTask.getId());
+        UnsupportedOperationException exJustTask = assertThrows(
+                UnsupportedOperationException.class,
+                () -> taskManager.getTask(justTask.getId())
+        );
+        Assertions.assertEquals("Задачи под таким номером не найдено", exJustTask.getMessage(), "removeTask работает верно при удалении justTusk-а");
+        taskManager.removeTask(subTask2.getId());
+        UnsupportedOperationException exSubTask2 = assertThrows(
+                UnsupportedOperationException.class,
+                () -> taskManager.getTask(subTask2.getId())
+        );
+        Assertions.assertEquals("Задачи под таким номером не найдено", exSubTask2.getMessage(), "removeTask работает верно при удалении subTusk-а");
+        taskManager.removeTask(epicTask2.getId());
+        UnsupportedOperationException exEpicTask2 = assertThrows(
+                UnsupportedOperationException.class,
+                () -> taskManager.getTask(epicTask2.getId())
+        );
+        Assertions.assertEquals("Задачи под таким номером не найдено", exEpicTask2.getMessage(), "removeTask работает верно при удалении epicTusk-а без подзадач");
+        taskManager.removeTask(epicTask1.getId());
+        UnsupportedOperationException exEpicTask1 = assertThrows(
+                UnsupportedOperationException.class,
+                () -> taskManager.getTask(epicTask1.getId())
+        );
+        Assertions.assertEquals("Задачи под таким номером не найдено", exEpicTask1.getMessage(), "removeTask работает верно при удалении epicTusk-а с подзадачами");
+        UnsupportedOperationException exSubTask1 = assertThrows(
+                UnsupportedOperationException.class,
+                () -> taskManager.getTask(subTask1.getId())
+        );
+        Assertions.assertEquals("Задачи под таким номером не найдено", exSubTask1.getMessage(), "removeTask удаляет subTask-и при удалении epicTask-а");
+        UnsupportedOperationException ex = assertThrows(
+                UnsupportedOperationException.class,
+                () -> taskManager.removeTask(-1)
+        );
+        Assertions.assertEquals("Такой задачи не обнаружено", ex.getMessage(), "removeTask работает верно при попытке удаления несуществующей задачи");
     }
 
     @Test
