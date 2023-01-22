@@ -236,6 +236,28 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void removeAllTask() {
+        JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
+        taskManager.addJustTask(justTask);
+        EpicTask epicTask1 = taskManager.createEpicTask("задача", "описание задачи");
+        taskManager.addEpicTask(epicTask1);
+        SubTask subTask1 = taskManager.createSubTask("задача", "описание задачи", Duration.ofMinutes(15), epicTask1.getId());
+        taskManager.addSubTask(subTask1);
+        taskManager.removeAllTask();
+        UnsupportedOperationException exJustTask = assertThrows(
+                UnsupportedOperationException.class,
+                () -> taskManager.getTask(justTask.getId())
+        );
+        Assertions.assertEquals("Задачи под таким номером не найдено", exJustTask.getMessage(), "removeAllTask удаляет все justTask-и");
+        UnsupportedOperationException exEpicTask1 = assertThrows(
+                UnsupportedOperationException.class,
+                () -> taskManager.getTask(epicTask1.getId())
+        );
+        Assertions.assertEquals("Задачи под таким номером не найдено", exEpicTask1.getMessage(), "removeAllTask удаляет все epicTask-и");
+        UnsupportedOperationException exSubTask1 = assertThrows(
+                UnsupportedOperationException.class,
+                () -> taskManager.getTask(subTask1.getId())
+        );
+        Assertions.assertEquals("Задачи под таким номером не найдено", exSubTask1.getMessage(), "removeAllTask удаляет все subTask-и");
     }
 
     @Test
