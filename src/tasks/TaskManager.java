@@ -24,13 +24,13 @@ public interface TaskManager {
     Integer addSubTask(SubTask subTask);
 
     void printAllJustTask();
-    ArrayList<JustTask> getListAllJustTask();
+    List<JustTask> getListAllJustTask();
 
     void printAllEpicTask();
-    ArrayList<EpicTask> getListAllEpicTask();
+    List<EpicTask> getListAllEpicTask();
 
     void printAllSubTask();
-    ArrayList<SubTask> getListAllSubTask();
+    List<SubTask> getListAllSubTask();
 
     Task getTask(Integer id);
     void removeTask(Integer id);

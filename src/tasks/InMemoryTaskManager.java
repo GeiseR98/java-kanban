@@ -138,8 +138,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
-    public ArrayList<JustTask> getListAllJustTask() {
-        ArrayList<JustTask> list = new ArrayList<>();
+    public List<JustTask> getListAllJustTask() {
+        List<JustTask> list = new ArrayList<>();
         for (Integer key : justTasks.keySet()) {
             list.add(justTasks.get(key));
         }
@@ -163,8 +163,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
-    public ArrayList<EpicTask> getListAllEpicTask() {
-        ArrayList<EpicTask> list = new ArrayList<>();
+    public List<EpicTask> getListAllEpicTask() {
+        List<EpicTask> list = new ArrayList<>();
         for (Integer key : epicTasks.keySet()) {
             list.add(epicTasks.get(key));
         }
@@ -179,8 +179,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
-    public ArrayList<SubTask> getListAllSubTask() {
-        ArrayList<SubTask> list = new ArrayList<>();
+    public List<SubTask> getListAllSubTask() {
+        List<SubTask> list = new ArrayList<>();
         for (Integer key : subTasks.keySet()) {
             list.add(subTasks.get(key));
         }
@@ -256,13 +256,14 @@ public class InMemoryTaskManager implements TaskManager {
     }
     @Override
     public void removeAllTask(){
-        for (Integer key : justTasks.keySet()) justTasks.remove(key);
-        for (Integer key : subTasks.keySet()) subTasks.remove(key);
-        for (Integer key : epicTasks.keySet()) epicTasks.remove(key);
-        historyManager.removeAllHistory();
-        System.out.println("Все задачи удалены");
-        if (autoSave) {
-            FileBackedTasksManager.save();
+        if (!justTasks.isEmpty()) {
+            for (Integer key : justTasks.keySet()) removeTask(key);
+        }
+        if (!subTasks.isEmpty()) {
+            for (Integer key : subTasks.keySet()) removeTask(key);
+        }
+        if (!epicTasks.isEmpty()) {
+            for (Integer key : epicTasks.keySet()) removeTask(key);
         }
     }
     @Override

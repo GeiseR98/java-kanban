@@ -7,8 +7,10 @@ import timeAndDate.InMemoryTimeManager;
 import timeAndDate.TimeManager;
 import utilit.Manager;
 
+import java.lang.reflect.Array;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -140,12 +142,32 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void getListAllJustTask() {
+        JustTask justTask = taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10));
+        taskManager.addJustTask(justTask);
+        List<JustTask> list = new ArrayList<>();
+        list.add(justTask);
+        assertNotNull(taskManager.getListAllJustTask().toArray());
+        assertArrayEquals(list.toArray(), taskManager.getListAllJustTask().toArray());
     }
     @Test
     void getListAllEpicTask() {
+        EpicTask epicTask = taskManager.createEpicTask("задача", "описание задачи");
+        taskManager.addEpicTask(epicTask);
+        List<EpicTask> list = new ArrayList<>();
+        list.add(epicTask);
+        assertNotNull(taskManager.getListAllEpicTask().toArray());
+        assertArrayEquals(list.toArray(), taskManager.getListAllEpicTask().toArray());
     }
     @Test
     void getListAllSubTask() {
+        EpicTask epicTask = taskManager.createEpicTask("задача", "описание задачи");
+        taskManager.addEpicTask(epicTask);
+        SubTask subTask = taskManager.createSubTask("задача", "описание задачи", Duration.ofMinutes(15), epicTask.getId());
+        taskManager.addSubTask(subTask);
+        List<SubTask> list = new ArrayList<>();
+        list.add(subTask);
+        assertNotNull(taskManager.getListAllSubTask().toArray());
+        assertArrayEquals(list.toArray(), taskManager.getListAllSubTask().toArray());
     }
     @Test
     void getTask() {
