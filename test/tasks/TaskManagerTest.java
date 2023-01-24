@@ -38,6 +38,26 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
+    public void isNotPossibleCreateTAskWithSameTime() {
+        LocalDateTime startTime = LocalDateTime.now().plusMinutes(15);
+        Duration duration = Duration.ofMinutes(10);
+        JustTask justTask = taskManager.createJustTask("задача", "описание задачи", startTime, duration);
+        UnsupportedOperationException ex = assertThrows(
+                UnsupportedOperationException.class,
+                () -> taskManager.createJustTask("задача", "описание задачи", startTime, duration)
+        );
+        Assertions.assertEquals("Ближайшее свободное время: " + timeManager.findFreeTime(duration), ex.getMessage());
+    }
+    @Test
+    public void isNotPossibleCreateTAskWithOverlappingTime() {
+        JustTask justTask = taskManager.createJustTask("задача", "описание задачи", LocalDateTime.now().plusMinutes(15), Duration.ofMinutes(100));
+        UnsupportedOperationException ex = assertThrows(
+                UnsupportedOperationException.class,
+                () -> taskManager.createJustTask("задача", "описание задачи", LocalDateTime.now().plusMinutes(40), Duration.ofMinutes(10))
+        );
+        Assertions.assertEquals("Ближайшее свободное время: " + timeManager.findFreeTime(Duration.ofMinutes(10)), ex.getMessage());
+    }
+    @Test
     public void shouldCreateJustTaskWithStartTime() {
         String name = "название";
         String description = "описание";

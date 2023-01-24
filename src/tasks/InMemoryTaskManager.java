@@ -31,6 +31,7 @@ public class InMemoryTaskManager implements TaskManager {
         Status status = Status.NEW;
         if (timeManager.checkingFreeTime(startTime, duration)) {
             JustTask justTask = new JustTask(idTask, name, description, status, startTime, duration, InMemoryTimeManager.timeStatusFixed);
+            timeManager.addFixedTime(justTask);
             return justTask;
         } else {
             throw new UnsupportedOperationException("Ближайшее свободное время: " + timeManager.findFreeTime(duration));
@@ -42,6 +43,7 @@ public class InMemoryTaskManager implements TaskManager {
         Status status = Status.NEW;
         LocalDateTime startTime = timeManager.findFreeTime(duration);
         JustTask justTask = new JustTask(idTask, name, description, status, startTime, duration, InMemoryTimeManager.timeStatusTusk);
+        timeManager.addTuskTime(justTask);
         return justTask;
     }
     @Override
@@ -49,7 +51,6 @@ public class InMemoryTaskManager implements TaskManager {
         if (!justTasks.containsKey(justTask.getId())) {
             justTasks.put(justTask.getId(), justTask);
             timeManager.addPrioritizedTasks(justTask);
-            timeManager.recoveryTimeTask(justTask, justTask.getTimeStatus());
             System.out.println("Задача сохранена под номером '" + justTask.getId() + "'");
             if (autoSave) {
                 FileBackedTasksManager.save();
@@ -121,7 +122,6 @@ public class InMemoryTaskManager implements TaskManager {
             epicTasks.get(subTask.getIdMaster()).getListIdSubtask().add(subTask.getId());
             System.out.println("Задача сохранена под номером '" + subTask.getId() + "'");
             }
-        timeManager.recoveryTimeTask(subTask, subTask.getTimeStatus());
         calculationEpicStatus(subTask.getIdMaster());
         calculationEpicTime(subTask.getIdMaster());
         timeManager.addPrioritizedTasks(subTask);

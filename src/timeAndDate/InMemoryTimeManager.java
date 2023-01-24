@@ -32,6 +32,10 @@ public class InMemoryTimeManager implements TimeManager{
         prioritizedTasks.remove(task);
     }
     @Override
+    public void cleaneTimeManager() {
+        year.clear();
+    }
+    @Override
     public void addFixedTime(Task task) {
         LocalDateTime endTime = task.getStartTime().plus(task.getDuration());
         LocalDateTime firstInterval = LocalDateTime.of(task.getStartTime().toLocalDate(), searchNearestInterval(task.getStartTime()));

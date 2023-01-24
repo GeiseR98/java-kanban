@@ -19,5 +19,6 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager>{
     public void afterEach() {
         taskManager.removeAllTask();
         taskManager.setIdTask(0);
+        timeManager.cleaneTimeManager();
     }
 }

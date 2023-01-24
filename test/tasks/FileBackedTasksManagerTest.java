@@ -28,6 +28,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     public void afterEach() {
         taskManager.removeAllTask();
         taskManager.setIdTask(0);
+        timeManager.cleaneTimeManager();
     }
     @Test
     public void shouldCorrectlySaveAndLoad() throws IOException {

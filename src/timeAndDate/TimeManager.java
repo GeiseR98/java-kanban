@@ -18,5 +18,6 @@ public interface TimeManager {
     byte getStatusTime(LocalDateTime startTime);
     LocalDateTime findFreeTime(LocalDateTime startTime, Duration duration);
     LocalDateTime findFreeTime( Duration duration);
+    void cleaneTimeManager();
 
 }
