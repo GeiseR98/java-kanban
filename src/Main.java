@@ -1,3 +1,5 @@
+import api.HttpTaskServer;
+import com.sun.net.httpserver.HttpServer;
 import files.FileBackedTasksManager;
 import history.HistoryManager;
 import tasks.InMemoryTaskManager;
@@ -26,6 +28,13 @@ public class Main {
         }
 
         InMemoryTaskManager.autoSave = true;
+        HttpTaskServer httpServer;
+        try {
+            httpServer = new HttpTaskServer();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        httpServer.start();
 
 
 

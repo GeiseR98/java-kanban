@@ -1,5 +1,7 @@
 package tasks;
 
+import files.Types;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -10,6 +12,21 @@ public class JustTask extends Task{
     public JustTask(int id, String name, String description, Status status, LocalDateTime startTime, Duration duration, byte timeStatus) {
         super(id, name, description, status, startTime, duration);
         this.timeStatus = timeStatus;
+    }
+
+    @Override
+    public String toString() {
+        String line;
+        line = getId() + "," +
+                Types.JUSTTASK + "," +
+                getName() + "," +
+                getStatus() + "," +
+                getDescription() + "," +
+                getStartTime() + "," +
+                getDuration() + "," +
+                getEndTime() + "," +
+                getTimeStatus();
+        return line;
     }
 
     public byte getTimeStatus() {

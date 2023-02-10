@@ -214,8 +214,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return subTask;
     }
     String toString(JustTask justTask) {
-
-
         String line;
         line = justTask.getId() + "," +
                 Types.JUSTTASK + "," +
@@ -226,7 +224,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 justTask.getDuration() + "," +
                 justTask.getEndTime() + "," +
                 justTask.getTimeStatus();
-
         return line;
     }
 

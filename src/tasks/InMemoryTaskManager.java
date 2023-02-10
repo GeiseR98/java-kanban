@@ -346,6 +346,14 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getPrioritizedTasks() {
         return timeManager.getPrioritizedTasks();
     }
+    @Override
+    public boolean containsKey(Integer id) {
+        if (justTasks.containsKey(id) || epicTasks.containsKey(id) || subTasks.containsKey(id)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     public byte getStatusTime(LocalDateTime startTime) {
         return timeManager.getStatusTime(startTime);
     }

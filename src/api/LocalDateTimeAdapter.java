@@ -2,28 +2,23 @@ package api;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
-    public LocalDateTime read(JsonReader reader) throws IOException {
-        if (reader.peek() == JsonToken.NULL) {
-            reader.nextNull();
-            return null;
-        }
-        String time = reader.nextString();
-        return LocalDateTime.parse(time);
-    }
+    private static final DateTimeFormatter formatterWriter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    private static final DateTimeFormatter formatterReader = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
-    public void write(JsonWriter writer, LocalDateTime value) throws IOException {
-        if (value == null) {
-            writer.nullValue();
-            return;
-        }
-        String time = value.toString();
-        writer.value(time);
+
+    @Override
+    public void write(final JsonWriter jsonWriter,final LocalDateTime localDateTime) throws IOException {
+        jsonWriter.value(localDateTime.format(formatterWriter));
+    }
+    @Override
+    public LocalDateTime read(final JsonReader jsonReader) throws IOException {
+        return LocalDateTime.parse(jsonReader.nextString(), formatterReader);
     }
 }

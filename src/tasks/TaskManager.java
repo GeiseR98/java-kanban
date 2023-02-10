@@ -35,4 +35,5 @@ public interface TaskManager {
     void changeDescription(Integer id, String description);
     List<Task>  getHistory();
     List<Task> getPrioritizedTasks();
+    boolean containsKey(Integer id);
 }
