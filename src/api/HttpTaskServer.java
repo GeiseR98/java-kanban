@@ -12,15 +12,15 @@ import java.nio.charset.StandardCharsets;
 public class HttpTaskServer {
     protected final HttpServer httpServer;
     protected static final int PORT = 8080;
-    private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     public HttpTaskServer() throws IOException, InterruptedException {
         TaskManager taskManager = Manager.getDefault();
         this.httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks/");
-        httpServer.createContext("/tasks/task");
+        httpServer.createContext("/tasks/task", new JustTaskHandler(taskManager));
         httpServer.createContext("/tasks/epic");
         httpServer.createContext("/tasks/subtask");
         httpServer.createContext("/tasks/history");
+        httpServer.createContext("/tasks/prioritized");
     }
     public void start() {
         httpServer.start();

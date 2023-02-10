@@ -13,5 +13,6 @@ public class TasksHandler implements HttpHandler {
     private Endpoint getEndpoint(String requestPath, String requestMethod) {
         String[] pathParts = requestPath.split("/");
 
+        return Endpoint.UNKNOWN;
     }
 }
