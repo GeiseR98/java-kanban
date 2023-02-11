@@ -2,8 +2,10 @@ package api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import tasks.JustTask;
 import tasks.Status;
 import tasks.TaskManager;
 
@@ -35,6 +37,7 @@ public class JustTaskHandler implements HttpHandler {
                 break;
             }
             case POST_JUSTTASK: {
+                handleAddJustTask(exchange);
                 break;
             }
             case GET_TASK_BY_ID: {
@@ -49,6 +52,46 @@ public class JustTaskHandler implements HttpHandler {
                 handleChange(exchange);
                 break;
             }
+            default:
+                writeResponse(exchange, "Такого эндпонта не существует", 404);
+        }
+    }
+    private void handleAddJustTask(HttpExchange exchange) throws IOException {
+        String body = new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
+        JustTask justTask;
+        try {
+            justTask = gson.fromJson(body, JustTask.class);
+        } catch (JsonSyntaxException exception) {
+            writeResponse(exchange, "Получен некорректный Json", 400);
+            return;
+        }
+        if (justTask.getName().isEmpty() ||
+            justTask.getDescription().isEmpty() ||
+            justTask.getDuration() == null) {
+            writeResponse(exchange, "Данные поля не могут быть пустыми", 400);
+            return;
+        }
+        if (justTask.getStartTime() != null) {
+            int id;
+            try {
+                id = taskManager.addJustTask(taskManager.createJustTask(
+                        justTask.getName(),
+                        justTask.getDescription(),
+                        justTask.getStartTime(),
+                        justTask.getDuration()
+                ));
+                writeResponse(exchange, "Задача сохранена под номером " + id, 201);
+                return;
+            } catch (UnsupportedOperationException exception) {
+                writeResponse(exchange, exception.getMessage(), 400);
+            }
+        } else {
+            int id = taskManager.addJustTask(taskManager.createJustTask(
+                    justTask.getName(),
+                    justTask.getDescription(),
+                    justTask.getDuration()
+            ));
+            writeResponse(exchange, "Задача сохранена под номером " + id, 201);
         }
     }
     private void handleChange(HttpExchange exchange) throws IOException {
