@@ -45,12 +45,12 @@ public class Main {
 //        Создание задачи:
 //        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", LocalDateTime.now().plusMinutes(10), Duration.ofMinutes(10)));
 //        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", LocalDateTime.now().plusMinutes(30), Duration.ofMinutes(10)));
-
+//
 //        System.out.println(taskManager.getTask(4));
 //        System.out.println(taskManager.getHistory());
-
-        // Создание подзадачи:
-        // taskManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(10), 4));
+//
+//        // Создание подзадачи:
+         taskManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(10), 1));
 
         // Изменить описание:
         // taskManager.changeDescription(id);

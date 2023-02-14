@@ -70,7 +70,7 @@ public class SubTaskHandler implements HttpHandler {
             writeResponse(exchange, "Данные поля не могут быть пустыми", 400);
             return;
         }
-        if (taskManager.isThereSuchEpicTask(subTask.getIdMaster())) {
+        if (!taskManager.isThereSuchEpicTask(subTask.getIdMaster())) {
             writeResponse(exchange, "Указанного эпика не существует, создайте сначала эпик", 400);
             return;
         }

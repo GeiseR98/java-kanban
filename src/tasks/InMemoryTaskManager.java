@@ -435,6 +435,10 @@ public class InMemoryTaskManager implements TaskManager {
             epicTasks.get(idMaster).setStartTime(min);
             epicTasks.get(idMaster).setEndTime(max);
             epicTasks.get(idMaster).setDuration(Duration.between(min,max));
+        } else {
+            epicTasks.get(idMaster).setEndTime(null);
+            epicTasks.get(idMaster).setStartTime(null);
+            epicTasks.get(idMaster).setDuration(null);
         }
     }
     private boolean checkInputStatus(Status status){

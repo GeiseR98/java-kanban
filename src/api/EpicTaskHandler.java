@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 public class EpicTaskHandler implements HttpHandler {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     private final Gson gson = new GsonBuilder()
+            .serializeNulls()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .create();
@@ -167,7 +168,7 @@ public class EpicTaskHandler implements HttpHandler {
     }
     private Endpoint getEndpoint(String requestPath, String requestMethod, String query) {
         String[] pathParts = requestPath.split("/");
-        if (pathParts.length == 3 && pathParts[2].equals("task")) {
+        if (pathParts.length == 3 && pathParts[2].equals("epic")) {
             if (query == null) {
                 switch (requestMethod) {
                     case "GET":
