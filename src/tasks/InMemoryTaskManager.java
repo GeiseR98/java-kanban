@@ -266,8 +266,12 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
+    public void clearHistory() {
+        historyManager.clearHistory();
+    }
+    @Override
     public void removeAllTask(){
-        historyManager.removeAllHistory();
+        historyManager.clearHistory();
         timeManager.removeAllPrioritizedTasks();
         timeManager.cleaneTimeManager();
         justTasks.clear();
@@ -277,6 +281,7 @@ public class InMemoryTaskManager implements TaskManager {
         FileBackedTasksManager.save();
         System.out.println("Все задачи удалены");
     }
+
     @Override
     public void changeName(Integer id, String name){
         if (justTasks.get(id) != null) {

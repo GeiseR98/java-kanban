@@ -95,7 +95,7 @@ class InMemoryHistoryManagerTest {
         taskManager.getTask(1);
         taskManager.getTask(2);
         taskManager.getTask(3);
-        historyManager.removeAllHistory();
+        historyManager.clearHistory();
         assertEquals(Collections.EMPTY_LIST, taskManager.getHistory());
     }
 }

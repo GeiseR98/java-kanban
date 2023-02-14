@@ -29,6 +29,7 @@ public interface TaskManager {
     List<SubTask> getListAllSubTask();
     Task getTask(Integer id);
     void removeTask(Integer id);
+    void clearHistory();
     void removeAllTask();
     void changeName(Integer id, String name);
     void changeStatus(Integer id, Status status);
