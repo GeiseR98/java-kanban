@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import tasks.JustTask;
 import tasks.Status;
 import tasks.SubTask;
 import tasks.TaskManager;
