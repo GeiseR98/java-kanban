@@ -10,10 +10,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class HistoryHandler implements HttpHandler {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-    private final Gson gson = new GsonBuilder().create();
+    private final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .registerTypeAdapter(Duration.class, new DurationAdapter())
+            .create();
     private final TaskManager taskManager;
     public HistoryHandler(TaskManager taskManager) {
         this.taskManager = taskManager;

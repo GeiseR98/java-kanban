@@ -68,7 +68,7 @@ public class Main {
         // taskManager.removeTask(id);
 
         // Удалить все задачи:
-         taskManager.removeAllTask();
+//         taskManager.removeAllTask();
 
         // Очистить историю:
         // historyManager.removeAllHistory();

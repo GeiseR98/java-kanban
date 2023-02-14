@@ -268,6 +268,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void clearHistory() {
         historyManager.clearHistory();
+        if (InMemoryTaskManager.autoSave) {
+            FileBackedTasksManager.save();
+        }
     }
     @Override
     public void removeAllTask(){
@@ -278,7 +281,9 @@ public class InMemoryTaskManager implements TaskManager {
         subTasks.clear();
         epicTasks.clear();
         idTask = 0;
-        FileBackedTasksManager.save();
+        if (InMemoryTaskManager.autoSave) {
+            FileBackedTasksManager.save();
+        }
         System.out.println("Все задачи удалены");
     }
 
