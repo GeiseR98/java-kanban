@@ -32,6 +32,10 @@ public class InMemoryTimeManager implements TimeManager{
         prioritizedTasks.remove(task);
     }
     @Override
+    public void removeAllPrioritizedTasks() {
+        prioritizedTasks.clear();
+    }
+    @Override
     public void cleaneTimeManager() {
         year.clear();
     }

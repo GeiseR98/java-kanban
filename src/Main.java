@@ -43,14 +43,14 @@ public class Main {
 //        fileBackedTasksManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
 
 //        Создание задачи:
-//        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", LocalDateTime.now().plusMinutes(10), Duration.ofMinutes(10)));
-//        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", LocalDateTime.now().plusMinutes(30), Duration.ofMinutes(10)));
+//        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10)));
+//        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10)));
 //
 //        System.out.println(taskManager.getTask(4));
 //        System.out.println(taskManager.getHistory());
 //
 //        // Создание подзадачи:
-         taskManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(10), 1));
+//         taskManager.addSubTask(taskManager.createSubTask("подзадача", "описание подзадачи", Duration.ofMinutes(10), 1));
 
         // Изменить описание:
         // taskManager.changeDescription(id);
@@ -68,7 +68,7 @@ public class Main {
         // taskManager.removeTask(id);
 
         // Удалить все задачи:
-        // taskManager.removeAllTask();
+         taskManager.removeAllTask();
 
         // Очистить историю:
         // historyManager.removeAllHistory();

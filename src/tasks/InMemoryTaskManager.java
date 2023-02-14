@@ -267,12 +267,15 @@ public class InMemoryTaskManager implements TaskManager {
     }
     @Override
     public void removeAllTask(){
-        if (!justTasks.isEmpty()) {
-            for (Integer key : justTasks.keySet()) removeTask(key);
-        }
-        if (!epicTasks.isEmpty()) {
-            for (Integer key : epicTasks.keySet()) removeTask(key);
-        }
+        historyManager.removeAllHistory();
+        timeManager.removeAllPrioritizedTasks();
+        timeManager.cleaneTimeManager();
+        justTasks.clear();
+        subTasks.clear();
+        epicTasks.clear();
+        idTask = 0;
+        FileBackedTasksManager.save();
+        System.out.println("Все задачи удалены");
     }
     @Override
     public void changeName(Integer id, String name){
