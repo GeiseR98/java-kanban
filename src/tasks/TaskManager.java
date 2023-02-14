@@ -36,4 +36,5 @@ public interface TaskManager {
     List<Task>  getHistory();
     List<Task> getPrioritizedTasks();
     boolean containsKey(Integer id);
+    boolean isThereSuchEpicTask(Integer idMaster);
 }

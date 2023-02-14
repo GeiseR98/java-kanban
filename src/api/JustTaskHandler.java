@@ -72,9 +72,10 @@ public class JustTaskHandler implements HttpHandler {
             return;
         }
         if (justTask.getStartTime() != null) {
-            int id;
             try {
-                id = taskManager.addJustTask(taskManager.createJustTask(
+                System.out.println(justTask.getId());
+
+                int id = taskManager.addJustTask(taskManager.createJustTask(
                         justTask.getName(),
                         justTask.getDescription(),
                         justTask.getStartTime(),
@@ -84,6 +85,7 @@ public class JustTaskHandler implements HttpHandler {
                 return;
             } catch (UnsupportedOperationException exception) {
                 writeResponse(exchange, exception.getMessage(), 400);
+                return;
             }
         } else {
             int id = taskManager.addJustTask(taskManager.createJustTask(
@@ -92,6 +94,7 @@ public class JustTaskHandler implements HttpHandler {
                     justTask.getDuration()
             ));
             writeResponse(exchange, "Задача сохранена под номером " + id, 201);
+            return;
         }
     }
     private void handleChange(HttpExchange exchange) throws IOException {
@@ -183,7 +186,6 @@ public class JustTaskHandler implements HttpHandler {
         }
         exchange.close();
     }
-
     private Endpoint getEndpoint(String requestPath, String requestMethod, String query) {
         String[] pathParts = requestPath.split("/");
         if (pathParts.length == 3 && pathParts[2].equals("task")) {

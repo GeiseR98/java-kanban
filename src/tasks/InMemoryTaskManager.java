@@ -100,6 +100,14 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
     @Override
+    public boolean isThereSuchEpicTask(Integer idMaster) {
+        if (epicTasks.containsKey(idMaster)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    @Override
     public SubTask createSubTask(String name,
                                  String description,
                                  Duration duration,

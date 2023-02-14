@@ -7,18 +7,25 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class DurationAdapter extends TypeAdapter<Duration> {
-
+//            "duration": "0 часов, 29 минут"
 
     @Override
     public void write(JsonWriter jsonWriter, Duration duration) throws IOException {
-        jsonWriter.value(duration.toHours() + " часов, " + duration.toMinutesPart() + " минут,");
+        jsonWriter.value(duration.toHours() + " часов, " + duration.toMinutesPart() + " минут");
     }
 
     @Override
     public Duration read(JsonReader jsonReader) throws IOException {
-        return null;
+        String[] split = jsonReader.nextString().split(", ");
+        Duration duration = null;
+        if (split.length == 2) {
+            Duration haur = Duration.ofHours(Integer.parseInt(split[0].substring(0, split[0].lastIndexOf(" "))));
+            duration = haur.plusMinutes(Integer.parseInt(split[1].substring(0, split[1].lastIndexOf(" "))));
+        }
+        return duration;
     }
 }
