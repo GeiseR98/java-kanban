@@ -27,8 +27,40 @@ public class KVServer {
         server.createContext("/load", this::load);
     }
 
-    private void load(HttpExchange h) {
-        // TODO Добавьте получение значения по ключу
+    private void load(HttpExchange h) throws IOException {
+        try {
+            System.out.println("\n/load");
+            if (!hasAuth(h)) {
+                System.out.println("Запрос не авторизован, нужен параметр в query API_TOKEN со значением API-ключа");
+                h.sendResponseHeaders(403, 0);
+                return;
+            }
+
+            if ("GET".equals(h.getRequestMethod())) {
+                String key = h.getRequestURI()
+                        .getPath()
+                        .substring("/load/".length());
+                if (key.isEmpty()) {
+                    System.out.println("Key для сохранения пустой. Key указывается в пути: /load/{key}");
+                    h.sendResponseHeaders(400, 0);
+                    return;
+                }
+                if (data.get(key) == null) {
+                    System.out.println("Не могу достать данные для ключа '" + key + "', данные отсутствуют");
+                    h.sendResponseHeaders(400, 0);
+                    return;
+                }
+                String response = data.get(key);
+                sendText(h, response);
+                System.out.println("Значение для ключа " + key + " успешно отправлено в ответ на запрос!");
+                h.sendResponseHeaders(200, 0);
+            } else {
+                System.out.println("/load ждет GET-запрос, а получил: " + h.getRequestMethod());
+                h.sendResponseHeaders(405, 0);
+            }
+        } finally {
+            h.close();
+        }
     }
 
     private void save(HttpExchange h) throws IOException {
@@ -83,6 +115,10 @@ public class KVServer {
         System.out.println("Открой в браузере http://localhost:" + PORT + "/");
         System.out.println("API_TOKEN: " + apiToken);
         server.start();
+    }
+    public void stop() {
+        server.stop(0);
+        System.out.println("Сервер остановлен на порту " + PORT);
     }
 
     private String generateApiToken() {
