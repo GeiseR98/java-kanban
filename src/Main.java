@@ -7,6 +7,7 @@ import tasks.Status;
 import tasks.TaskManager;
 import timeAndDate.TimeManager;
 import utilit.Manager;
+import KVServer.KVServer;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +36,7 @@ public class Main {
             throw new RuntimeException(e);
         }
         httpServer.start();
+        new KVServer().start();
 
 
 
