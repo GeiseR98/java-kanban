@@ -34,6 +34,7 @@ public class InMemoryTaskManager implements TaskManager {
             timeManager.addFixedTime(justTask);
             return justTask;
         } else {
+            idTask--;
             throw new UnsupportedOperationException("Ближайшее свободное время: " + timeManager.findFreeTime(duration));
         }
     }
@@ -53,7 +54,7 @@ public class InMemoryTaskManager implements TaskManager {
             timeManager.addPrioritizedTasks(justTask);
             System.out.println("Задача сохранена под номером '" + justTask.getId() + "'");
             if (autoSave) {
-                FileBackedTasksManager.save();
+                save();
             }
         }
         return justTask.getId();
@@ -74,7 +75,7 @@ public class InMemoryTaskManager implements TaskManager {
             epicTasks.put(epicTask.getId(), epicTask);
             System.out.println("Задача сохранена под номером '" + epicTask.getId() + "'");
             if (autoSave) {
-                FileBackedTasksManager.save();
+                save();
             }
         }
         return epicTask.getId();
@@ -95,6 +96,7 @@ public class InMemoryTaskManager implements TaskManager {
                 timeManager.addFixedTime(subTask);
                 return subTask;
             } else {
+                idTask--;
                 throw new UnsupportedOperationException("Ближайшее свободное время: " + timeManager.findFreeTime(duration));
             }
         }
@@ -134,7 +136,7 @@ public class InMemoryTaskManager implements TaskManager {
         calculationEpicTime(subTask.getIdMaster());
         timeManager.addPrioritizedTasks(subTask);
         if (autoSave) {
-            FileBackedTasksManager.save();
+            save();
         }
         return subTask.getId();
     }
@@ -210,7 +212,7 @@ public class InMemoryTaskManager implements TaskManager {
             throw new UnsupportedOperationException("Задачи под таким номером не найдено");
         }
         if (autoSave) {
-            FileBackedTasksManager.save();
+            save();
         }
         return task;
     }
@@ -224,7 +226,7 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Задача №" + id + " успешно удалена...");
 
             if (autoSave) {
-                FileBackedTasksManager.save();
+                save();
             }
         } else if (epicTasks.containsKey(id)){
             if (epicTasks.get(id).getListIdSubtask().size() != 0) {
@@ -238,14 +240,14 @@ public class InMemoryTaskManager implements TaskManager {
                 epicTasks.remove(id);
                 System.out.println("Эпик №" + id + " успешно удален вместе с подзадачами.");
                 if (autoSave) {
-                    FileBackedTasksManager.save();
+                    save();
                 }
             } else {
                 epicTasks.remove(id);
                 historyManager.remove(id);
                 System.out.println("Эпик №" + id + " успешно удален");
                 if (autoSave) {
-                    FileBackedTasksManager.save();
+                    save();
                 }
             }
         } else if (subTasks.containsKey(id)) {
@@ -269,7 +271,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void clearHistory() {
         historyManager.clearHistory();
         if (InMemoryTaskManager.autoSave) {
-            FileBackedTasksManager.save();
+            save();
         }
     }
     @Override
@@ -282,7 +284,7 @@ public class InMemoryTaskManager implements TaskManager {
         epicTasks.clear();
         idTask = 0;
         if (InMemoryTaskManager.autoSave) {
-            FileBackedTasksManager.save();
+            save();
         }
         System.out.println("Все задачи удалены");
     }
@@ -292,19 +294,19 @@ public class InMemoryTaskManager implements TaskManager {
         if (justTasks.get(id) != null) {
             justTasks.get(id).setName(name);
             if (autoSave) {
-                FileBackedTasksManager.save();
+                save();
             }
         }
         else if (subTasks.get(id) != null) {
             subTasks.get(id).setName(name);
             if (autoSave) {
-                FileBackedTasksManager.save();
+                save();
             }
         }
         else if (epicTasks.get(id) != null) {
             epicTasks.get(id).setName(name);
             if (autoSave) {
-                FileBackedTasksManager.save();
+                save();
             }
         } else {
             System.out.println("Вы не верно ввели номер задачи, попробуйте снова");
@@ -316,7 +318,7 @@ public class InMemoryTaskManager implements TaskManager {
             if (justTasks.get(id) != null) {
                 justTasks.get(id).setStatus(status);
                 if (autoSave) {
-                    FileBackedTasksManager.save();
+                    save();
                 }
             }
             else if (subTasks.get(id) != null) {
@@ -324,7 +326,7 @@ public class InMemoryTaskManager implements TaskManager {
                 subTasks.get(id).setStatus(status);
                 calculationEpicStatus(idMaster);
                 if (autoSave) {
-                    FileBackedTasksManager.save();
+                    save();
                 }
             } else if (epicTasks.get(id) != null) {
                 System.out.println("Вы не можете менять статус эпика, он рассчитывается исходя из статусов подзадач");
@@ -340,19 +342,19 @@ public class InMemoryTaskManager implements TaskManager {
         if (justTasks.get(id) != null) {
             justTasks.get(id).setDescription(description);
             if (autoSave) {
-                FileBackedTasksManager.save();
+                save();
             }
         }
         else if (subTasks.get(id) != null) {
             subTasks.get(id).setDescription(description);
             if (autoSave) {
-                FileBackedTasksManager.save();
+                save();
             }
         }
         else if (epicTasks.get(id) != null) {
             epicTasks.get(id).setDescription(description);
             if (autoSave) {
-                FileBackedTasksManager.save();
+                save();
             }
         }
         else {
@@ -462,5 +464,8 @@ public class InMemoryTaskManager implements TaskManager {
             inputStatus = true;
         }
         return inputStatus;
+    }
+    private void save() {
+        FileBackedTasksManager.save();
     }
 }
