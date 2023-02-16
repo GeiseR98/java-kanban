@@ -1,7 +1,6 @@
 package KVServer;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -17,7 +16,7 @@ public class KVTaskClient {
         this.serverURL = serverURL;
     }
     public void register() {
-        URI uri =URI.create(this.serverURL + "/register");
+        URI uri = URI.create(this.serverURL + "/register");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
