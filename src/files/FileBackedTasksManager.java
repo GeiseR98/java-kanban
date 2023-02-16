@@ -20,64 +20,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public static void setFileName(String fileName) {
         FileBackedTasksManager.fileName = fileName;
     }
-
     public static String getFileName() {
         return fileName;
     }
-
-    @Override
-    public void recoveryTimeTask(Task task, byte statusTime) {
-        super.recoveryTimeTask(task, statusTime);
-        save();
-    }
-    @Override
-    public Integer addJustTask(JustTask justTask){
-        super.addJustTask(justTask);
-        save();
-        return justTask.getId();
-    }
-    @Override
-    public Integer addEpicTask(EpicTask epicTask){
-        super.addEpicTask(epicTask);
-        save();
-        return epicTask.getId();
-    }
-
-    @Override
-    public Integer addSubTask(SubTask subTask){
-        super.addSubTask(subTask);
-        save();
-        return subTask.getId();
-    }
-    @Override
-    public void removeTask(Integer id){
-        super.removeTask(id);
-        save();
-    }
-
-    @Override
-    public void removeAllTask(){
-        super.removeAllTask();
-        save();
-    }
-
-    @Override
-    public void changeStatus(Integer id, Status status){
-        super.changeStatus(id, status);
-        save();
-    }
-
-    @Override
-    public void changeDescription(Integer id, String description){
-        super.changeDescription(id, description);
-        save();
-    }
-
-    @Override
-    public void setIdTask(int idTask) {
-        super.setIdTask(idTask);
-    }
-
     public static void save()  { // сохранение всего, надо будет переделать на редактирование файла
         TaskManager taskManager = Manager.getDefault();
         HistoryManager historyManager = Manager.getDefaultHistory();
@@ -118,9 +63,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         } catch (IOException e) {
             System.out.println("Ошибка закрытия потока");
         }
-
     }
-
     private void remouveAndCreatFile() {
         try {
             Files.delete(Path.of("saves" + File.separator + getFileName()));

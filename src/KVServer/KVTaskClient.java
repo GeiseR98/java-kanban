@@ -1,7 +1,10 @@
 package KVServer;
 
+import files.ManagerSaveException;
+
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -10,31 +13,33 @@ import java.nio.charset.StandardCharsets;
 
 public class KVTaskClient {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+    private final URL serverURL;
     private String apiToken;
-    private final String serverURL;
-    public KVTaskClient(String serverURL) {
-        this.serverURL = serverURL;
-    }
-    public void register() {
-        URI uri = URI.create(this.serverURL + "/register");
 
+    public KVTaskClient(URL serverURL) {        // "http://localhost:" + port + "/";
+        this.serverURL = serverURL;
+        apiToken = register();
+    }
+    public String register() {
+        URI uri = URI.create(this.serverURL + "/register");
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(uri)
                 .header("Content-Type", "application/json")
                 .build();
-
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse<String> response;
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() == 200) {
+            if (response.statusCode() != 200) {
                 apiToken = response.body();
+                return apiToken;
             } else {
-                apiToken = String.valueOf(400);
+                throw new ManagerSaveException("Не получилось выполнить сохранение: " + response.statusCode());
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+            throw new ManagerSaveException("Не получилось выполнить сохранение: ");
         }
     }
     public void put(String key, String json) {
