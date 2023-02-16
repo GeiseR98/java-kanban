@@ -19,14 +19,9 @@ public class Main {
     public static void main(String[] args) throws IOException {
         System.out.println("Поехали!");
         FileBackedTasksManager.setFileName("file.csv");
-        TaskManager taskManager = Manager.getDefault();
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
+        TaskManager taskManager = FileBackedTasksManager.loadFromFile(new File(FileBackedTasksManager.getFileName()));;
         TimeManager timeManager = Manager.getDefaultTime();
-        if (fileBackedTasksManager.readFile("saves" + File.separator + "file.csv") != null) {
-            FileBackedTasksManager.loadFromFile();
-        } else {
-            System.out.println("Невозможно прочитать файл. Возможно, файл не находится в нужной директории.");
-        }
+
 
         InMemoryTaskManager.autoSave = true;
         HttpTaskServer httpServer;
@@ -42,7 +37,7 @@ public class Main {
 
 
 //        Создание эпика:
-//        fileBackedTasksManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
+//        taskManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
 
 //        Создание задачи:
 //        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10)));

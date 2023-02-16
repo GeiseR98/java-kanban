@@ -72,8 +72,6 @@ public class JustTaskHandler implements HttpHandler {
         }
         if (justTask.getStartTime() != null) {
             try {
-                System.out.println(justTask.getId());
-
                 int id = taskManager.addJustTask(taskManager.createJustTask(
                         justTask.getName(),
                         justTask.getDescription(),

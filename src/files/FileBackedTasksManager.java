@@ -14,7 +14,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-
+    private final File file;
+    public FileBackedTasksManager(File file) {
+        super();
+        this.file = file;
+    }
     private static String fileName;
 
     public static void setFileName(String fileName) {
@@ -23,23 +27,22 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public static String getFileName() {
         return fileName;
     }
-    public static void save()  { // сохранение всего, надо будет переделать на редактирование файла
-        TaskManager taskManager = Manager.getDefault();
+    @Override
+    public void save()  { // сохранение всего, надо будет переделать на редактирование файла
         HistoryManager historyManager = Manager.getDefaultHistory();
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
-        fileBackedTasksManager.remouveAndCreatFile();
+        remouveAndCreatFile();
         Writer fileWriter = null;
         try {
             fileWriter = new FileWriter("saves" + File.separator + getFileName(), true);
             fileWriter.write("id,тип,название,статус,описание,начало,продолжительность,окончание,statusTime,idMaster(для подзадач)\n");
-        for (Task justTask : taskManager.getListAllJustTask()) {
-            fileWriter.write(fileBackedTasksManager.toString((JustTask) justTask) + "\n");
+        for (Task justTask : getListAllJustTask()) {
+            fileWriter.write(toString((JustTask) justTask) + "\n");
         }
-        for (Task epicTasks : taskManager.getListAllEpicTask()) {
-            fileWriter.write(fileBackedTasksManager.toString((EpicTask) epicTasks) + "\n");
+        for (Task epicTasks : getListAllEpicTask()) {
+            fileWriter.write(toString((EpicTask) epicTasks) + "\n");
         }
-        for (Task subTask : taskManager.getListAllSubTask()) {
-            fileWriter.write(fileBackedTasksManager.toString((SubTask) subTask) + "\n");
+        for (Task subTask : getListAllSubTask()) {
+            fileWriter.write(toString((SubTask) subTask) + "\n");
         }
         fileWriter.write("\n");
         if (!historyManager.getHistory().isEmpty()) {
@@ -79,7 +82,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    public String readFile(String path) {
+    public static String readFile(String path) {
         try {
             return Files.readString(Path.of(path));
         } catch (IOException e) {
@@ -88,12 +91,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    public static FileBackedTasksManager loadFromFile() throws IOException {
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
-        ArrayList<Integer> listAllId = new ArrayList<>();
-        String file = fileBackedTasksManager.readFile("saves" + File.separator + getFileName());
+    public static FileBackedTasksManager loadFromFile(File file) throws IOException {
+//        String file = FileBackedTasksManager.readFile("saves" + File.separator + getFileName());
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
 
-        String[] lines = file.split("\r?\n");
+        ArrayList<Integer> listAllId = new ArrayList<>();
+
+
+        String[] lines = fileBackedTasksManager.readFile("saves" + File.separator + getFileName()).split("\r?\n");
         for (int i = 1; i < (lines.length - 2); i++) {
             String line = lines[i];
             if (line.contains(String.valueOf(Types.JUSTTASK))) {

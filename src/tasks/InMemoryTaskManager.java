@@ -261,7 +261,7 @@ public class InMemoryTaskManager implements TaskManager {
             calculationEpicTime(idMaster);
             System.out.println("Задача №" + id + " успешно удалена...");
             if (autoSave) {
-                FileBackedTasksManager.save();
+                save();
             }
         } else {
             throw new UnsupportedOperationException("Такой задачи не обнаружено");
@@ -465,7 +465,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return inputStatus;
     }
-    private void save() {
-        FileBackedTasksManager.save();
+    public void save() {
     }
 }
