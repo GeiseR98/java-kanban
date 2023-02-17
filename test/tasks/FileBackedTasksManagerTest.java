@@ -24,7 +24,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @BeforeEach
     public void beforeEach() throws IOException {
-        taskManager = (InMemoryTaskManager) Manager.getDefault(new File("fileTest.csv"));
+        taskManager = new FileBackedTasksManager(new File("fileTest.csv"));
     }
     @AfterEach
     public void afterEach() {

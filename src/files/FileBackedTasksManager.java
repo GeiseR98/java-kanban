@@ -92,12 +92,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     public static FileBackedTasksManager loadFromFile(File file) throws IOException {
-//        String file = FileBackedTasksManager.readFile("saves" + File.separator + getFileName());
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
-
         ArrayList<Integer> listAllId = new ArrayList<>();
-
-
         String[] lines = fileBackedTasksManager.readFile("saves" + File.separator + getFileName()).split("\r?\n");
         for (int i = 1; i < (lines.length - 2); i++) {
             String line = lines[i];

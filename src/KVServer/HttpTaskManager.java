@@ -1,50 +1,79 @@
-//package KVServer;
-//
-//import com.google.gson.*;
-//import com.google.gson.reflect.TypeToken;
-//import files.FileBackedTasksManager;
-//import tasks.EpicTask;
-//import tasks.JustTask;
-//import tasks.Task;
-//import utilit.Manager;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.stream.Collectors;
-//
-//public class HttpTaskManager extends FileBackedTasksManager {
-//    private final Gson gson;
-//    private KVTaskClient client;
-//
-//    public HttpTaskManager(int port) {
-//        this(port, false);
-//    }
-//    public HttpTaskManager(int port, boolean load) {
-//        super();
-//        gson = Manager.getGson();
-//        if (load) {
-//            load();
-//        }
-//    }
-//    public void save() {
-//        HttpTaskManager taskManager = new HttpTaskManager(8078);
-//        String jsonJustTasks = taskManager.gson.toJson(new ArrayList<>(justTasks.values()));
-//        taskManager.client.put("task", jsonJustTasks);
-//        String jsonSubTasks = taskManager.gson.toJson(new ArrayList<>(subTasks.values()));
-//        taskManager.client.put("subtask", jsonSubTasks);
-//        String jsonEpicTask = taskManager.gson.toJson(new ArrayList<>(epicTasks.values()));
-//        taskManager.client.put("epic", jsonEpicTask);
-//
-//        String jsonHistory = taskManager.gson.toJson(taskManager.getHistory().stream().map(Task::getId).collect(Collectors.toList()));
-//        taskManager.client.put("history", jsonHistory);
-//    }
-//    private void load() {
-//        List<JustTask> justTasks = gson.fromJson(client.load("tasks"), new TypeToken<ArrayList<JustTask>>() {
-//        }.getType());
-//        recoveryJustTask(justTasks);
-//
-//        List<EpicTask> epicTasks = gson.fromJson(client.load("epics"), new TypeToken<ArrayList<EpicTask>>() {
-//        }.getType());
-//        addEpicTask(epicTasks);
-//    }
-//}
+package KVServer;
+
+import com.google.gson.*;
+import files.FileBackedTasksManager;
+import tasks.EpicTask;
+import tasks.JustTask;
+import tasks.SubTask;
+import tasks.Task;
+import utilit.Manager;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
+public class HttpTaskManager extends FileBackedTasksManager {
+    private final Gson gson = Manager.getGson();
+    private KVTaskClient client;
+
+    public HttpTaskManager(String path) {
+        super(null);
+        client = new KVTaskClient(path);
+    }
+    @Override
+    public void save() {
+        client.register();
+        System.out.println("зарегались");
+        String jsonJustTask = gson.toJson(new ArrayList<>(justTasks.values()));
+        client.put("tasks", jsonJustTask);
+        String jsonEpicTasks = gson.toJson(new ArrayList<>(epicTasks.values()));
+        client.put("epics", jsonEpicTasks);
+        String jsonSubTask = gson.toJson(new ArrayList<>(subTasks.values()));
+        client.put("subtasks", jsonSubTask);
+
+        String jsonHistory = gson.toJson(getHistory().stream().map(Task::getId).collect(Collectors.toList()));
+        client.put("history", jsonHistory);
+    }
+    private void load() {
+        ArrayList<Integer> listAllId = new ArrayList<>();
+
+        JsonElement jsonJustTasks = JsonParser.parseString(client.load("tasks"));
+        if (!jsonJustTasks.isJsonNull()) {
+            JsonArray jsonJustTaskArray = jsonJustTasks.getAsJsonArray();
+            for (JsonElement jsonJustTask : jsonJustTaskArray) {
+                JustTask justTask = gson.fromJson(jsonJustTask, JustTask.class);
+                addJustTask(justTask);
+                listAllId.add(justTask.getId());
+                recoveryTimeTask(justTask, justTask.getTimeStatus());
+            }
+        }
+        JsonElement jsonEpicTasks = JsonParser.parseString(client.load("epics"));
+        if (!jsonEpicTasks.isJsonNull()) {
+            JsonArray jsonEpicTaskArray = jsonEpicTasks.getAsJsonArray();
+            for (JsonElement jsonEpicTask : jsonEpicTaskArray) {
+                EpicTask epicTask = gson.fromJson(jsonEpicTask, EpicTask.class);
+                addEpicTask(epicTask);
+                listAllId.add(epicTask.getId());
+            }
+        }
+        JsonElement jsonSubTasks = JsonParser.parseString(client.load("subtasks"));
+        if (!jsonSubTasks.isJsonNull()) {
+            JsonArray jsonSubTaskArray = jsonSubTasks.getAsJsonArray();
+            for (JsonElement jsonSubTask : jsonSubTaskArray) {
+                SubTask subTask = gson.fromJson(jsonSubTask, SubTask.class);
+                addSubTask(subTask);
+                listAllId.add(subTask.getId());
+                recoveryTimeTask(subTask, subTask.getTimeStatus());
+            }
+        }
+        JsonElement jsonHistoryList = JsonParser.parseString(client.load("history"));
+        if (!jsonHistoryList.isJsonNull()) {
+            JsonArray jsonHistoryArray = jsonHistoryList.getAsJsonArray();
+            for (JsonElement jsonIdTask : jsonHistoryArray) {
+                int idTask = jsonIdTask.getAsInt();
+                getTask(idTask);
+            }
+        }
+    }
+}

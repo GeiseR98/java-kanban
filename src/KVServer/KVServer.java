@@ -94,7 +94,7 @@ public class KVServer {
 
     private void register(HttpExchange exchange) throws IOException {
         try {
-            System.out.println("\n/register");
+            System.out.println("\n/register KVServer");
             if ("GET".equals(exchange.getRequestMethod())) {
                 sendText(exchange, apiToken);
             } else {

@@ -18,20 +18,18 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Поехали!");
-        FileBackedTasksManager.setFileName("file.csv");
-        TaskManager taskManager = FileBackedTasksManager.loadFromFile(new File(FileBackedTasksManager.getFileName()));;
-        TimeManager timeManager = Manager.getDefaultTime();
-
-
-        InMemoryTaskManager.autoSave = true;
+              KVServer server;
         HttpTaskServer httpServer;
         try {
-            httpServer = new HttpTaskServer();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            server = new KVServer();
+            server.start();
+            TaskManager taskManager = Manager.getDefault();
+            TimeManager timeManager = Manager.getDefaultTime();
+            httpServer = new HttpTaskServer(taskManager);
+            httpServer.start();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        httpServer.start();
-        new KVServer().start();
 
 
 

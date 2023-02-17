@@ -11,8 +11,7 @@ import java.net.InetSocketAddress;
 public class HttpTaskServer {
     protected final HttpServer httpServer;
     protected static final int PORT = 8080;
-    public HttpTaskServer() throws IOException, InterruptedException {
-        TaskManager taskManager = Manager.getDefault(new File("file.csv"));
+    public HttpTaskServer(TaskManager taskManager) throws IOException, InterruptedException {
         this.httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks", new TasksHandler(taskManager));
         httpServer.createContext("/tasks/task", new JustTaskHandler(taskManager));

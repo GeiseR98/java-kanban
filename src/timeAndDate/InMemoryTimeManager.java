@@ -18,7 +18,6 @@ public class InMemoryTimeManager implements TimeManager{
 
     static Map<LocalDate, Day> year = new HashMap<>();
     static Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
-
     @Override
     public List<Task> getPrioritizedTasks() {
         return new ArrayList<>(InMemoryTimeManager.prioritizedTasks);

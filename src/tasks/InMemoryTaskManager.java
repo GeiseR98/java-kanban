@@ -19,11 +19,12 @@ public class InMemoryTaskManager implements TaskManager {
     public static Map<Integer, SubTask> subTasks = new HashMap<>();
 
     HistoryManager historyManager = Manager.getDefaultHistory();
+
     TimeManager timeManager = Manager.getDefaultTime();
 
     private static int idTask = 0;
 
-    public static boolean autoSave = false;
+    public static boolean autoSave = true;
 
     @Override
     public JustTask createJustTask(String name, String description, LocalDateTime startTime, Duration duration) {
@@ -403,7 +404,6 @@ public class InMemoryTaskManager implements TaskManager {
     public void recoveryTimeTask(Task task, byte statusTime) {
         timeManager.recoveryTimeTask(task, statusTime);
     }
-
     public void setIdTask(int idTaskMax) {
         idTask = idTaskMax;
     }

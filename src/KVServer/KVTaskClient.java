@@ -13,12 +13,12 @@ import java.nio.charset.StandardCharsets;
 
 public class KVTaskClient {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-    private final URL serverURL;
-    private String apiToken;
+    private final String serverURL;
+    private final String apiToken;
 
-    public KVTaskClient(URL serverURL) {        // "http://localhost:" + port + "/";
+    public KVTaskClient(String serverURL) {        // "http://localhost:" + port + "/";
         this.serverURL = serverURL;
-        apiToken = register();
+        this.apiToken = register();
     }
     public String register() {
         URI uri = URI.create(this.serverURL + "/register");
@@ -31,9 +31,8 @@ public class KVTaskClient {
         HttpResponse<String> response;
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() != 200) {
-                apiToken = response.body();
-                return apiToken;
+            if (response.statusCode() == 200) {
+                return response.body();
             } else {
                 throw new ManagerSaveException("Не получилось выполнить сохранение: " + response.statusCode());
             }
@@ -57,6 +56,7 @@ public class KVTaskClient {
             if (response.statusCode() != 200) {
                 System.out.println("Не удалось сохранить данные");
             }
+            return;
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

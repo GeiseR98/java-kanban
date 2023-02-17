@@ -1,5 +1,6 @@
 package utilit;
 
+import KVServer.HttpTaskManager;
 import api.DurationAdapter;
 import api.LocalDateTimeAdapter;
 import com.google.gson.Gson;
@@ -19,8 +20,8 @@ import java.time.LocalDateTime;
 
 public class Manager {
 
-    public static TaskManager getDefault(File file) throws IOException {
-        return FileBackedTasksManager.loadFromFile(file);
+    public static TaskManager getDefault() throws IOException {
+        return new HttpTaskManager("http://localhost:8078");
     }
     public static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
