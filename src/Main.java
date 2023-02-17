@@ -1,22 +1,12 @@
 import api.HttpTaskServer;
-import com.sun.net.httpserver.HttpServer;
-import files.FileBackedTasksManager;
-import history.HistoryManager;
-import tasks.InMemoryTaskManager;
-import tasks.Status;
 import tasks.TaskManager;
-import timeAndDate.TimeManager;
 import utilit.Manager;
 import KVServer.KVServer;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args){
         System.out.println("Поехали!");
               KVServer server;
         HttpTaskServer httpServer;
@@ -24,7 +14,6 @@ public class Main {
             server = new KVServer();
             server.start();
             TaskManager taskManager = Manager.getDefault();
-            TimeManager timeManager = Manager.getDefaultTime();
             httpServer = new HttpTaskServer(taskManager);
             httpServer.start();
         } catch (Exception e) {

@@ -2,16 +2,14 @@ package api;
 
 import com.sun.net.httpserver.HttpServer;
 import tasks.TaskManager;
-import utilit.Manager;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
 public class HttpTaskServer {
     protected final HttpServer httpServer;
     protected static final int PORT = 8080;
-    public HttpTaskServer(TaskManager taskManager) throws IOException, InterruptedException {
+    public HttpTaskServer(TaskManager taskManager) throws IOException {
         this.httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
         httpServer.createContext("/tasks", new TasksHandler(taskManager));
         httpServer.createContext("/tasks/task", new JustTaskHandler(taskManager));

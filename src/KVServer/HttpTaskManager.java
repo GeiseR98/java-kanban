@@ -8,14 +8,13 @@ import tasks.SubTask;
 import tasks.Task;
 import utilit.Manager;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class HttpTaskManager extends FileBackedTasksManager {
     private final Gson gson = Manager.getGson();
-    private KVTaskClient client;
+    private final KVTaskClient client;
 
     public HttpTaskManager(String path) {
         super(null);
@@ -74,6 +73,9 @@ public class HttpTaskManager extends FileBackedTasksManager {
                 int idTask = jsonIdTask.getAsInt();
                 getTask(idTask);
             }
+        }
+        if (!listAllId.isEmpty()) {
+            setIdTask(Collections.max(listAllId));
         }
     }
 }

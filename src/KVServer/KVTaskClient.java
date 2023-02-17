@@ -4,7 +4,6 @@ import files.ManagerSaveException;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -56,7 +55,6 @@ public class KVTaskClient {
             if (response.statusCode() != 200) {
                 System.out.println("Не удалось сохранить данные");
             }
-            return;
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
