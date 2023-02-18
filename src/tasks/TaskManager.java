@@ -1,4 +1,4 @@
-package managers;
+package tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

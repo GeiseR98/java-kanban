@@ -5,9 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import managers.JustTask;
-import managers.Status;
-import managers.TaskManager;
+import tasks.JustTask;
+import tasks.Status;
+import tasks.TaskManager;
 
 import java.io.IOException;
 import java.io.OutputStream;

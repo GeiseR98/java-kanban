@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import history.HistoryManager;
 import history.InMemoryHistoryManager;
-import managers.TaskManager;
+import tasks.TaskManager;
 import timeAndDate.InMemoryTimeManager;
 import timeAndDate.TimeManager;
 

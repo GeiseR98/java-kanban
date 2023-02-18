@@ -1,7 +1,7 @@
 package api;
 
 import com.sun.net.httpserver.HttpServer;
-import managers.TaskManager;
+import tasks.TaskManager;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -11,12 +11,12 @@ public class HttpTaskServer {
     protected static final int PORT = 8080;
     public HttpTaskServer(TaskManager taskManager) throws IOException {
         this.httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
-        httpServer.createContext("/managers", new TasksHandler(taskManager));
-        httpServer.createContext("/managers/task", new JustTaskHandler(taskManager));
-        httpServer.createContext("/managers/epic", new EpicTaskHandler(taskManager));
-        httpServer.createContext("/managers/subtask", new SubTaskHandler(taskManager));
-        httpServer.createContext("/managers/history", new HistoryHandler(taskManager));
-        httpServer.createContext("/managers/prioritized", new PrioritizedHandler(taskManager));
+        httpServer.createContext("/tasks", new TasksHandler(taskManager));
+        httpServer.createContext("/tasks/task", new JustTaskHandler(taskManager));
+        httpServer.createContext("/tasks/epic", new EpicTaskHandler(taskManager));
+        httpServer.createContext("/tasks/subtask", new SubTaskHandler(taskManager));
+        httpServer.createContext("/tasks/history", new HistoryHandler(taskManager));
+        httpServer.createContext("/tasks/prioritized", new PrioritizedHandler(taskManager));
     }
     public void start() {
         httpServer.start();

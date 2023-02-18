@@ -1,4 +1,4 @@
-package managers;
+package tasks;
 
 import history.HistoryManager;
 import timeAndDate.InMemoryTimeManager;

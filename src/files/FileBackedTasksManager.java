@@ -1,7 +1,7 @@
 package files;
 
 import history.HistoryManager;
-import managers.*;
+import tasks.*;
 import utilit.Manager;
 
 import java.io.*;

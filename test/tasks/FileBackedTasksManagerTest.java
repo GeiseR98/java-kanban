@@ -1,4 +1,4 @@
-package managers;
+package tasks;
 
 import files.FileBackedTasksManager;
 import org.junit.jupiter.api.AfterEach;
