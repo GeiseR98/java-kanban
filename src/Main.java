@@ -1,5 +1,5 @@
 import api.HttpTaskServer;
-import tasks.TaskManager;
+import managers.TaskManager;
 import utilit.Manager;
 import KVServer.KVServer;
 
@@ -8,7 +8,7 @@ public class Main {
 
     public static void main(String[] args){
         System.out.println("Поехали!");
-              KVServer server;
+        KVServer server;
         HttpTaskServer httpServer;
         try {
             server = new KVServer();
@@ -16,15 +16,13 @@ public class Main {
             TaskManager taskManager = Manager.getDefault();
             httpServer = new HttpTaskServer(taskManager);
             httpServer.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
 
 
 
 //        Создание эпика:
-//        taskManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
+        taskManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
 
 //        Создание задачи:
 //        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10)));
@@ -56,5 +54,8 @@ public class Main {
 
         // Очистить историю:
         // historyManager.removeAllHistory();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

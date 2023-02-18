@@ -1,4 +1,4 @@
-package tasks;
+package managers;
 
 import files.Types;
 

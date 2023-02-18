@@ -1,6 +1,5 @@
-package tasks;
+package managers;
 
-import files.FileBackedTasksManager;
 import history.HistoryManager;
 import timeAndDate.InMemoryTimeManager;
 import timeAndDate.TimeManager;

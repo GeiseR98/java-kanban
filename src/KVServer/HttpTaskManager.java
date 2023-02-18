@@ -2,10 +2,10 @@ package KVServer;
 
 import com.google.gson.*;
 import files.FileBackedTasksManager;
-import tasks.EpicTask;
-import tasks.JustTask;
-import tasks.SubTask;
-import tasks.Task;
+import managers.EpicTask;
+import managers.JustTask;
+import managers.SubTask;
+import managers.Task;
 import utilit.Manager;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
         client.register();
         System.out.println("зарегались");
         String jsonJustTask = gson.toJson(new ArrayList<>(justTasks.values()));
-        client.put("tasks", jsonJustTask);
+        client.put("managers", jsonJustTask);
         String jsonEpicTasks = gson.toJson(new ArrayList<>(epicTasks.values()));
         client.put("epics", jsonEpicTasks);
         String jsonSubTask = gson.toJson(new ArrayList<>(subTasks.values()));
@@ -34,10 +34,10 @@ public class HttpTaskManager extends FileBackedTasksManager {
         String jsonHistory = gson.toJson(getHistory().stream().map(Task::getId).collect(Collectors.toList()));
         client.put("history", jsonHistory);
     }
-    private void load() {
+    public void load() {
         ArrayList<Integer> listAllId = new ArrayList<>();
 
-        JsonElement jsonJustTasks = JsonParser.parseString(client.load("tasks"));
+        JsonElement jsonJustTasks = JsonParser.parseString(client.load("managers"));
         if (!jsonJustTasks.isJsonNull()) {
             JsonArray jsonJustTaskArray = jsonJustTasks.getAsJsonArray();
             for (JsonElement jsonJustTask : jsonJustTaskArray) {

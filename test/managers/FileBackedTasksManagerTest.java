@@ -1,11 +1,10 @@
-package tasks;
+package managers;
 
 import files.FileBackedTasksManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utilit.Manager;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,11 +14,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class FileBackedTasksManagerTest extends TaskManagerTest<InMemoryTaskManager> {
+class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
     @BeforeAll
     static void beforeAll() {
         FileBackedTasksManager.setFileName("fileTest.csv");
-        FileBackedTasksManager.autoSave = false;
+//        FileBackedTasksManager.autoSave = false;
     }
 
     @BeforeEach

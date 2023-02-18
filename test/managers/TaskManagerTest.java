@@ -1,6 +1,5 @@
-package tasks;
+package managers;
 
-import files.FileBackedTasksManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import timeAndDate.InMemoryTimeManager;
@@ -12,7 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-abstract class TaskManagerTest<T extends TaskManager> {
+public abstract class TaskManagerTest<T extends TaskManager> {
 
     T taskManager;
     InMemoryTimeManager timeManager = new InMemoryTimeManager();

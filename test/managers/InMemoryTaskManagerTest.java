@@ -1,10 +1,9 @@
-package tasks;
+package managers;
 
 import files.FileBackedTasksManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import timeAndDate.InMemoryTimeManager;
 
 class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager>{
     @BeforeAll

@@ -2,13 +2,11 @@ package api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import tasks.JustTask;
-import tasks.Status;
-import tasks.Task;
-import tasks.TaskManager;
+import managers.Status;
+import managers.Task;
+import managers.TaskManager;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -157,7 +155,7 @@ public class TasksHandler implements HttpHandler {
     }
     private Endpoint getEndpoint(String requestPath, String requestMethod, String query) {
         String[] pathParts = requestPath.split("/");
-        if (pathParts.length == 2 && pathParts[1].equals("tasks")) {
+        if (pathParts.length == 2 && pathParts[1].equals("managers")) {
             if (query == null) {
                 switch (requestMethod) {
                     case "GET":

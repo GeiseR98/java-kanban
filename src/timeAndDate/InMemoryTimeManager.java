@@ -1,7 +1,7 @@
 package timeAndDate;
 
-import tasks.InMemoryTaskManager;
-import tasks.Task;
+import managers.InMemoryTaskManager;
+import managers.Task;
 
 import java.time.Duration;
 import java.time.LocalDate;

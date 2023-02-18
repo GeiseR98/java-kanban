@@ -1,6 +1,6 @@
 package timeAndDate;
 
-import tasks.Task;
+import managers.Task;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
