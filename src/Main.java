@@ -3,6 +3,8 @@ import tasks.TaskManager;
 import utilit.Manager;
 import KVServer.KVServer;
 
+import java.time.Duration;
+
 
 public class Main {
 
@@ -22,10 +24,10 @@ public class Main {
 
 
 //        Создание эпика:
-        taskManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
+//        taskManager.addEpicTask(taskManager.createEpicTask("эпик", "описание эпика"));
 
 //        Создание задачи:
-//        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10)));
+        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10)));
 //        taskManager.addJustTask(taskManager.createJustTask("задача", "описание задачи", Duration.ofMinutes(10)));
 //
 //        System.out.println(taskManager.getTask(4));

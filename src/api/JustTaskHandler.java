@@ -8,6 +8,7 @@ import com.sun.net.httpserver.HttpHandler;
 import tasks.JustTask;
 import tasks.Status;
 import tasks.TaskManager;
+import utilit.Manager;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -18,10 +19,7 @@ import java.time.LocalDateTime;
 
 public class JustTaskHandler implements HttpHandler {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-    private final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-            .registerTypeAdapter(Duration.class, new DurationAdapter())
-            .create();
+    private final Gson gson = Manager.getGson();
     private final TaskManager taskManager;
     public JustTaskHandler(TaskManager taskManager) {
         this.taskManager = taskManager;

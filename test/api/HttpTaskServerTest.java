@@ -19,6 +19,7 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 
@@ -69,9 +70,8 @@ public class HttpTaskServerTest {
         taskManager.removeAllTask();
         timeManager.cleaneTimeManager();
     }
-
     @Test
-    void DELETE_in_tasks_shouldRemoveAllTask() throws IOException, InterruptedException {
+    void DELETE_in_tasks_shouldRemoveAllTask() {
         taskManager.addEpicTask(createEpic());
         taskManager.addJustTask(createJustTask());
         taskManager.addSubTask(createSubTusk());
@@ -101,7 +101,7 @@ public class HttpTaskServerTest {
         assertEquals(Collections.EMPTY_LIST, taskManager.getListAllEpicTask(),"Эпики удалены");
     }
     @Test
-    void DELETE_in_tasks_task_shouldRemoveTaskBiId() throws IOException, InterruptedException {
+    void DELETE_in_tasks_task_shouldRemoveTaskBiId(){
         taskManager.addEpicTask(createEpic());
         taskManager.addJustTask(createJustTask());
         taskManager.addSubTask(createSubTusk());
@@ -131,13 +131,55 @@ public class HttpTaskServerTest {
         assertNotEquals(Collections.EMPTY_LIST, taskManager.getListAllEpicTask(),"Эпики удалены");
     }
     @Test
-    void test() throws IOException, InterruptedException {
+    void GET_in_tasks_task_shouldGetJustTask(){
         String name = "задача";
         String description = "описание задачи";
         Duration duration = Duration.ofMinutes(10);
         JustTask justTask = taskManager.createJustTask(name, description, duration);
+        JustTask justTaskWithRequest;
         taskManager.addJustTask(justTask);
-        String query = "http://localhost:8080/tasks";
+
+        String query = "http://localhost:8080/tasks/task/?id=1";
+        HttpURLConnection connection = null;
+        InputStreamReader isR = null;
+        BufferedReader bfR = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            connection = (HttpURLConnection) new URL(query).openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            connection.addRequestProperty("Content-Type", "application/json");
+            connection.setConnectTimeout(250);
+            connection.setReadTimeout(250);
+            connection.connect();
+
+            if (HttpURLConnection.HTTP_OK == connection.getResponseCode()) {
+                isR = new InputStreamReader(connection.getInputStream());
+                bfR = new BufferedReader(isR);
+                String line;
+                while ((line = bfR.readLine()) != null) {
+                    sb.append(line);
+                }
+                justTaskWithRequest = gson.fromJson(new String(sb.toString()), JustTask.class);
+                assertEquals(justTask, justTaskWithRequest);
+            }
+        } catch (Throwable cause) {
+            cause.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+    @Test
+    void POST_in_tasks_task_shouldCreateAndSaveJustTask(){
+        String name = "задача";
+        String description = "описание задачи";
+        Duration duration = Duration.ofMinutes(10);
+        JustTask justTask = taskManager.createJustTask(name, description, duration);
+
+        String query = "http://localhost:8080/tasks/task";
         HttpURLConnection connection = null;
         OutputStream os = null;
         InputStreamReader isR = null;
@@ -145,17 +187,29 @@ public class HttpTaskServerTest {
         StringBuilder sb = new StringBuilder();
         try {
             connection = (HttpURLConnection) new URL(query).openConnection();
-            connection.setRequestMethod("DELETE");
+            connection.setRequestMethod("POST");
             connection.setDoOutput(true);
             connection.setDoInput(true);
-
-            connection.addRequestProperty("Content-Type", "application/json");
+            connection.addRequestProperty("Content-Type", "application/json; StandardCharsets.UTF_8");
             connection.setConnectTimeout(250);
             connection.setReadTimeout(250);
-
             connection.connect();
-            System.out.println(taskManager.getListAllJustTask());
-
+            try {
+                os = connection.getOutputStream();
+                String json = "{\"timeStatus\":2," +
+                        "\"id\":1," +
+                        "\"name\":\"задача\"," +
+                        "\"description\":\"описание задачи\"," +
+                        "\"status\":\"NEW\"," +
+                        "\"duration\":\"0 часов, 10 минут\"," +
+                        "\"startTime\":\"18.02.2023 23:45\"}";
+                byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
+                os.write(bytes);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            } finally {
+                os.close();
+            }
             if (HttpURLConnection.HTTP_OK == connection.getResponseCode()) {
                 isR = new InputStreamReader(connection.getInputStream());
                 bfR = new BufferedReader(isR);
@@ -164,21 +218,21 @@ public class HttpTaskServerTest {
                 while ((line = bfR.readLine()) != null) {
                     sb.append(line);
                 }
-                System.out.println(sb + "опа");
+                System.out.println(sb + "ответ");
             }
-
+            System.out.println(connection.getResponseCode());
+            System.out.println(connection.getResponseMessage());
         } catch (Throwable cause) {
             cause.printStackTrace();
         } finally {
-//            isR.close();
-//            bfR.close();
-//            os.close();
             if (connection != null) {
                 connection.disconnect();
             }
         }
-        System.out.println(taskManager.getListAllJustTask());
-        assertEquals(Collections.EMPTY_LIST, taskManager.getListAllJustTask());
+        assertEquals(justTask.getName(), taskManager.getTask(2).getName());
+        assertEquals(justTask.getDescription(), taskManager.getTask(2).getDescription());
+        assertEquals(justTask.getStatus(), taskManager.getTask(2).getStatus());
+        assertEquals(justTask.getDuration(), taskManager.getTask(2).getDuration());
     }
 }
 
