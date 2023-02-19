@@ -1,5 +1,8 @@
-package api;
+package api.handlers;
 
+import api.Endpoint;
+import api.adapters.DurationAdapter;
+import api.adapters.LocalDateTimeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;

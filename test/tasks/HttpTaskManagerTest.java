@@ -1,7 +1,7 @@
 package tasks;
 
-import KVServer.HttpTaskManager;
-import KVServer.KVServer;
+import kvServer.HttpTaskManager;
+import kvServer.KVServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

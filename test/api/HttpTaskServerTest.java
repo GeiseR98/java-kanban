@@ -1,7 +1,7 @@
 package api;
 
-import KVServer.HttpTaskManager;
-import KVServer.KVServer;
+import kvServer.HttpTaskManager;
+import kvServer.KVServer;
 import com.google.gson.Gson;
 import tasks.*;
 import org.junit.jupiter.api.AfterEach;
@@ -11,14 +11,10 @@ import org.junit.jupiter.api.Test;
 import timeAndDate.InMemoryTimeManager;
 import utilit.Manager;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 

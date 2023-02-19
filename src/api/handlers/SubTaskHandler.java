@@ -1,14 +1,16 @@
-package api;
+package api.handlers;
 
+import api.Endpoint;
+import api.adapters.DurationAdapter;
+import api.adapters.LocalDateTimeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import tasks.JustTask;
 import tasks.Status;
+import tasks.SubTask;
 import tasks.TaskManager;
-import utilit.Manager;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,24 +19,26 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class JustTaskHandler implements HttpHandler {
+public class SubTaskHandler implements HttpHandler {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-    private final Gson gson = Manager.getGson();
+    private final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .registerTypeAdapter(Duration.class, new DurationAdapter())
+            .create();
     private final TaskManager taskManager;
-    public JustTaskHandler(TaskManager taskManager) {
+    public SubTaskHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
     }
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         Endpoint endpoint = getEndpoint(exchange.getRequestURI().getPath(), exchange.getRequestMethod(), exchange.getRequestURI().getQuery());
-
         switch (endpoint) {
-            case GET_JUSTTASKS: {
-                handleGetJustTask(exchange);
+            case GET_SUBTASKS: {
+                handleGetSubTask(exchange);
                 break;
             }
-            case POST_JUSTTASK: {
-                handleAddJustTask(exchange);
+            case POST_SUBTASK: {
+                handleAddSubTask(exchange);
                 break;
             }
             case GET_TASK_BY_ID: {
@@ -53,28 +57,34 @@ public class JustTaskHandler implements HttpHandler {
                 writeResponse(exchange, "Такого эндпонта не существует", 404);
         }
     }
-    private void handleAddJustTask(HttpExchange exchange) throws IOException {
+    private void handleAddSubTask(HttpExchange exchange) throws IOException {
         String body = new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
-        JustTask justTask;
+        SubTask subTask;
         try {
-            justTask = gson.fromJson(body, JustTask.class);
+            subTask = gson.fromJson(body, SubTask.class);
         } catch (JsonSyntaxException exception) {
             writeResponse(exchange, "Получен некорректный Json", 400);
             return;
         }
-        if (justTask.getName().isEmpty() ||
-            justTask.getDescription().isEmpty() ||
-            justTask.getDuration() == null) {
+        if (subTask.getName().isEmpty() ||
+                subTask.getDescription().isEmpty() ||
+                subTask.getIdMaster() == null ||
+                subTask.getDuration() == null) {
             writeResponse(exchange, "Данные поля не могут быть пустыми", 400);
             return;
         }
-        if (justTask.getStartTime() != null) {
+        if (!taskManager.isThereSuchEpicTask(subTask.getIdMaster())) {
+            writeResponse(exchange, "Указанного эпика не существует, создайте сначала эпик", 400);
+            return;
+        }
+        if (subTask.getStartTime() != null) {
             try {
-                int id = taskManager.addJustTask(taskManager.createJustTask(
-                        justTask.getName(),
-                        justTask.getDescription(),
-                        justTask.getStartTime(),
-                        justTask.getDuration()
+                int id = taskManager.addSubTask(taskManager.createSubTask(
+                        subTask.getName(),
+                        subTask.getDescription(),
+                        subTask.getStartTime(),
+                        subTask.getDuration(),
+                        subTask.getIdMaster()
                 ));
                 writeResponse(exchange, "Задача сохранена под номером " + id, 201);
                 return;
@@ -83,14 +93,18 @@ public class JustTaskHandler implements HttpHandler {
                 return;
             }
         } else {
-            int id = taskManager.addJustTask(taskManager.createJustTask(
-                    justTask.getName(),
-                    justTask.getDescription(),
-                    justTask.getDuration()
+            int id = taskManager.addSubTask(taskManager.createSubTask(
+                    subTask.getName(),
+                    subTask.getDescription(),
+                    subTask.getDuration(),
+                    subTask.getIdMaster()
             ));
             writeResponse(exchange, "Задача сохранена под номером " + id, 201);
             return;
         }
+    }
+    private void handleGetSubTask(HttpExchange exchange) throws IOException {
+        writeResponse(exchange, gson.toJson(taskManager.getListAllSubTask()), 200);
     }
     private void handleChange(HttpExchange exchange) throws IOException {
         try {
@@ -147,20 +161,17 @@ public class JustTaskHandler implements HttpHandler {
             writeResponse(exchange, gson.toJson("Неверный формат id"),400);
         }
     }
-    private void handleGetJustTask(HttpExchange exchange) throws IOException {
-        writeResponse(exchange, gson.toJson(taskManager.getListAllJustTask()), 200);
-    }
     private void handleGetTask(HttpExchange exchange) throws IOException {
         try {
             if (taskManager.containsKey(findId(exchange))) {
-        writeResponse(exchange, gson.toJson(taskManager.getTask(findId(exchange))),200);
-    } else {
-        writeResponse(exchange, "Задача под номером " + findId(exchange) + " не найдена", 404);
-    }
-} catch (StringIndexOutOfBoundsException e) {
-        writeResponse(exchange, gson.toJson("В запросе отсутствует необходимый параметр id"),400);
+                writeResponse(exchange, gson.toJson(taskManager.getTask(findId(exchange))),200);
+            } else {
+                writeResponse(exchange, "Задача под номером " + findId(exchange) + " не найдена", 404);
+            }
+        } catch (StringIndexOutOfBoundsException e) {
+            writeResponse(exchange, gson.toJson("В запросе отсутствует необходимый параметр id"),400);
         } catch (NumberFormatException e) {
-        writeResponse(exchange, gson.toJson("Неверный формат id"),400);
+            writeResponse(exchange, gson.toJson("Неверный формат id"),400);
         }
     }
     private Integer findId(HttpExchange exchange) {
@@ -183,13 +194,13 @@ public class JustTaskHandler implements HttpHandler {
     }
     private Endpoint getEndpoint(String requestPath, String requestMethod, String query) {
         String[] pathParts = requestPath.split("/");
-        if (pathParts.length == 3 && pathParts[2].equals("task")) {
+        if (pathParts.length == 3 && pathParts[2].equals("subtask")) {
             if (query == null) {
                 switch (requestMethod) {
                     case "GET":
-                        return Endpoint.GET_JUSTTASKS;
+                        return Endpoint.GET_SUBTASKS;
                     case "POST":
-                        return Endpoint.POST_JUSTTASK;
+                        return Endpoint.POST_SUBTASK;
                 }
             } else {
                 switch (requestMethod) {
@@ -202,6 +213,6 @@ public class JustTaskHandler implements HttpHandler {
                 }
             }
         }
-        return Endpoint.UNKNOWN;
+        return  Endpoint.UNKNOWN;
     }
 }

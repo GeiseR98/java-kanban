@@ -1,4 +1,4 @@
-package KVServer;
+package kvServer;
 
 import files.ManagerSaveException;
 

@@ -1,8 +1,8 @@
 package utilit;
 
-import KVServer.HttpTaskManager;
-import api.DurationAdapter;
-import api.LocalDateTimeAdapter;
+import kvServer.HttpTaskManager;
+import api.adapters.DurationAdapter;
+import api.adapters.LocalDateTimeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import history.HistoryManager;

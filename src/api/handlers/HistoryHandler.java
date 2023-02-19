@@ -1,5 +1,8 @@
-package api;
+package api.handlers;
 
+import api.Endpoint;
+import api.adapters.DurationAdapter;
+import api.adapters.LocalDateTimeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
@@ -13,14 +16,14 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class PrioritizedHandler implements HttpHandler {
+public class HistoryHandler implements HttpHandler {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .create();
     private final TaskManager taskManager;
-    public PrioritizedHandler(TaskManager taskManager) {
+    public HistoryHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
     }
     @Override
@@ -28,16 +31,24 @@ public class PrioritizedHandler implements HttpHandler {
         Endpoint endpoint = getEndpoint(exchange.getRequestURI().getPath(), exchange.getRequestMethod(), exchange.getRequestURI().getQuery());
 
         switch (endpoint) {
-            case GET_PROIRITIZED: {
-                handleGetPrioritized(exchange);
+            case GET_HISTORY: {
+                handleGetHistory(exchange);
+                break;
+            }
+            case DELETE_HISTORY: {
+                handleClearHistory(exchange);
                 break;
             }
             default:
                 writeResponse(exchange, "Такого эндпонта не существует", 404);
         }
     }
-    private void handleGetPrioritized(HttpExchange exchange) throws IOException {
-        writeResponse(exchange, gson.toJson(taskManager.getPrioritizedTasks()),200);
+    private void handleClearHistory(HttpExchange exchange) throws IOException {
+        taskManager.clearHistory();
+        writeResponse(exchange, "История очищена",200);
+    }
+    private void handleGetHistory(HttpExchange exchange) throws IOException {
+        writeResponse(exchange, gson.toJson(taskManager.getHistory()),200);
     }
     private Integer findId(HttpExchange exchange) {
         String query = exchange.getRequestURI().getQuery();
@@ -59,11 +70,13 @@ public class PrioritizedHandler implements HttpHandler {
     }
     private Endpoint getEndpoint(String requestPath, String requestMethod, String query) {
         String[] pathParts = requestPath.split("/");
-        if (pathParts.length == 3 && pathParts[2].equals("prioritized")) {
+        if (pathParts.length == 3 && pathParts[2].equals("history")) {
             if (query == null) {
                 switch (requestMethod) {
                     case "GET":
-                        return Endpoint.GET_PROIRITIZED;
+                        return Endpoint.GET_HISTORY;
+                    case "DELETE":
+                        return Endpoint.DELETE_HISTORY;
                 }
             }
         }

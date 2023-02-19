@@ -1,4 +1,4 @@
-package KVServer;
+package kvServer;
 
 import com.google.gson.*;
 import files.FileBackedTasksManager;

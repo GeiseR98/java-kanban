@@ -1,5 +1,6 @@
 package api;
 
+import api.handlers.*;
 import com.sun.net.httpserver.HttpServer;
 import tasks.TaskManager;
 
